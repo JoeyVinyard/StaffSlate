@@ -7,9 +7,5 @@ import { MatSidenav } from '@angular/material';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @ViewChild('sidenav', {static: false}) sidenav: MatSidenav;
 
-  toggle() {
-    this.sidenav.toggle();
-  }
 }

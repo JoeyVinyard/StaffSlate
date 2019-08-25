@@ -1,3 +1,7 @@
+<div class="logo">
+    <h1>EMS</h1>
+    <h2>Employee Management System</h2>
+</div>
 <mat-card class="login-card">
     <mat-card-title>Login</mat-card-title>
     <div class="spacing"></div>
@@ -5,12 +9,15 @@
         <form class="login-form">
             <mat-form-field class="full-width">
                 <mat-label>Email</mat-label>
-                <input matInput placeholder="Email" name="email">
+                <input matInput [formControl]="email" placeholder="Email" name="email">
+                <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
             </mat-form-field>
             <mat-form-field class="full-width">
                 <mat-label>Password</mat-label>
-                <input matInput placeholder="Password" name="password">
+                <input matInput [formControl]="password" placeholder="Password" type="password" name="password">
+                <mat-error *ngIf="password.invalid">{{getPasswordError()}}</mat-error>
             </mat-form-field>
+            <mat-error *ngIf="loginError">{{loginError}}</mat-error>
         </form>
     </mat-card-content>
     <mat-card-actions class="submit">

@@ -1,0 +1,42 @@
+.spacing {
+    margin: 10px;
+}
+
+.icon {
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.icon:hover {
+    text-shadow: 1px 1px 5px grey;
+}
+
+.icon:active {
+    transform: translateY(1px);
+}
+
+.sidenav {
+    width: 200px;
+}
+
+.sidenav-content {
+    background-color: transparent;
+}
+.sidenav-container {
+    background-color: transparent;
+    width: 100%;
+    height: 100vh;
+}
+
+.logo {
+    font-family: 'Lexend Mega', sans-serif;
+    letter-spacing: -2px;
+    text-align: center;
+    margin-top: 1vh;
+}
+
+.logo h1 {
+    font-size: 4vh;
+    line-height: 4vh;
+    margin: 0;
+}

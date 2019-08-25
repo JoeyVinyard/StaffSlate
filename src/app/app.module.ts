@@ -26,12 +26,14 @@ import { DashboardComponent } from './components/pages/dashboard/dashboard.compo
 // Config Files
 import { appRoutes } from "./routes";
 import { environment } from '../environments/environment';
+import { SidenavComponent } from './components/core/sidenav/sidenav.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    SidenavComponent
   ],
   imports: [
     BrowserModule,

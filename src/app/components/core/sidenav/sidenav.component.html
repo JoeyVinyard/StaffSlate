@@ -1,0 +1,13 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav class="sidenav" #sidenav mode="over">
+            <div class="logo">
+                <h1>EMS</h1>
+            </div>
+    </mat-sidenav>
+    <mat-sidenav-content class="sidenav-content">
+        <div class="spacing">
+            <mat-icon (click)="toggle()" class="icon">dehaze</mat-icon>
+            <ng-content></ng-content>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
