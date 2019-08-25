@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Material Imports
 import { MatCardModule } from '@angular/material/card';
@@ -18,22 +19,25 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon'
 
+// Config Files
+import { appRoutes } from "./routes";
+import { environment } from '../environments/environment';
+
 // Components
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/pages/login/login.component';
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
-
-// Config Files
-import { appRoutes } from "./routes";
-import { environment } from '../environments/environment';
 import { SidenavComponent } from './components/core/sidenav/sidenav.component';
+import { ToolbarComponent } from './components/core/toolbar/toolbar.component';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    SidenavComponent
+    SidenavComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,
@@ -49,10 +53,12 @@ import { SidenavComponent } from './components/core/sidenav/sidenav.component';
     MatSidenavModule,
     MatIconModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    AngularFireStorageModule
   ],
   providers: [
-    AngularFireAuthGuard
+    AngularFireAuthGuard,
+    AngularFirestore
   ],
   bootstrap: [AppComponent]
 })

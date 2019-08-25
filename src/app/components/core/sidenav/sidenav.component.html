@@ -1,12 +1,12 @@
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav class="sidenav" #sidenav mode="over">
-            <div class="logo">
-                <h1>EMS</h1>
-            </div>
+        <div class="logo">
+            <h1>EMS</h1>
+        </div>
     </mat-sidenav>
     <mat-sidenav-content class="sidenav-content">
         <div class="spacing">
-            <mat-icon (click)="toggle()" class="icon">dehaze</mat-icon>
+            <app-toolbar (toggled)="toggle()"></app-toolbar>
             <ng-content></ng-content>
         </div>
     </mat-sidenav-content>

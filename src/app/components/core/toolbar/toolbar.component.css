@@ -1,0 +1,23 @@
+.icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.icon:hover {
+    text-shadow: 1px 1px 5px grey;
+}
+
+.icon:active {
+    transform: translateY(1px);
+}
+
+.toolbar {
+    margin: -10px;
+    width: calc(100% + 20px);
+}
+
+.spacer {
+    flex: 1 1 auto;
+}

@@ -2,19 +2,6 @@
     margin: 10px;
 }
 
-.icon {
-    font-size: 40px;
-    cursor: pointer;
-}
-
-.icon:hover {
-    text-shadow: 1px 1px 5px grey;
-}
-
-.icon:active {
-    transform: translateY(1px);
-}
-
 .sidenav {
     width: 200px;
 }
