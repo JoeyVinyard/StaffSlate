@@ -10,21 +10,27 @@ import { Observable } from 'rxjs';
 })
 export class UserService {
 
-  private currentUser: User;
   private currentUserInfo: Observable<UserInfo>;
 
   public getCurrentUserInfo(): Observable<UserInfo> {
     return this.currentUserInfo;
   }
 
+  public logout(): Promise<void> {
+    return this.afAuth.auth.signOut();
+  }
+
   private loadUserInfo(user: User): void {
-    this.currentUserInfo = this.afStorage.doc<UserInfo>(`users/${this.currentUser.email}`).valueChanges();
+    this.currentUserInfo = this.afStorage.doc<UserInfo>(`users/${user.email}`).valueChanges();
   }
 
   constructor(private afAuth: AngularFireAuth, private afStorage: AngularFirestore) {
     afAuth.user.subscribe((user) => {
-      this.currentUser = user
-      this.loadUserInfo(user);
+      if(user){
+        this.loadUserInfo(user);
+      } else {
+        this.currentUserInfo = null;
+      }
     });
   }
 }
