@@ -10,13 +10,15 @@ import { Observable } from 'rxjs';
 })
 export class UserService {
 
-  currentUser: User;
-  currentUserInfo: UserInfo;
+  private currentUser: User;
+  private currentUserInfo: Observable<UserInfo>;
+
+  public getCurrentUserInfo(): Observable<UserInfo> {
+    return this.currentUserInfo;
+  }
 
   private loadUserInfo(user: User): void {
-    // let query: Observable<UserInfo> = this.afStorage.collection<UserInfo>('users', ref => ref.where('email', '==', this.currentUser.email)).get();
-    let doc: Observable<UserInfo> = this.afStorage.doc<UserInfo>(`users/${this.currentUser.email}`).valueChanges();
-    doc.subscribe(data => console.log(data));
+    this.currentUserInfo = this.afStorage.doc<UserInfo>(`users/${this.currentUser.email}`).valueChanges();
   }
 
   constructor(private afAuth: AngularFireAuth, private afStorage: AngularFirestore) {
