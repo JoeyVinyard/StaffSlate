@@ -1,0 +1,13 @@
+table {
+  width: 100%;
+}
+
+.firstName {
+    width: 15%;
+    min-width: 100px;
+}
+
+.lastName {
+    width: 90%;
+    min-width: 100px;
+}
