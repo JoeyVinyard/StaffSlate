@@ -1,7 +1,3 @@
-.spacing {
-    margin: 10px;
-}
-
 .sidenav {
     width: 200px;
 }
@@ -9,6 +5,7 @@
 .sidenav-content {
     background-color: transparent;
 }
+
 .sidenav-container {
     background-color: transparent;
     width: 100%;
