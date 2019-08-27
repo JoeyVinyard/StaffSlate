@@ -2,6 +2,14 @@
     margin-top: 50px;
 }
 
+.content {
+    cursor: pointer;
+}
+
+.content:hover {
+    background-color: #EEE;
+}
+
 .icon {
     text-align: center;
     font-size: 120px;
