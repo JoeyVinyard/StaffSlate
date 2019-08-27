@@ -19,6 +19,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon'
+import { MatTableModule } from '@angular/material/table'; 
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu'; 
 
 // Config Files
 import { appRoutes } from "./routes";
@@ -34,6 +37,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { EmployeesComponent } from './components/pages/employees/employees.component';
 import { SchedulesComponent } from './components/pages/schedules/schedules.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
+import { EmployeeComponent } from './components/pages/employee/employee.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +48,8 @@ import { SettingsComponent } from './components/pages/settings/settings.componen
     ToolbarComponent,
     EmployeesComponent,
     SchedulesComponent,
-    SettingsComponent
+    SettingsComponent,
+    EmployeeComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +64,9 @@ import { SettingsComponent } from './components/pages/settings/settings.componen
     MatToolbarModule,
     MatSidenavModule,
     MatIconModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatMenuModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireStorageModule,
