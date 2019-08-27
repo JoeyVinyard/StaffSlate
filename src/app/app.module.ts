@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Angular Fire Imports
 import { AngularFireModule } from '@angular/fire';
@@ -30,6 +31,9 @@ import { DashboardComponent } from './components/pages/dashboard/dashboard.compo
 import { SidenavComponent } from './components/core/sidenav/sidenav.component';
 import { ToolbarComponent } from './components/core/toolbar/toolbar.component';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { EmployeesComponent } from './components/pages/employees/employees.component';
+import { SchedulesComponent } from './components/pages/schedules/schedules.component';
+import { SettingsComponent } from './components/pages/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +41,10 @@ import { AngularFirestore } from '@angular/fire/firestore';
     LoginComponent,
     DashboardComponent,
     SidenavComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    EmployeesComponent,
+    SchedulesComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +61,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
     MatIconModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    FlexLayoutModule
   ],
   providers: [
     AngularFireAuthGuard,
