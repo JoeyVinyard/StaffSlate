@@ -4,6 +4,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { User } from 'firebase';
 import { UserInfo } from '../models/user-info';
 import { Observable } from 'rxjs';
+import { LocationService } from './location.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +25,11 @@ export class UserService {
     this.currentUserInfo = this.afStorage.doc<UserInfo>(`users/${user.email}`).valueChanges();
   }
 
-  constructor(private afAuth: AngularFireAuth, private afStorage: AngularFirestore) {
+  constructor(private afAuth: AngularFireAuth, private afStorage: AngularFirestore, private locations: LocationService) {
     afAuth.user.subscribe((user) => {
       if(user){
         this.loadUserInfo(user);
+        locations.loadLocations(user);
       } else {
         this.currentUserInfo = null;
       }
