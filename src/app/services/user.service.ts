@@ -29,7 +29,9 @@ export class UserService {
     afAuth.user.subscribe((user) => {
       if(user){
         this.loadUserInfo(user);
-        locations.loadLocations(user);
+        this.currentUserInfo.subscribe((userInfo) => {
+          locations.loadLocations(userInfo);
+        });
       } else {
         this.currentUserInfo = null;
       }
