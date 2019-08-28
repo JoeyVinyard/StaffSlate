@@ -2,7 +2,7 @@ import { Employee } from './employee';
 import { Schedule } from './schedule';
 
 export interface Location {
-    employees: Employee[];
-    schedules: Schedule[];
+    employees: Map<string, Employee>;
+    schedules: Map<string, Schedule>;
     name: string;
 }

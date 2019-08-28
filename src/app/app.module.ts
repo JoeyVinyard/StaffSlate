@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatTableModule } from '@angular/material/table'; 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu'; 
+import { MatSelectModule } from '@angular/material/select'; 
 
 // Config Files
 import { appRoutes } from "./routes";
@@ -67,6 +68,7 @@ import { EmployeeComponent } from './components/pages/employee/employee.componen
     MatTableModule,
     MatPaginatorModule,
     MatMenuModule,
+    MatSelectModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireStorageModule,
