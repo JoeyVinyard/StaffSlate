@@ -1,5 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatSidenav } from '@angular/material';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +6,5 @@ import { MatSidenav } from '@angular/material';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
+  constructor(){}
 }
