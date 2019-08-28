@@ -1,4 +1,11 @@
 <div class="container">
+    <mat-form-field>
+        <mat-select (selectionChange)="location.setCurrentLocation($event.value)" [value]="location.getCurrentLocationKey()">
+            <mat-option *ngFor="let loc of location.getLocations() | keyvalue" [value]="loc.key">
+                {{loc.value.label}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <div fxLayoutAlign="center center">
         <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="15px" fxFlex.xs="90%" fxFlex.sm="75%" fxFlex="50%">
             <mat-card class="content"  routerLink="/employees" fxFlex>
