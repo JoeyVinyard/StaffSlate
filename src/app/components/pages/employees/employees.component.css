@@ -8,6 +8,11 @@ table {
 }
 
 .lastName {
-    width: 90%;
+    width: 25%;
     min-width: 100px;
+}
+
+.email {
+  width: 65%;
+  min-width: 100px;
 }
