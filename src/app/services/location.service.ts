@@ -48,7 +48,7 @@ export class LocationService {
             userInfo.locations.forEach((locationKey) => {
                 this.locationsCollection.doc<Location>(locationKey).valueChanges().subscribe((locationData) => {
                     locationData.employees = new Map();
-                    this.afs.collection<Employee>(`locations/${location}/employees`).snapshotChanges().subscribe((employeeSnapshot) => {
+                    this.afs.collection<Employee>(`locations/${locationKey}/employees`).snapshotChanges().subscribe((employeeSnapshot) => {
                         employeeSnapshot.forEach((employeeData) => {
                             this.parseLocation(employeeData, locationKey, locationData);
                             res();
