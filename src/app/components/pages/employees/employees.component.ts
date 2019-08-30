@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Employee } from 'src/app/models/employee';
+import { Employee, DisplayedEmployee } from 'src/app/models/employee';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { LocationService } from 'src/app/services/location.service';
 
@@ -10,18 +10,25 @@ import { LocationService } from 'src/app/services/location.service';
 })
 export class EmployeesComponent {
 
-  employees: Employee[];
-
-  dataSource = new MatTableDataSource<Employee>();
+  dataSource = new MatTableDataSource<DisplayedEmployee>();
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'action'];
 
-  manage(employee: Employee): void {
+  manage(employee: DisplayedEmployee): void {
     console.log(employee);
   }
 
   constructor(private locationService: LocationService) {
-    locationService.status.subscribe(() => {
-      console.log("Finished");
+    this.locationService.status.subscribe((fetched: boolean) => {
+      if(fetched) {
+        this.dataSource.data = Array.from(this.locationService.getCurrentLocation().employees).map((emp) => {
+          return {
+            firstName: emp[1].firstName,
+            lastName: emp[1].lastName,
+            email: emp[1].email,
+            id: emp[0]
+          } as DisplayedEmployee
+        });
+      }
     });
   }
 
