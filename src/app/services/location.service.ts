@@ -33,12 +33,13 @@ export class LocationService {
         this.currentLocationKey = key;
     }
     
-    private parseLocation(employeeData: DocumentChangeAction<Employee>, locationKey: string, locationData: Location): void {
+    private parseLocation(employeeData: DocumentChangeAction<Employee>, locationKey: string, locationData: Location, res: (value?: void |PromiseLike<void>) => void): void {
         locationData.employees.set(employeeData.payload.doc.id, employeeData.payload.doc.data());
         this.locations.set(locationKey, locationData);
         if (this.currentLocation == null) {
             this.setCurrentLocation(locationKey);
         }
+        res();
     }
 
     public loadLocations(userInfo: UserInfo): void {
@@ -49,10 +50,7 @@ export class LocationService {
                 this.locationsCollection.doc<Location>(locationKey).valueChanges().subscribe((locationData) => {
                     locationData.employees = new Map();
                     this.afs.collection<Employee>(`locations/${locationKey}/employees`).snapshotChanges().subscribe((employeeSnapshot) => {
-                        employeeSnapshot.forEach((employeeData) => {
-                            this.parseLocation(employeeData, locationKey, locationData);
-                            res();
-                        });
+                        employeeSnapshot.forEach((employeeData) => this.parseLocation(employeeData, locationKey, locationData, res));
                     });
                 });
             });
