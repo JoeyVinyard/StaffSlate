@@ -6,11 +6,12 @@
 .buttons {
   width: 100%;
   margin: 10px 0;
-  display: flex;
-  justify-content: space-between;
+
 }
 
 .buttons button {
+  float: right;
+  margin-top: 10px;
   height: 40px;
 }
 
