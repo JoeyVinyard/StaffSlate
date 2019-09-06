@@ -8,5 +8,5 @@ import { LocationService } from 'src/app/services/location.service';
 })
 export class DashboardComponent {
 
-  constructor(private location: LocationService) { }
+  constructor() { }
 }

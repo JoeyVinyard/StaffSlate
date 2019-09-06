@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } fr
 import { Location } from '../models/location';
 import { UserInfo } from '../models/user-info';
 import { Employee } from '../models/employee';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -11,52 +11,63 @@ import { BehaviorSubject } from 'rxjs';
 export class LocationService {
     
     private locationsCollection:AngularFirestoreCollection<Location> = this.afs.collection("locations");
-    private locations: Map<string, Location> = new Map();
-    private currentLocation: Location = null;
-    private currentLocationKey: string = null;
-    public status: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private locationsMap: Map<string, Location> = new Map();
+    private currentLocationKey: Subject<string> = new Subject();
+    private cachedCurrentLocationKey: string = null;
+    private currentLocation: Subject<Location> = new Subject();
+    private locations: Subject<Map<string, Location>> = new Subject();
     
-    public getLocations(): Map<string, Location> {
+    public getLocations(): Subject<Map<string, Location>> {
         return this.locations;
     }
     
-    public getCurrentLocationKey(): string {
+    public getCurrentLocationKey(): Subject<string> {
         return this.currentLocationKey
     }
     
-    public getCurrentLocation(): Location {
+    public getCurrentLocation(): Subject<Location> {
         return this.currentLocation;
     }
     
     public setCurrentLocation(key: string): void {
-        this.currentLocation = this.locations.get(key);
-        this.currentLocationKey = key;
+        this.currentLocation.next(this.locationsMap.get(key));
+        this.cachedCurrentLocationKey = key;
+        this.currentLocationKey.next(key);
+    }
+
+    public addEmployeeToCurrentLocation(employee: Employee): Promise<void> {
+        return new Promise((res, rej) => {
+            this.afs.collection(`locations/${this.cachedCurrentLocationKey}/employees`).add(employee)
+            .then(() => res())
+            .catch(() => rej());
+        });
     }
     
-    private parseLocation(employeeData: DocumentChangeAction<Employee>, locationKey: string, locationData: Location, res: (value?: void |PromiseLike<void>) => void): void {
+    private parseLocation(employeeData: DocumentChangeAction<Employee>, locationKey: string, locationData: Location): void {
         locationData.employees.set(employeeData.payload.doc.id, employeeData.payload.doc.data());
-        this.locations.set(locationKey, locationData);
-        if (this.currentLocation == null) {
-            this.setCurrentLocation(locationKey);
-        }
-        res();
+        this.locationsMap.set(locationKey, locationData);
     }
 
     public loadLocations(userInfo: UserInfo): void {
-        this.locations.clear();
-        let locationFetchStatus: Promise<void>[] = [];
-        locationFetchStatus.push(new Promise((res, rej) => {
-            userInfo.locations.forEach((locationKey) => {
-                this.locationsCollection.doc<Location>(locationKey).valueChanges().subscribe((locationData) => {
-                    locationData.employees = new Map();
-                    this.afs.collection<Employee>(`locations/${locationKey}/employees`).snapshotChanges().subscribe((employeeSnapshot) => {
-                        employeeSnapshot.forEach((employeeData) => this.parseLocation(employeeData, locationKey, locationData, res));
-                    });
+        this.locationsMap.clear();
+        userInfo.locations.forEach((locationKey) => {
+            this.locationsCollection.doc<Location>(locationKey).valueChanges().subscribe((locationData) => {
+                locationData.employees = new Map();
+                this.afs.collection<Employee>(`locations/${locationKey}/employees`).snapshotChanges().subscribe((employeeSnapshot) => {
+                    employeeSnapshot.forEach((employeeData) => this.parseLocation(employeeData, locationKey, locationData));
+                    this.locations.next(this.locationsMap);
                 });
             });
-        }));
-        Promise.all(locationFetchStatus).then(() => this.status.next(true));
+        });
     }
-    
-    constructor(private afs: AngularFirestore) {}
+
+    constructor(private afs: AngularFirestore) {
+        this.getLocations().subscribe((locations) => {
+            if(locations.size > 0) {
+                this.setCurrentLocation(locations.keys().next().value);
+            } else {
+                this.setCurrentLocation("");
+            }
+        })
+    }
 }

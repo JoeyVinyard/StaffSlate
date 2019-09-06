@@ -1,13 +1,13 @@
 <div class="container">
     <div class="buttons">
         <mat-form-field>
-            <mat-select (selectionChange)="locationService.setCurrentLocation($event.value)" [value]="locationService.getCurrentLocationKey()">
-                <mat-option *ngFor="let loc of locationService.getLocations() | keyvalue" [value]="loc.key">
+            <mat-select (selectionChange)="locationService.setCurrentLocation($event.value)" [value]="locationService.getCurrentLocationKey() | async">
+                <mat-option *ngFor="let loc of locationService.getLocations() | async | keyvalue" [value]="loc.key">
                     {{loc.value.label}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <button mat-raised-button color="primary">Add Employee</button>
+        <button mat-raised-button color="primary" (click)="openNewEmployeeDialog()">Add Employee</button>
     </div>
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource">
