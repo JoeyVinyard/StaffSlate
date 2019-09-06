@@ -37,7 +37,7 @@
                     </button>
                     <mat-menu #menu="matMenu">
                         <button mat-menu-item (click)="manage(employee)">Manage</button>
-                        <button mat-menu-item>Delete</button>
+                        <button mat-menu-item (click)="delete(employee)">Delete</button>
                     </mat-menu>
                 </td>
             </ng-container>

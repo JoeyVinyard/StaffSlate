@@ -42,6 +42,14 @@ export class LocationService {
             .catch(() => rej());
         });
     }
+
+    public deleteEmployeeFromCurrentLocation(employeeId: string): Promise<void> {
+        return new Promise((res, rej) => {
+            this.afs.collection(`locations/${this.cachedCurrentLocationKey}/employees`).doc(employeeId).delete()
+            .then(() => res())
+            .catch(() => rej());
+        });
+    }
     
     private parseLocation(employeeData: DocumentChangeAction<Employee>, locationKey: string, locationData: Location): void {
         locationData.employees.set(employeeData.payload.doc.id, employeeData.payload.doc.data());
