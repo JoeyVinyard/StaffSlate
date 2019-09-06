@@ -32,6 +32,18 @@ export class EmployeesComponent {
     console.log(employee);
   }
 
+  private delete(employee: DisplayedEmployee): void {
+    this.locationService.deleteEmployeeFromCurrentLocation(employee.id).then(() => {
+        this.snackbar.open("Employee succesfully deleted.", "Dismiss", {
+          duration: 5000
+        });
+    }).catch(() => {
+      this.snackbar.open("Error deleting employee, please try again later.", "Dismiss", {
+        duration: 5000
+      });
+    })
+  }
+
   private parseEmployees(location: Location): void {
     this.dataSource.data = Array.from(location.employees).map((emp) => {
       return {
