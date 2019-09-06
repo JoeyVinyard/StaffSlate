@@ -41,21 +41,27 @@ export class EmployeesComponent {
         id: emp[0]
       } as DisplayedEmployee
     });
+    this.snackbar.dismiss();
   }
 
   private addEmployeeResult(success: boolean): void {
     if(success) {
-      this.addEmployeeSnackBar.open("Employee succesfully added.", "Dismiss", {
+      this.snackbar.open("Employee succesfully added.", "Dismiss", {
         duration: 5000
       });
     } else {
-      this.addEmployeeSnackBar.open("Error adding employee, please try again later.", "Dismiss", {
+      this.snackbar.open("Error adding employee, please try again later.", "Dismiss", {
         duration: 5000
       });
     }
   }
 
-  constructor(private locationService: LocationService, public dialog: MatDialog, public addEmployeeSnackBar: MatSnackBar) {
+  private filter(f: string): void {
+    this.dataSource.filter = f.trim().toLowerCase();
+  }
+
+  constructor(private locationService: LocationService, public dialog: MatDialog, public snackbar: MatSnackBar) {
+    this.snackbar.open("Loading Employees...", "Dismiss");
     this.locationService.getCurrentLocation().subscribe(this.parseEmployees.bind(this));
   }
 

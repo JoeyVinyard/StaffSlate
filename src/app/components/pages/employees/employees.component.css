@@ -10,9 +10,18 @@
 }
 
 .buttons button {
-  float: right;
   margin-top: 10px;
   height: 40px;
+  width: 10%;
+}
+
+.select {
+  width: 10%;
+}
+
+.search {
+  margin: 0 10%;
+  width:60%;
 }
 
 table {
