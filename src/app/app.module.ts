@@ -14,7 +14,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 // Material Imports
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material';
+import { MatInputModule, MatDialog } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -22,7 +22,9 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatTableModule } from '@angular/material/table'; 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu'; 
-import { MatSelectModule } from '@angular/material/select'; 
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Config Files
 import { appRoutes } from "./routes";
@@ -39,6 +41,7 @@ import { EmployeesComponent } from './components/pages/employees/employees.compo
 import { SchedulesComponent } from './components/pages/schedules/schedules.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
 import { EmployeeComponent } from './components/pages/employee/employee.component';
+import { NewEmployeeDialogComponent } from './components/pages/employees/new-employee-dialog/new-employee-dialog.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +53,8 @@ import { EmployeeComponent } from './components/pages/employee/employee.componen
     EmployeesComponent,
     SchedulesComponent,
     SettingsComponent,
-    EmployeeComponent
+    EmployeeComponent,
+    NewEmployeeDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -69,14 +73,20 @@ import { EmployeeComponent } from './components/pages/employee/employee.componen
     MatPaginatorModule,
     MatMenuModule,
     MatSelectModule,
+    MatDialogModule,
+    MatSnackBarModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireStorageModule,
     FlexLayoutModule
   ],
+  entryComponents: [
+    NewEmployeeDialogComponent
+  ],
   providers: [
     AngularFireAuthGuard,
-    AngularFirestore
+    AngularFirestore,
+    MatDialog
   ],
   bootstrap: [AppComponent]
 })
