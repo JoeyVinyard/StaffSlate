@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
@@ -14,4 +15,10 @@ export class SidenavComponent {
     this.sidenav.toggle();
   }
 
+  navigate(link: string) {
+    this.router.navigateByUrl(link);
+    this.sidenav.close();
+  }
+
+  constructor(private router: Router){}
 }
