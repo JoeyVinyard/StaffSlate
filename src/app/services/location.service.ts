@@ -3,7 +3,8 @@ import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } fr
 import { Location } from '../models/location';
 import { UserInfo } from '../models/user-info';
 import { Employee } from '../models/employee';
-import { Subject } from 'rxjs';
+import { Subject, Observable, combineLatest } from 'rxjs';
+import { Schedule } from '../models/schedule';
 
 @Injectable({
     providedIn: 'root'
@@ -51,23 +52,32 @@ export class LocationService {
         });
     }
     
-    private parseLocationEmployees(employeeData: DocumentChangeAction<Employee>, locationData: Location): void {
+    private parseLocationEmployee(employeeData: DocumentChangeAction<Employee>, locationData: Location): void {
         locationData.employees.set(employeeData.payload.doc.id, employeeData.payload.doc.data());
+    }
+
+    private parseLocationSchedule(scheduleData: DocumentChangeAction<Schedule>, locationData: Location): void {
+        locationData.schedules.set(scheduleData.payload.doc.id, scheduleData.payload.doc.data());
     }
 
     public loadLocations(userInfo: UserInfo): void {
         this.locationsMap.clear();
         userInfo.locations.forEach((locationKey) => {
-            this.locationsCollection.doc<Location>(locationKey).valueChanges().subscribe((locationData) => {
-                console.log(locationData);
-                // locationData.employees = new Map();
-                // this.afs.collection<Employee>(`locations/${locationKey}/employees`).snapshotChanges().subscribe((employeeSnapshot) => {
-                //     console.log("updating")
-                //     locationData.employees.clear();
-                //     employeeSnapshot.forEach((employeeData) => this.parseLocationEmployees(employeeData, locationData));
-                // });
-                this.locationsMap.set(locationKey, locationData);
-                this.locations.next(this.locationsMap);
+            let locationDoc = this.locationsCollection.doc<Location>(locationKey);
+            locationDoc.valueChanges().subscribe((locationData) => {
+                locationData.employees = new Map();
+                locationData.schedules = new Map();
+                let combined = combineLatest(
+                    locationDoc.collection<Employee>("employees").snapshotChanges(),
+                    locationDoc.collection<Schedule>("schedules").snapshotChanges()
+                );
+                combined.subscribe(([employees, schedules]) => {
+                    locationData.employees.clear();
+                    employees.forEach((employeeData) => this.parseLocationEmployee(employeeData, locationData));
+                    schedules.forEach((scheduleData) => this.parseLocationSchedule(scheduleData, locationData));
+                    this.locationsMap.set(locationKey, locationData);
+                    this.locations.next(this.locationsMap);
+                });
             });
         });
     }
