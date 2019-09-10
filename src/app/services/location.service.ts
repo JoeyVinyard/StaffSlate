@@ -51,9 +51,8 @@ export class LocationService {
         });
     }
     
-    private parseLocation(employeeData: DocumentChangeAction<Employee>, locationKey: string, locationData: Location): void {
+    private parseLocation(employeeData: DocumentChangeAction<Employee>, locationData: Location): void {
         locationData.employees.set(employeeData.payload.doc.id, employeeData.payload.doc.data());
-        this.locationsMap.set(locationKey, locationData);
     }
 
     public loadLocations(userInfo: UserInfo): void {
@@ -62,7 +61,9 @@ export class LocationService {
             this.locationsCollection.doc<Location>(locationKey).valueChanges().subscribe((locationData) => {
                 locationData.employees = new Map();
                 this.afs.collection<Employee>(`locations/${locationKey}/employees`).snapshotChanges().subscribe((employeeSnapshot) => {
-                    employeeSnapshot.forEach((employeeData) => this.parseLocation(employeeData, locationKey, locationData));
+                    locationData.employees.clear();
+                    employeeSnapshot.forEach((employeeData) => this.parseLocation(employeeData, locationData));
+                    this.locationsMap.set(locationKey, locationData);
                     this.locations.next(this.locationsMap);
                 });
             });
