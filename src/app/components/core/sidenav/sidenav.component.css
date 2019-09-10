@@ -1,5 +1,6 @@
 .sidenav {
     width: 200px;
+    display: block;
 }
 
 .sidenav-content {
@@ -23,4 +24,14 @@
 .logo h1 {
     line-height: 4vh;
     margin: 0;
+}
+
+.menu-item {
+    width: 80%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.menu-item span {
+    cursor: pointer;
 }
