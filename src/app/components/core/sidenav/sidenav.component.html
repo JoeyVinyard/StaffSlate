@@ -1,13 +1,12 @@
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav class="sidenav" #sidenav mode="over">
         <div class="logo">
-            <h1>EMS</h1>
+            <h1 fittext>Time Table</h1>
         </div>
+
     </mat-sidenav>
     <mat-sidenav-content class="sidenav-content">
-        <!-- <div class="spacing"> -->
-            <app-toolbar (toggled)="toggle()"></app-toolbar>
-            <ng-content></ng-content>
-        <!-- </div> -->
+        <app-toolbar (toggled)="toggle()"></app-toolbar>
+        <ng-content></ng-content>
     </mat-sidenav-content>
 </mat-sidenav-container>

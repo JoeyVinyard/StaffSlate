@@ -21,14 +21,11 @@
 }
 
 .logo {
-    font-family: 'Lexend Mega', sans-serif;
     text-align: center;
     margin-top: 5vh;
-    letter-spacing: -5px;
 }
 
 .logo h1 {
-    font-size: 10vh;
     margin: 0;
 }
 
