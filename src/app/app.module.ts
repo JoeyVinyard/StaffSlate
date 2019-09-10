@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { AngularFittextModule } from 'angular-fittext';
 
 // Angular Fire Imports
 import { AngularFireModule } from '@angular/fire';
@@ -62,6 +63,7 @@ import { NewEmployeeDialogComponent } from './components/pages/employees/new-emp
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
+    AngularFittextModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,

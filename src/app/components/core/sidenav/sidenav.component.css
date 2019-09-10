@@ -13,14 +13,14 @@
 }
 
 .logo {
-    font-family: 'Lexend Mega', sans-serif;
-    letter-spacing: -2px;
     text-align: center;
-    margin-top: 1vh;
+    margin: 2vh auto;
+    padding-bottom: 10px;
+    width: 90%;
+    border-bottom: 1px solid #BBB;
 }
 
 .logo h1 {
-    font-size: 4vh;
     line-height: 4vh;
     margin: 0;
 }
