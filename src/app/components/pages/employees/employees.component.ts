@@ -45,6 +45,9 @@ export class EmployeesComponent {
   }
 
   private parseEmployees(location: Location): void {
+    if(!location){
+      return;
+    }
     this.dataSource.data = Array.from(location.employees).map((emp) => {
       return {
         firstName: emp[1].firstName,

@@ -1,9 +1,9 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/firestore';
 import { Location } from '../models/location';
 import { UserInfo } from '../models/user-info';
 import { Employee } from '../models/employee';
-import { Subject, Observable, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { Schedule } from '../models/schedule';
 
 @Injectable({
@@ -13,20 +13,20 @@ export class LocationService {
     
     private locationsCollection:AngularFirestoreCollection<Location> = this.afs.collection("locations");
     private locationsMap: Map<string, Location> = new Map();
-    private currentLocationKey: Subject<string> = new Subject();
+    private currentLocationKey: BehaviorSubject<string> = new BehaviorSubject("");
     private cachedCurrentLocationKey: string = null;
-    private currentLocation: Subject<Location> = new Subject();
-    private locations: Subject<Map<string, Location>> = new Subject();
+    private currentLocation: BehaviorSubject<Location> = new BehaviorSubject(null);
+    private locations: BehaviorSubject<Map<string, Location>> = new BehaviorSubject(null);
     
-    public getLocations(): Subject<Map<string, Location>> {
+    public getLocations(): BehaviorSubject<Map<string, Location>> {
         return this.locations;
     }
     
-    public getCurrentLocationKey(): Subject<string> {
+    public getCurrentLocationKey(): BehaviorSubject<string> {
         return this.currentLocationKey
     }
     
-    public getCurrentLocation(): Subject<Location> {
+    public getCurrentLocation(): BehaviorSubject<Location> {
         return this.currentLocation;
     }
     
@@ -84,10 +84,12 @@ export class LocationService {
 
     constructor(private afs: AngularFirestore) {
         this.getLocations().subscribe((locations) => {
-            if(locations.size > 0) {
-                this.setCurrentLocation(locations.keys().next().value);
-            } else {
-                this.setCurrentLocation("");
+            if(locations){
+                if(locations.size > 0) {
+                    this.setCurrentLocation(locations.keys().next().value);
+                } else {
+                    this.setCurrentLocation("");
+                }
             }
         })
     }
