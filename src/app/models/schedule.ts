@@ -1,6 +1,6 @@
 import { Sheet } from './sheet';
 
 export interface Schedule {
-    sheets: Sheet[];
+    sheets: Map<string, Sheet>;
     label: string;
 }
