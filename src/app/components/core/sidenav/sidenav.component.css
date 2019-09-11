@@ -15,7 +15,7 @@
 
 .logo {
     text-align: center;
-    margin: 2vh auto;
+    margin: 2vh auto 0 auto;
     padding-bottom: 10px;
     width: 90%;
     border-bottom: 1px solid #BBB;
@@ -30,8 +30,18 @@
     width: 80%;
     text-align: center;
     margin: 0 auto;
+    padding: 10px 0;
+    border-bottom: 1px solid #BBB;
 }
 
-.menu-item span {
+.menu-item:hover {
+    text-shadow: 1px 1px 2px #CCC;
+}
+
+.menu-item-text {
     cursor: pointer;
+}
+
+.menu-item:active{
+    transform: translateY(1px);
 }

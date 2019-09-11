@@ -27,6 +27,18 @@ export class EmployeesComponent {
       }
     });
   }
+
+  private addEmployeeResult(success: boolean): void {
+    if (success) {
+      this.snackbar.open("Employee succesfully added.", "Dismiss", {
+        duration: 5000
+      });
+    } else {
+      this.snackbar.open("Error adding employee, please try again later.", "Dismiss", {
+        duration: 5000
+      });
+    }
+  }
   
   private manage(employee: DisplayedEmployee): void {
     console.log(employee);
@@ -45,29 +57,16 @@ export class EmployeesComponent {
   }
 
   private parseEmployees(location: Location): void {
-    if(!location){
-      return;
-    }
-    this.dataSource.data = Array.from(location.employees).map((emp) => {
-      return {
-        firstName: emp[1].firstName,
-        lastName: emp[1].lastName,
-        email: emp[1].email,
-        id: emp[0]
-      } as DisplayedEmployee
-    });
-    this.snackbar.dismiss();
-  }
-
-  private addEmployeeResult(success: boolean): void {
-    if(success) {
-      this.snackbar.open("Employee succesfully added.", "Dismiss", {
-        duration: 5000
+    if(location){
+      this.dataSource.data = Array.from(location.employees).map((emp) => {
+        return {
+          firstName: emp[1].firstName,
+          lastName: emp[1].lastName,
+          email: emp[1].email,
+          id: emp[0]
+        } as DisplayedEmployee
       });
-    } else {
-      this.snackbar.open("Error adding employee, please try again later.", "Dismiss", {
-        duration: 5000
-      });
+      this.snackbar.dismiss();
     }
   }
 

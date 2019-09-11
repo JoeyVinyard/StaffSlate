@@ -1,49 +1,39 @@
 <div class="container">
     <div class="buttons">
-        <!-- <mat-form-field class="select">
+        <mat-form-field class="select">
             <mat-select (selectionChange)="locationService.setCurrentLocation($event.value)" [value]="locationService.getCurrentLocationKey() | async">
                 <mat-option *ngFor="let loc of locationService.getLocations() | async | keyvalue" [value]="loc.key">
                     {{loc.value.label}}
                 </mat-option>
             </mat-select>
-        </mat-form-field> -->
-        <!-- <mat-form-field class="search">
-            <input type="search" matInput (input)="filter($event.target.value)" placeholder="Search Employees">
-        </mat-form-field> -->
-        <!-- <button mat-raised-button color="primary" (click)="openNewEmployeeDialog()">New Schedule</button> -->
+        </mat-form-field>
+        <mat-form-field class="search">
+            <input type="search" matInput (input)="filter($event.target.value)" placeholder="Search Schedules">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="openNewScheduleDialog()">New Schedule</button>
     </div>
     <div class="mat-elevation-z8">
-        <!-- <table mat-table [dataSource]="dataSource">
-            <ng-container matColumnDef="firstName">
-                <th mat-header-cell class="firstName" *matHeaderCellDef> First Name </th>
-                <td mat-cell *matCellDef="let employee"> {{employee.firstName}} </td>
-            </ng-container>
-            
-            <ng-container matColumnDef="lastName">
-                <th mat-header-cell class="lastName" *matHeaderCellDef> Last Name </th>
-                <td mat-cell *matCellDef="let employee"> {{employee.lastName}} </td>
-            </ng-container>
-            
-            <ng-container matColumnDef="email">
-                <th mat-header-cell class="email" *matHeaderCellDef> Email </th>
-                <td mat-cell *matCellDef="let employee"> {{employee.email}} </td>
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell class="name" *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.label}} </td>
             </ng-container>
             
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef> Action </th>
-                <td mat-cell *matCellDef="let employee">
+                <td mat-cell *matCellDef="let schedule">
                     <button mat-button [matMenuTriggerFor]="menu">
                         <mat-icon class="icon">more_horiz</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="manage(employee)">Manage</button>
-                        <button mat-menu-item (click)="delete(employee)">Delete</button>
+                        <button mat-menu-item (click)="edit(schedule)">Manage</button>
+                        <button mat-menu-item (click)="delete(schedule)">Delete</button>
                     </mat-menu>
                 </td>
             </ng-container>
             
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table> -->
+        </table>
     </div>
 </div>
