@@ -38,7 +38,7 @@ export class LocationService {
 
     public addEmployeeToCurrentLocation(employee: Employee): Promise<void> {
         return new Promise((res, rej) => {
-            this.afs.collection(`locations/${this.cachedCurrentLocationKey}/employees`).add(employee)
+            this.locationsCollection.doc(this.cachedCurrentLocationKey).collection("employees").add(employee)
             .then(() => res())
             .catch(() => rej());
         });
@@ -46,12 +46,28 @@ export class LocationService {
 
     public deleteEmployeeFromCurrentLocation(employeeId: string): Promise<void> {
         return new Promise((res, rej) => {
-            this.afs.collection(`locations/${this.cachedCurrentLocationKey}/employees`).doc(employeeId).delete()
+            this.locationsCollection.doc(this.cachedCurrentLocationKey).collection("employees").doc(employeeId).delete()
             .then(() => res())
             .catch(() => rej());
         });
     }
+
+    public addScheduleToCurrentLocation(schedule: Schedule): Promise<void> {
+        return new Promise((res, rej) => {
+            this.locationsCollection.doc(this.cachedCurrentLocationKey).collection("schedules").add(schedule)
+                .then(() => res())
+                .catch(() => rej());
+        });
+    }
     
+    public deleteScheduleFromCurrentLocation(scheduleId: string): Promise<void> {
+        return new Promise((res, rej) => {
+            this.locationsCollection.doc(this.cachedCurrentLocationKey).collection("schedules").doc(scheduleId).delete()
+                .then(() => res())
+                .catch(() => rej());
+        });
+    }
+
     private parseLocationEmployee(employeeData: DocumentChangeAction<Employee>, locationData: Location): void {
         locationData.employees.set(employeeData.payload.doc.id, employeeData.payload.doc.data());
     }
@@ -73,6 +89,7 @@ export class LocationService {
                 );
                 combined.subscribe(([employees, schedules]) => {
                     locationData.employees.clear();
+                    locationData.schedules.clear();
                     employees.forEach((employeeData) => this.parseLocationEmployee(employeeData, locationData));
                     schedules.forEach((scheduleData) => this.parseLocationSchedule(scheduleData, locationData));
                     this.locationsMap.set(locationKey, locationData);

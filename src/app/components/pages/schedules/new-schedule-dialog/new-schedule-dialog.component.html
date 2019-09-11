@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>New Schedule</h1>
+<div class="content" mat-dialog-content>
+    <mat-form-field>
+        <input matInput [formControl]="label" placeholder="Schedule Name">
+        <mat-error *ngIf="label.invalid">{{getLabelError()}}</mat-error>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" [disabled]="label.invalid"
+        (click)="submit()">Create Schedule</button>
+</div>
