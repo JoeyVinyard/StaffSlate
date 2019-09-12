@@ -44,6 +44,7 @@ import { SettingsComponent } from './components/pages/settings/settings.componen
 import { EmployeeComponent } from './components/pages/employee/employee.component';
 import { NewEmployeeDialogComponent } from './components/pages/employees/new-employee-dialog/new-employee-dialog.component';
 import { NewScheduleDialogComponent } from './components/pages/schedules/new-schedule-dialog/new-schedule-dialog.component';
+import { ScheduleComponent } from './components/pages/schedule/schedule.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { NewScheduleDialogComponent } from './components/pages/schedules/new-sch
     SettingsComponent,
     EmployeeComponent,
     NewEmployeeDialogComponent,
-    NewScheduleDialogComponent
+    NewScheduleDialogComponent,
+    ScheduleComponent
   ],
   imports: [
     BrowserModule,

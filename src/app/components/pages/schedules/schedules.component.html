@@ -16,12 +16,12 @@
         <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="name">
                 <th mat-header-cell class="name" *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let schedule"> {{schedule.label}} </td>
+                <td mat-cell *matCellDef="let schedule"  (click)="openSchedule(schedule)"> {{schedule.label}} </td>
             </ng-container>
             
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef> Action </th>
-                <td mat-cell *matCellDef="let schedule">
+                <td mat-cell *matCellDef="let schedule" (click)="openSchedule(schedule)">
                     <button mat-button [matMenuTriggerFor]="menu">
                         <mat-icon class="icon">more_horiz</mat-icon>
                     </button>

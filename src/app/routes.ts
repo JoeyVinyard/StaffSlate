@@ -5,6 +5,7 @@ import { AngularFireAuthGuard, redirectUnauthorizedTo, redirectLoggedInTo } from
 import { EmployeesComponent } from './components/pages/employees/employees.component';
 import { SchedulesComponent } from './components/pages/schedules/schedules.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
+import { ScheduleComponent } from './components/pages/schedule/schedule.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
@@ -37,6 +38,12 @@ export const appRoutes: Routes = [
     {
         path: "schedules",
         component: SchedulesComponent,
+        canActivate: [AngularFireAuthGuard],
+        data: {authGuardPipe: redirectUnauthorizedToLogin}
+    },
+    {
+        path: "schedule/:locationId/:scheduleId",
+        component: ScheduleComponent,
         canActivate: [AngularFireAuthGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
