@@ -4,6 +4,7 @@ import { Location } from 'src/app/models/location';
 import { DisplayedSchedule, Schedule } from 'src/app/models/schedule';
 import { MatTableDataSource, MatDialog, MatSnackBar } from '@angular/material';
 import { NewScheduleDialogComponent } from './new-schedule-dialog/new-schedule-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-schedules',
@@ -15,13 +16,19 @@ export class SchedulesComponent {
   dataSource = new MatTableDataSource<DisplayedSchedule>();
   displayedColumns: string[] = ['name', 'action'];
 
+
+  private openSchedule(schedule: DisplayedSchedule) {
+    this.locationService.getCurrentLocationKey().subscribe((key) => {
+      this.router.navigate(["schedule", key, schedule.id]);
+    }).unsubscribe();
+  }
+  
   private openNewScheduleDialog(): void {
     const dialogRef = this.dialog.open(NewScheduleDialogComponent, {
       width: '300px',
     });
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
       if (schedule) {
-        console.log(schedule);
         this.locationService.addScheduleToCurrentLocation(schedule)
           .then(() => this.addScheduleResult(true))
           .catch(() => this.addScheduleResult(false));
@@ -70,8 +77,8 @@ export class SchedulesComponent {
     this.dataSource.filter = f.trim().toLowerCase();
   }
 
-  constructor(private locationService: LocationService, public dialog: MatDialog, public snackbar: MatSnackBar) {
-    this.locationService.getCurrentLocation().subscribe(this.parseSchedules.bind(this));
+  constructor(private locationService: LocationService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
     this.snackbar.open("Loading Schedules...", "Dismiss");
+    this.locationService.getCurrentLocation().subscribe(this.parseSchedules.bind(this));
   }
 }
