@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } fr
 import { Location } from '../models/location';
 import { UserInfo } from '../models/user-info';
 import { Employee } from '../models/employee';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Schedule } from '../models/schedule';
 import { Sheet } from '../models/sheet';
 import { UserService } from './user.service';
@@ -13,7 +13,9 @@ import { UserService } from './user.service';
 })
 export class LocationService {
     
-    private currentLocation: Observable<Location>;
+    private currentLocationSub: Subscription;
+    public currentLocation: Subject<Location> = new Subject();
+    public currentLocationKey:string = "";
     // private locationsCollection:AngularFirestoreCollection<Location> = this.afs.collection("locations");
     // private locationsMap: Map<string, Location> = new Map();
     // private currentLocationKey: BehaviorSubject<string> = new BehaviorSubject("");
@@ -114,12 +116,22 @@ export class LocationService {
         // });
     // }
 
-    public loadLocation(locationId: string): Observable<Location> {
-        return this.afs.collection("locations").doc<Location>(locationId).valueChanges();
+    public loadLocation(locationId: string): void {
+        console.log("Loading Location", locationId);
+        if(this.currentLocationSub) {
+            this.currentLocationSub.unsubscribe();
+        }
+        this.currentLocationSub = this.afs.collection("locations").doc<Location>(locationId).valueChanges().subscribe((locationData: Location) => {
+            this.currentLocation.next(new Location(this.afs.collection("locations").doc<Location>(locationId)));
+        });
     }
 
     constructor(private afs: AngularFirestore, private userService: UserService) {
         userService.getCurrentUserInfo().subscribe((userInfo: UserInfo) => {
+            if(userInfo.locations.length > 0) {
+                this.currentLocationKey = userInfo.locations[0].key;
+                this.loadLocation(this.currentLocationKey);
+            }
             console.log(userInfo);
         });
         // this.getLocations().subscribe((locations) => {
