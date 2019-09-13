@@ -4,16 +4,11 @@ import { AngularFirestore, AngularFirestoreDocument, DocumentReference } from '@
 import { Observable } from 'rxjs';
 
 export class Location {
-    employees: Map<string, Employee>;
-    schedules: Map<string, Schedule>;
-    name: string;
     document: AngularFirestoreDocument<Location>;
 
     loadEmployees(): Observable<Employee[]> {
         return this.document.collection<Employee>("employees").valueChanges();
     }
-
-
     
     addEmployee(employee: Employee): Promise<void> {
         return new Promise((res, rej) => {
@@ -23,5 +18,5 @@ export class Location {
         });
     }
 
-    constructor(private afs: AngularFirestore) {}
+    constructor(document: AngularFirestoreDocument<Location>) {}
 }

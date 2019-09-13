@@ -19,25 +19,25 @@ export class SchedulesComponent {
 
 
   private openSchedule(schedule: DisplayedSchedule) {
-    this.locationService.getCurrentLocationKey().subscribe((key) => {
-      this.router.navigate(["schedule", key, schedule.id]);
-    }).unsubscribe();
+    // this.locationService.getCurrentLocationKey().subscribe((key) => {
+    //   this.router.navigate(["schedule", key, schedule.id]);
+    // }).unsubscribe();
   }
   
   private openNewScheduleDialog(): void {
-    const dialogRef = this.dialog.open(NewScheduleDialogComponent, {
-      width: '300px',
-    });
-    dialogRef.afterClosed().subscribe((schedule: Schedule) => {
-      if (schedule) {
-        this.locationService.addScheduleToCurrentLocation(schedule)
-          .then(() => this.addScheduleResult(true))
-          .catch((err) => {
-            console.error(err);
-            this.addScheduleResult(false);
-          });
-      }
-    });
+    // const dialogRef = this.dialog.open(NewScheduleDialogComponent, {
+    //   width: '300px',
+    // });
+    // dialogRef.afterClosed().subscribe((schedule: Schedule) => {
+    //   if (schedule) {
+    //     this.locationService.addScheduleToCurrentLocation(schedule)
+    //       .then(() => this.addScheduleResult(true))
+    //       .catch((err) => {
+    //         console.error(err);
+    //         this.addScheduleResult(false);
+    //       });
+    //   }
+    // });
   }
 
   private addScheduleResult(success: boolean): void {
@@ -53,28 +53,28 @@ export class SchedulesComponent {
   }
 
   private delete(schedule: DisplayedSchedule): void {
-    this.locationService.deleteScheduleFromCurrentLocation(schedule.id).then(() => {
-      this.snackbar.open("Schedule succesfully deleted.", "Dismiss", {
-        duration: 5000
-      });
-    }).catch(() => {
-      this.snackbar.open("Error deleting schedule, please try again later.", "Dismiss", {
-        duration: 5000
-      });
-    })
+    // this.locationService.deleteScheduleFromCurrentLocation(schedule.id).then(() => {
+    //   this.snackbar.open("Schedule succesfully deleted.", "Dismiss", {
+    //     duration: 5000
+    //   });
+    // }).catch(() => {
+    //   this.snackbar.open("Error deleting schedule, please try again later.", "Dismiss", {
+    //     duration: 5000
+    //   });
+    // })
   }
 
   private parseSchedules(location: Location): void {
-    if(location) {
-      this.dataSource.data =  Array.from(location.schedules).map((schedule) => {
-        return {
-          label: schedule[1].label,
-          sheets: schedule[1].sheets,
-          id: schedule[0]
-        } as DisplayedSchedule
-      });
-      this.snackbar.dismiss();
-    }
+    // if(location) {
+    //   this.dataSource.data =  Array.from(location.schedules).map((schedule) => {
+    //     return {
+    //       label: schedule[1].label,
+    //       sheets: schedule[1].sheets,
+    //       id: schedule[0]
+    //     } as DisplayedSchedule
+    //   });
+    //   this.snackbar.dismiss();
+    // }
   }
   
   private filter(f: string): void {
@@ -83,6 +83,6 @@ export class SchedulesComponent {
 
   constructor(private locationService: LocationService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
     this.snackbar.open("Loading Schedules...", "Dismiss");
-    this.locationService.getCurrentLocation().subscribe(this.parseSchedules.bind(this));
+    // this.locationService.getCurrentLocation().subscribe(this.parseSchedules.bind(this));
   }
 }

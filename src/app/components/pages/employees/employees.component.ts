@@ -58,17 +58,17 @@ export class EmployeesComponent {
   // }
 
   private parseEmployees(location: Location): void {
-    if(location){
-      this.dataSource.data = Array.from(location.employees).map((emp) => {
-        return {
-          firstName: emp[1].firstName,
-          lastName: emp[1].lastName,
-          email: emp[1].email,
-          id: emp[0]
-        } as DisplayedEmployee
-      });
-      this.snackbar.dismiss();
-    }
+    // if(location){
+    //   this.dataSource.data = Array.from(location.employees).map((emp) => {
+    //     return {
+    //       firstName: emp[1].firstName,
+    //       lastName: emp[1].lastName,
+    //       email: emp[1].email,
+    //       id: emp[0]
+    //     } as DisplayedEmployee
+    //   });
+    //   this.snackbar.dismiss();
+    // }
   }
 
   private filter(f: string): void {
@@ -77,6 +77,9 @@ export class EmployeesComponent {
 
   constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar) {
     this.snackbar.open("Loading Employees...", "Dismiss");
+    this.locationService.currentLocation.subscribe((location) => {
+      console.log(location);
+    })
     // this.locationService.getCurrentLocation().subscribe(this.parseEmployees.bind(this));
   }
 
