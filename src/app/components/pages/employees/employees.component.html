@@ -1,9 +1,10 @@
 <div class="container">
     <div class="buttons">
         <mat-form-field class="select">
-            <mat-select (selectionChange)="locationService.setCurrentLocation($event.value)" [value]="locationService.getCurrentLocationKey() | async">
-                <mat-option *ngFor="let loc of locationService.getLocations() | async | keyvalue" [value]="loc.key">
-                    {{loc.value.label}}
+            <!-- <mat-select (selectionChange)="test($event)" [value]="(userService.getCurrentUserInfo() | async)?.locations[0].key"> -->
+            <mat-select [value]="(userService.getCurrentUserInfo() | async)?.locations[0].key">
+                <mat-option *ngFor="let loc of (userService.getCurrentUserInfo() | async)?.locations" [value]="loc.key">
+                    {{loc.label}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

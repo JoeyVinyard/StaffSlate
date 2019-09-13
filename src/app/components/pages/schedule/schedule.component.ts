@@ -21,9 +21,9 @@ export class ScheduleComponent {
         if(locations){
           this.currentSchedule = <any>locations.get(locationId).schedules.get(scheduleId);
           this.currentSchedule.id = scheduleId;
-          if(!this.currentSchedule.sheets) {
-            this.currentSchedule.sheets = new Map();
-          }
+          // if(!this.currentSchedule.sheets) {
+          //   this.currentSchedule.sheets = new Map();
+          // }
           console.log(this.currentSchedule);
         }
       });

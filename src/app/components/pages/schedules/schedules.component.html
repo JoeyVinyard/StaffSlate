@@ -21,7 +21,7 @@
             
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef> Action </th>
-                <td mat-cell *matCellDef="let schedule" (click)="openSchedule(schedule)">
+                <td mat-cell *matCellDef="let schedule">
                     <button mat-button [matMenuTriggerFor]="menu">
                         <mat-icon class="icon">more_horiz</mat-icon>
                     </button>

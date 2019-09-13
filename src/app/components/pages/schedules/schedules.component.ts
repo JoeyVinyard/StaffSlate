@@ -5,6 +5,7 @@ import { DisplayedSchedule, Schedule } from 'src/app/models/schedule';
 import { MatTableDataSource, MatDialog, MatSnackBar } from '@angular/material';
 import { NewScheduleDialogComponent } from './new-schedule-dialog/new-schedule-dialog.component';
 import { Router } from '@angular/router';
+import { Sheet } from 'src/app/models/sheet';
 
 @Component({
   selector: 'app-schedules',
@@ -31,7 +32,10 @@ export class SchedulesComponent {
       if (schedule) {
         this.locationService.addScheduleToCurrentLocation(schedule)
           .then(() => this.addScheduleResult(true))
-          .catch(() => this.addScheduleResult(false));
+          .catch((err) => {
+            console.error(err);
+            this.addScheduleResult(false);
+          });
       }
     });
   }
