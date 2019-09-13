@@ -4,7 +4,6 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { User } from 'firebase';
 import { UserInfo } from '../models/user-info';
 import { Observable } from 'rxjs';
-import { LocationService } from './location.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +11,7 @@ import { LocationService } from './location.service';
 export class UserService {
 
   private currentUserInfo: Observable<UserInfo>;
+  private currentUserLocations: Observable<string[]>;
 
   public getCurrentUserInfo(): Observable<UserInfo> {
     return this.currentUserInfo;
@@ -22,16 +22,13 @@ export class UserService {
   }
 
   private loadUserInfo(user: User): void {
-    this.currentUserInfo = this.afStorage.doc<UserInfo>(`users/${user.email}`).valueChanges();
+    this.currentUserInfo = this.afs.collection("users").doc<UserInfo>(user.email).valueChanges();
   }
 
-  constructor(private afAuth: AngularFireAuth, private afStorage: AngularFirestore, private locations: LocationService) {
+  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {
     afAuth.user.subscribe((user) => {
       if(user){
         this.loadUserInfo(user);
-        this.currentUserInfo.subscribe((userInfo) => {
-          locations.loadLocations(userInfo);
-        });
       } else {
         this.currentUserInfo = null;
       }
