@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { DisplayedEmployee, Employee } from 'src/app/models/employee';
-import { MatTableDataSource, MatDialog, MatSnackBar } from '@angular/material';
+import { Component, ViewChild } from '@angular/core';
+import {  Employee } from 'src/app/models/employee';
+import { MatTableDataSource, MatDialog, MatSnackBar, MatSelect } from '@angular/material';
 import { LocationService } from 'src/app/services/location.service';
 import { NewEmployeeDialogComponent } from './new-employee-dialog/new-employee-dialog.component';
 import { Location } from 'src/app/models/location';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-employees',
@@ -12,8 +13,9 @@ import { Location } from 'src/app/models/location';
 })
 export class EmployeesComponent {
 
-  dataSource = new MatTableDataSource<DisplayedEmployee>();
+  dataSource = new MatTableDataSource<Employee>();
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'action'];
+  loadedLocation: Location;
 
   private openNewEmployeeDialog(): void {
     const dialogRef = this.dialog.open(NewEmployeeDialogComponent, {
@@ -21,7 +23,7 @@ export class EmployeesComponent {
     });
     dialogRef.afterClosed().subscribe((employee: Employee) => {
       if(employee) {
-        this.locationService.addEmployeeToCurrentLocation(employee)
+        this.loadedLocation.addEmployee(employee)
         .then(() => this.addEmployeeResult(true))
         .catch(() => this.addEmployeeResult(false));
       }
@@ -40,12 +42,12 @@ export class EmployeesComponent {
     }
   }
   
-  private manage(employee: DisplayedEmployee): void {
+  private manage(employee: Employee): void {
     console.log(employee);
   }
 
-  private delete(employee: DisplayedEmployee): void {
-    this.locationService.deleteEmployeeFromCurrentLocation(employee.id).then(() => {
+  private delete(employee: Employee): void {
+    this.loadedLocation.deleteEmployee(employee.id).then(() => {
         this.snackbar.open("Employee succesfully deleted.", "Dismiss", {
           duration: 5000
         });
@@ -56,27 +58,20 @@ export class EmployeesComponent {
     })
   }
 
-  private parseEmployees(location: Location): void {
-    if(location){
-      this.dataSource.data = Array.from(location.employees).map((emp) => {
-        return {
-          firstName: emp[1].firstName,
-          lastName: emp[1].lastName,
-          email: emp[1].email,
-          id: emp[0]
-        } as DisplayedEmployee
-      });
+  private parseEmployees(employees: Employee[]): void {
+      this.dataSource.data = employees
       this.snackbar.dismiss();
-    }
   }
 
   private filter(f: string): void {
     this.dataSource.filter = f.trim().toLowerCase();
   }
 
-  constructor(private locationService: LocationService, public dialog: MatDialog, public snackbar: MatSnackBar) {
+  constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar) {
     this.snackbar.open("Loading Employees...", "Dismiss");
-    this.locationService.getCurrentLocation().subscribe(this.parseEmployees.bind(this));
+    this.locationService.currentLocation.subscribe((location) => {
+      this.loadedLocation = location;
+      this.loadedLocation.loadEmployees().subscribe(this.parseEmployees.bind(this));
+    });
   }
-
 }

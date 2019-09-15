@@ -1,9 +1,9 @@
 <div class="container">
     <div class="buttons">
         <mat-form-field class="select">
-            <mat-select (selectionChange)="locationService.setCurrentLocation($event.value)" [value]="locationService.getCurrentLocationKey() | async">
-                <mat-option *ngFor="let loc of locationService.getLocations() | async | keyvalue" [value]="loc.key">
-                    {{loc.value.label}}
+            <mat-select (selectionChange)="locationService.loadLocation($event.target.value)"  [value]="(userService.getCurrentUserInfo() | async)?.locations[0].key">
+                <mat-option *ngFor="let loc of (userService.getCurrentUserInfo() | async)?.locations" [value]="loc.key">
+                    {{loc.label}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -21,7 +21,7 @@
             
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef> Action </th>
-                <td mat-cell *matCellDef="let schedule" (click)="openSchedule(schedule)">
+                <td mat-cell *matCellDef="let schedule">
                     <button mat-button [matMenuTriggerFor]="menu">
                         <mat-icon class="icon">more_horiz</mat-icon>
                     </button>

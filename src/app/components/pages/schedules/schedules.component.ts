@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { LocationService } from 'src/app/services/location.service';
 import { Location } from 'src/app/models/location';
-import { DisplayedSchedule, Schedule } from 'src/app/models/schedule';
+import { Schedule } from 'src/app/models/schedule';
 import { MatTableDataSource, MatDialog, MatSnackBar } from '@angular/material';
 import { NewScheduleDialogComponent } from './new-schedule-dialog/new-schedule-dialog.component';
 import { Router } from '@angular/router';
+import { Sheet } from 'src/app/models/sheet';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-schedules',
@@ -13,14 +15,13 @@ import { Router } from '@angular/router';
 })
 export class SchedulesComponent {
 
-  dataSource = new MatTableDataSource<DisplayedSchedule>();
+  dataSource = new MatTableDataSource<Schedule>();
   displayedColumns: string[] = ['name', 'action'];
+  private loadedLocation: Location;
 
 
-  private openSchedule(schedule: DisplayedSchedule) {
-    this.locationService.getCurrentLocationKey().subscribe((key) => {
-      this.router.navigate(["schedule", key, schedule.id]);
-    }).unsubscribe();
+  private openSchedule(schedule: Schedule) {
+      this.router.navigate(["schedule", schedule.id]);
   }
   
   private openNewScheduleDialog(): void {
@@ -29,9 +30,12 @@ export class SchedulesComponent {
     });
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
       if (schedule) {
-        this.locationService.addScheduleToCurrentLocation(schedule)
+        this.loadedLocation.addSchedule(schedule)
           .then(() => this.addScheduleResult(true))
-          .catch(() => this.addScheduleResult(false));
+          .catch((err) => {
+            console.error(err);
+            this.addScheduleResult(false);
+          });
       }
     });
   }
@@ -48,8 +52,8 @@ export class SchedulesComponent {
     }
   }
 
-  private delete(schedule: DisplayedSchedule): void {
-    this.locationService.deleteScheduleFromCurrentLocation(schedule.id).then(() => {
+  private delete(schedule: Schedule): void {
+    this.loadedLocation.deleteSchedule(schedule.id).then(() => {
       this.snackbar.open("Schedule succesfully deleted.", "Dismiss", {
         duration: 5000
       });
@@ -60,25 +64,20 @@ export class SchedulesComponent {
     })
   }
 
-  private parseSchedules(location: Location): void {
-    if(location) {
-      this.dataSource.data =  Array.from(location.schedules).map((schedule) => {
-        return {
-          label: schedule[1].label,
-          sheets: schedule[1].sheets,
-          id: schedule[0]
-        } as DisplayedSchedule
-      });
-      this.snackbar.dismiss();
-    }
+  private parseSchedules(schedules: Schedule[]): void {
+    this.dataSource.data = schedules;
+    this.snackbar.dismiss();
   }
   
   private filter(f: string): void {
     this.dataSource.filter = f.trim().toLowerCase();
   }
 
-  constructor(private locationService: LocationService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
+  constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
     this.snackbar.open("Loading Schedules...", "Dismiss");
-    this.locationService.getCurrentLocation().subscribe(this.parseSchedules.bind(this));
+    this.locationService.currentLocation.subscribe((location) => {
+      this.loadedLocation = location;
+      this.loadedLocation.loadSchedules().subscribe(this.parseSchedules.bind(this));
+    });
   }
 }
