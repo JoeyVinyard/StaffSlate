@@ -1,7 +1,7 @@
 <div class="container">
     <div class="buttons">
         <mat-form-field class="select">
-            <mat-select (selectionChange)="locationService.loadLocation($event.target.value)"  [value]="(userService.getCurrentUserInfo() | async)?.locations[0].key">
+            <mat-select (selectionChange)="locationService.loadLocation($event.value)" [value]="(userService.getCurrentUserInfo() | async)?.locations[0].key">
                 <mat-option *ngFor="let loc of (userService.getCurrentUserInfo() | async)?.locations" [value]="loc.key">
                     {{loc.label}}
                 </mat-option>

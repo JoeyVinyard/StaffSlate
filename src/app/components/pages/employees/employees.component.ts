@@ -59,8 +59,8 @@ export class EmployeesComponent {
   }
 
   private parseEmployees(employees: Employee[]): void {
-      this.dataSource.data = employees
-      this.snackbar.dismiss();
+    this.dataSource.data = employees
+    this.snackbar.dismiss();
   }
 
   private filter(f: string): void {

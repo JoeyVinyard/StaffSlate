@@ -3,15 +3,14 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { User } from 'firebase';
 import { UserInfo } from '../models/user-info';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private currentUserInfo: Observable<UserInfo>;
-  private currentUserLocations: Observable<string[]>;
+  private currentUserInfo: ReplaySubject<UserInfo> = new ReplaySubject(1);
 
   public getCurrentUserInfo(): Observable<UserInfo> {
     return this.currentUserInfo;
@@ -22,7 +21,9 @@ export class UserService {
   }
 
   private loadUserInfo(user: User): void {
-    this.currentUserInfo = this.afs.collection("users").doc<UserInfo>(user.email).valueChanges();
+    this.afs.collection("users").doc<UserInfo>(user.email).valueChanges().subscribe((userInfo) => {
+      this.currentUserInfo.next(userInfo);
+    });
   }
 
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {
