@@ -42,7 +42,7 @@ export const appRoutes: Routes = [
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {
-        path: "schedule/:locationId/:scheduleId",
+        path: "schedule/:scheduleId",
         component: ScheduleComponent,
         canActivate: [AngularFireAuthGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}

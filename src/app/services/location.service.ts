@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/firestore';
 import { Location } from '../models/location';
 import { UserInfo } from '../models/user-info';
-import { Employee } from '../models/employee';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { Schedule } from '../models/schedule';
-import { Sheet } from '../models/sheet';
+import { Subscription, ReplaySubject } from 'rxjs';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -14,7 +11,7 @@ import { UserService } from './user.service';
 export class LocationService {
     
     private currentLocationSub: Subscription;
-    public currentLocation: Subject<Location> = new Subject();
+    public currentLocation: ReplaySubject<Location> = new ReplaySubject(1);
     public currentLocationKey:string = "";
     // private locationsCollection:AngularFirestoreCollection<Location> = this.afs.collection("locations");
     // private locationsMap: Map<string, Location> = new Map();

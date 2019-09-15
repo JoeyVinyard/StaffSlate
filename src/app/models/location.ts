@@ -1,7 +1,7 @@
+import {  AngularFirestoreDocument, DocumentReference } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { Employee } from './employee';
 import { Schedule } from './schedule';
-import { AngularFirestore, AngularFirestoreDocument, DocumentReference } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
 
 export class Location {
     document: AngularFirestoreDocument<Location>;
@@ -9,6 +9,7 @@ export class Location {
     loadEmployees(): Observable<Employee[]> {
         return this.document.collection<Employee>("employees").valueChanges();
     }
+
     
     addEmployee(employee: Employee): Promise<void> {
         return new Promise((res, rej) => {
@@ -18,5 +19,41 @@ export class Location {
         });
     }
 
-    constructor(document: AngularFirestoreDocument<Location>) {}
+    deleteEmployee(employeeId: string): Promise<void> {
+        return new Promise((res, rej) => {
+            this.document.collection("employees").doc(employeeId).delete().then(() => {
+                res();
+            })
+            .catch((err) => {
+                rej(err);
+            });
+        })
+    }
+    
+    loadSchedules(): Observable<Schedule[]> {
+        return this.document.collection<Schedule>("schedules").valueChanges();
+    }
+
+    addSchedule(schedule: Schedule): Promise<void> {
+        return new Promise((res, rej) => {
+            this.document.collection("schedules").add(schedule).then((ref: DocumentReference) => {
+                this.document.collection("schedules").doc(ref.id).update({ id: ref.id });
+            })
+        });
+    }
+
+    deleteSchedule(scheduleId: string): Promise<void> {
+        return new Promise((res, rej) => {
+            this.document.collection("schedules").doc(scheduleId).delete().then(() => {
+                res();
+            })
+                .catch((err) => {
+                    rej(err);
+                });
+        })
+    }
+
+    constructor(document: AngularFirestoreDocument<Location>) {
+        this.document = document;
+    }
 }

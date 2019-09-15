@@ -1,8 +1,7 @@
 <div class="container">
     <div class="buttons">
         <mat-form-field class="select">
-            <!-- <mat-select (selectionChange)="test($event)" [value]="(userService.getCurrentUserInfo() | async)?.locations[0].key"> -->
-            <mat-select [value]="(userService.getCurrentUserInfo() | async)?.locations[0].key">
+            <mat-select (selectionChange)="locationService.loadLocation($event.target.value)" [value]="(userService.getCurrentUserInfo() | async)?.locations[0].key">
                 <mat-option *ngFor="let loc of (userService.getCurrentUserInfo() | async)?.locations" [value]="loc.key">
                     {{loc.label}}
                 </mat-option>
@@ -11,7 +10,7 @@
         <mat-form-field class="search">
             <input type="search" matInput (input)="filter($event.target.value)" placeholder="Search Employees">
         </mat-form-field>
-        <button mat-raised-button color="primary" (click)="openNewEmployeeDialog()">Add Employee</button>
+        <button mat-raised-button color="primary" [disabled]="loadedLocation == null" (click)="openNewEmployeeDialog()">Add Employee</button>
     </div>
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource">
