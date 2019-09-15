@@ -5,7 +5,6 @@ import { Schedule } from 'src/app/models/schedule';
 import { MatTableDataSource, MatDialog, MatSnackBar } from '@angular/material';
 import { NewScheduleDialogComponent } from './new-schedule-dialog/new-schedule-dialog.component';
 import { Router } from '@angular/router';
-import { Sheet } from 'src/app/models/sheet';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({

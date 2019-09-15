@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Schedule } from 'src/app/models/schedule';
 import { LocationService } from 'src/app/services/location.service';
 import { Location } from 'src/app/models/location';
@@ -12,21 +12,20 @@ import { Location } from 'src/app/models/location';
 export class ScheduleComponent {
 
   private currentSchedule: Schedule;
+  private loadedLocation: Location;
 
-  constructor(private locationService: LocationService, private activatedRoute: ActivatedRoute) {
-  //   activatedRoute.paramMap.subscribe((map) => {
-  //     let locationId = map.get("locationId");
-  //     let scheduleId = map.get("scheduleId");
-  //     locationService.getLocations().subscribe((locations: Map<string, Location>) => {
-  //       if(locations){
-  //         this.currentSchedule = <any>locations.get(locationId).schedules.get(scheduleId);
-  //         this.currentSchedule.id = scheduleId;
-  //         // if(!this.currentSchedule.sheets) {
-  //         //   this.currentSchedule.sheets = new Map();
-  //         // }
-  //         console.log(this.currentSchedule);
-  //       }
-  //     });
-  //   });
+  constructor(private locationService: LocationService, private activatedRoute: ActivatedRoute, private router: Router) {
+    activatedRoute.paramMap.subscribe((map) => {
+      let scheduleId = map.get("scheduleId");
+      this.locationService.currentLocation.subscribe((location) => {
+        this.loadedLocation = location;
+        this.loadedLocation.loadSchedule(scheduleId).subscribe((schedule) => {
+          if(!schedule) {
+            router.navigateByUrl("schedules");
+          }
+          this.currentSchedule = schedule;
+        });
+      });
+    });
   }
 }

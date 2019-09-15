@@ -9,13 +9,16 @@ export class Location {
     loadEmployees(): Observable<Employee[]> {
         return this.document.collection<Employee>("employees").valueChanges();
     }
-
     
     addEmployee(employee: Employee): Promise<void> {
         return new Promise((res, rej) => {
             this.document.collection("employees").add(employee).then((ref: DocumentReference) => {
-                this.document.collection("employees").doc(ref.id).update({id: ref.id});
-            })
+                this.document.collection("employees").doc(ref.id).update({ id: ref.id }).then(() => {
+                    res();
+                }).catch((err) => {
+                    rej(err);
+                });
+            });
         });
     }
 
@@ -23,8 +26,7 @@ export class Location {
         return new Promise((res, rej) => {
             this.document.collection("employees").doc(employeeId).delete().then(() => {
                 res();
-            })
-            .catch((err) => {
+            }).catch((err) => {
                 rej(err);
             });
         })
@@ -41,8 +43,12 @@ export class Location {
     addSchedule(schedule: Schedule): Promise<void> {
         return new Promise((res, rej) => {
             this.document.collection("schedules").add(schedule).then((ref: DocumentReference) => {
-                this.document.collection("schedules").doc(ref.id).update({ id: ref.id });
-            })
+                this.document.collection("schedules").doc(ref.id).update({ id: ref.id }).then(() => {
+                    res();
+                }).catch((err) => {
+                    rej(err);
+                });
+            });
         });
     }
 
@@ -50,10 +56,9 @@ export class Location {
         return new Promise((res, rej) => {
             this.document.collection("schedules").doc(scheduleId).delete().then(() => {
                 res();
-            })
-                .catch((err) => {
-                    rej(err);
-                });
+            }).catch((err) => {
+                rej(err);
+            });
         })
     }
 
