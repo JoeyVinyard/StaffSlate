@@ -74,7 +74,7 @@ export class SchedulesComponent {
 
   constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
     this.snackbar.open("Loading Schedules...", "Dismiss");
-    this.locationService.currentLocation.subscribe((location) => {
+    this.locationService.currentLocation.subscribe((location: Location) => {
       this.loadedLocation = location;
       this.loadedLocation.loadSchedules().subscribe(this.parseSchedules.bind(this));
     });

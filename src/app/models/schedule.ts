@@ -1,7 +1,13 @@
-import { Sheet } from './sheet';
+import { AngularFirestoreDocument } from '@angular/fire/firestore';
 
-export interface Schedule {
-    sheets: Map<string, Sheet>;
+export class Schedule {
+    document: AngularFirestoreDocument;
     label: string;
     id: string;
+
+    constructor(scheduleData: Schedule, document: AngularFirestoreDocument) {
+        this.label = scheduleData.label;
+        this.id = scheduleData.id;
+        this.document = document;
+    }
 }

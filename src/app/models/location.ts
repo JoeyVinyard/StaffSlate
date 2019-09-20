@@ -4,6 +4,8 @@ import { Employee } from './employee';
 import { Schedule } from './schedule';
 
 export class Location {
+    label: string = "";
+    id: string = "";
     document: AngularFirestoreDocument<Location>;
 
     loadEmployees(): Observable<Employee[]> {
@@ -30,10 +32,6 @@ export class Location {
                 rej(err);
             });
         })
-    }
-    
-    loadSchedule(scheduleId: string): Observable<Schedule> {
-        return this.document.collection("schedules").doc<Schedule>(scheduleId).valueChanges();
     }
 
     loadSchedules(): Observable<Schedule[]> {
@@ -62,7 +60,9 @@ export class Location {
         })
     }
 
-    constructor(document: AngularFirestoreDocument<Location>) {
+    constructor(locationData: Location, document: AngularFirestoreDocument<Location>) {
+        this.label = locationData.label;
+        this.id = locationData.id;
         this.document = document;
     }
 }
