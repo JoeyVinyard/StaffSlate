@@ -16,19 +16,10 @@ export class ScheduleComponent {
   constructor(private scheduleService: ScheduleService, private activatedRoute: ActivatedRoute, private router: Router) {
     activatedRoute.paramMap.subscribe((map) => {
       let scheduleId = map.get("scheduleId");
-      // this.scheduleService.loadSchedule(scheduleId);
-      // this.scheduleService.currentSchedule.subscribe((schedule) => {
-      //   console.log("Data",schedule);
-      // });
-    //   this.locationService.currentLocation.subscribe((location) => {
-    //     this.loadedLocation = location;
-        // this.loadedLocation.loadSchedule(scheduleId).subscribe((schedule) => {
-        //   if(!schedule) {
-        //     router.navigateByUrl("schedules");
-        //   }
-        //   this.currentSchedule = schedule;
-        // });
-  //     });
+      this.scheduleService.loadSchedule(scheduleId);
+      this.scheduleService.currentSchedule.subscribe((schedule) => {
+        this.currentSchedule = schedule;
+      });
     });
   }
 }

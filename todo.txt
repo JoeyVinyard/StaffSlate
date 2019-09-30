@@ -1,3 +1,4 @@
 Prevent duplicate employees
 Prevent duplicate schedule labels
 Prevent duplicate sheet labels
+Navigate away if invalid schedule or employee
