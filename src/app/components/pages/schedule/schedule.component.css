@@ -1,0 +1,16 @@
+.container {
+    background-color: #F8F8F8;
+    height: calc(100% - 114px);
+    width: 100%;
+}
+.footer {
+    height: 50px;
+    width: 100%;
+    background-image: linear-gradient(#F0F0F0, #D5D5D5);;
+    border-top: 2px solid lightgrey;
+    box-sizing: border-box;
+}
+
+.schedule {
+    width: 100%;
+}
