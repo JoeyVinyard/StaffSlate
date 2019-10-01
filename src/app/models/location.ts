@@ -1,15 +1,26 @@
 import {  AngularFirestoreDocument, DocumentReference } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { Employee } from './employee';
 import { Schedule } from './schedule';
 
 export class Location {
     label: string = "";
     id: string = "";
+    private employees: ReplaySubject<Map<string, Employee>> = new ReplaySubject(1);
     document: AngularFirestoreDocument<Location>;
 
-    loadEmployees(): Observable<Employee[]> {
-        return this.document.collection<Employee>("employees").valueChanges();
+    loadEmployees(): void {
+        this.document.collection<Employee>("employees").valueChanges().subscribe((employees) => {
+            let m = new Map<string, Employee>();
+            employees.forEach((emp) => {
+                m.set(emp.id, emp);
+            });
+            this.employees.next(m);
+        })
+    }
+
+    public getEmployees(): ReplaySubject<Map<string, Employee>> {
+        return this.employees;
     }
     
     addEmployee(employee: Employee): Promise<void> {
@@ -34,9 +45,10 @@ export class Location {
         })
     }
 
-    fetchEmployee(employeeId: string): Observable<Employee> {
-        return this.document.collection("employees").doc<Employee>(employeeId).valueChanges();
-    }
+    // fetchEmployee(employeeId: string): Subject<Employee> {
+        
+        // return this.document.collection("employees").doc<Employee>(employeeId).valueChanges();
+    // }
 
     loadSchedules(): Observable<Schedule[]> {
         return this.document.collection<Schedule>("schedules").valueChanges();
@@ -68,5 +80,6 @@ export class Location {
         this.label = locationData.label;
         this.id = locationData.id;
         this.document = document;
+        this.loadEmployees();
     }
 }

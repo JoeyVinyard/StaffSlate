@@ -21,6 +21,10 @@ export class ScheduleComponent {
   
   private times: number[] = [];
   
+  private isInShift(time: number, shift: Shift): boolean {
+    return (time >= shift.startTime && time < shift.endTime);
+  }
+  
   private formatTime(time: number): string {
     if(time == 0)  {
       return "12am"
@@ -33,21 +37,14 @@ export class ScheduleComponent {
     }
   }
   
-parseSchedule(): void {
-  this.currentSchedule.loadSheets().subscribe((sheets) => {
-    this.sheets = sheets;
-    this.parseShifts();
-  });
-}
-
-  parseShifts(): void {
-    this.sheets.forEach((sheet) => {
-      sheet.shifts.forEach((shift: Shift) => {
-        this.currentLocation.fetchEmployee(shift.empId).subscribe((empData: Employee) => {
-          shift.employeeName = empData.firstName + " " + empData.lastName.substring(0, 1) + ".";
-        });
-      });
+  parseSchedule(): void {
+    this.currentSchedule.loadSheets().subscribe((sheets) => {
+      this.sheets = sheets;
     });
+  }
+  
+  parseName(emp: Employee) {
+    return `${emp.firstName} ${emp.lastName.substring(0,1)}.`;
   }
   
   constructor(private locationService: LocationService, private scheduleService: ScheduleService, private activatedRoute: ActivatedRoute, private router: Router) {

@@ -1,6 +1,5 @@
 export interface Shift {
-    startTime: string;
-    endTime: string;
+    startTime: number;
+    endTime: number;
     empId: string;
-    employeeName: string;
 }

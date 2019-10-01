@@ -58,8 +58,8 @@ export class EmployeesComponent {
     })
   }
 
-  private parseEmployees(employees: Employee[]): void {
-    this.dataSource.data = employees
+  private parseEmployees(employees: Map<string, Employee>): void {
+    this.dataSource.data = Array.from(employees.values());
     this.snackbar.dismiss();
   }
 
@@ -71,7 +71,7 @@ export class EmployeesComponent {
     this.snackbar.open("Loading Employees...", "Dismiss");
     this.locationService.currentLocation.subscribe((location) => {
       this.loadedLocation = location;
-      this.loadedLocation.loadEmployees().subscribe(this.parseEmployees.bind(this));
+      this.loadedLocation.getEmployees().subscribe(this.parseEmployees.bind(this));
     });
   }
 }

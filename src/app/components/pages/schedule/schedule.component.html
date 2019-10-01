@@ -2,11 +2,19 @@
     <table class="schedule" *ngIf="sheets">
         <tr>
             <th class="label">{{sheets[0].label}}</th>
+            <th class="hbuffer"></th>
             <th class="time" *ngFor="let t of times">{{formatTime(t)}}</th>
         </tr>
-        <tr *ngFor="let shift of sheets[0].shifts">
-            <td class="name">{{shift.employeeName}}</td>
-        </tr>
+        <ng-container *ngFor="let shift of sheets[0].shifts">
+            <tr class="vbuffer">
+                <td class="name"></td>
+            </tr>
+            <tr>
+                <td class="name">{{parseName((currentLocation.getEmployees() | async).get(shift.empId))}}</td>
+                <td class="hbuffer"></td>
+                <td *ngFor="let t of times" [ngClass]="{'shaded': isInShift(t, shift)}"></td>
+            </tr>
+        </ng-container>
     </table>
 </div>
 <div class="footer"></div>

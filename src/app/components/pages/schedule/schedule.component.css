@@ -19,7 +19,6 @@
 
 .label {
     border-right: 1px solid black;
-    border-bottom: 1px solid black;
 }
 
 .name {
@@ -27,10 +26,22 @@
     border-right: 1px solid black;
 }
 
-.time {
+th {
     border-bottom: 1px solid black;
 }
 
 td {
     text-align: center;
+}
+
+.hbuffer {
+    width: 5px;
+}
+
+.vbuffer {
+    height: 5px;
+}
+
+.shaded {
+    background-color: #555;
 }
