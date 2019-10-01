@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LocationService } from './location.service';
 import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Schedule } from '../models/schedule';
-import { Subscription, ReplaySubject } from 'rxjs';
+import { Subscription, ReplaySubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class ScheduleService {
   currentSchedule: ReplaySubject<Schedule> = new ReplaySubject(1);
   clOb: Subscription;
 
-  loadSchedule(scheduleId: string): void {
+  loadSchedule(scheduleId: string): Observable<Schedule> {
     this.clOb = this.locationService.currentLocation.subscribe((location) => {
       if(this.currentScheduleSub) {
         this.currentScheduleSub.unsubscribe();
@@ -26,6 +26,7 @@ export class ScheduleService {
         this.clOb.unsubscribe();
       }
     });
+    return this.currentSchedule;
   }
 
   constructor(private locationService: LocationService) {
