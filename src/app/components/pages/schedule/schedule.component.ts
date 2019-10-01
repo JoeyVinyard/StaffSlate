@@ -7,6 +7,8 @@ import { Sheet } from 'src/app/models/sheet';
 import { LocationService } from 'src/app/services/location.service';
 import { Employee } from 'src/app/models/employee';
 import { Shift } from 'src/app/models/shift';
+import { MatDialog } from '@angular/material';
+import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.component';
 
 @Component({
   selector: 'app-schedule',
@@ -21,6 +23,19 @@ export class ScheduleComponent {
   
   private times: number[] = [];
   
+  private openNewShiftDialog(): void {
+    const dialogRef = this.dialog.open(NewShiftDialogComponent, {
+      width: '300px',
+    });
+    // dialogRef.afterClosed().subscribe((employee: Employee) => {
+    //   if (employee) {
+    //     this.loadedLocation.addEmployee(employee)
+    //       .then(() => this.addEmployeeResult(true))
+    //       .catch(() => this.addEmployeeResult(false));
+    //   }
+    // });
+  }
+
   private isInShift(time: number, shift: Shift): boolean {
     return (time >= shift.startTime && time < shift.endTime);
   }
@@ -47,7 +62,12 @@ export class ScheduleComponent {
     return `${emp.firstName} ${emp.lastName.substring(0,1)}.`;
   }
   
-  constructor(private locationService: LocationService, private scheduleService: ScheduleService, private activatedRoute: ActivatedRoute, private router: Router) {
+  constructor(
+    private locationService: LocationService,
+    private scheduleService: ScheduleService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    public dialog: MatDialog) {
     activatedRoute.paramMap.subscribe((map) => {
       
       locationService.currentLocation.subscribe((location) => {

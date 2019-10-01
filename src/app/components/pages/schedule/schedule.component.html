@@ -17,4 +17,6 @@
         </ng-container>
     </table>
 </div>
-<div class="footer"></div>
+<div class="footer">
+    <button mat-raised-button color="primary" [disabled]="currentLocation == null" (click)="openNewShiftDialog()">Add Shift</button>
+</div>

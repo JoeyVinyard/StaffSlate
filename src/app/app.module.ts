@@ -45,6 +45,7 @@ import { EmployeeComponent } from './components/pages/employee/employee.componen
 import { NewEmployeeDialogComponent } from './components/pages/employees/new-employee-dialog/new-employee-dialog.component';
 import { NewScheduleDialogComponent } from './components/pages/schedules/new-schedule-dialog/new-schedule-dialog.component';
 import { ScheduleComponent } from './components/pages/schedule/schedule.component';
+import { NewShiftDialogComponent } from './components/pages/schedule/new-shift-dialog/new-shift-dialog.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { ScheduleComponent } from './components/pages/schedule/schedule.componen
     EmployeeComponent,
     NewEmployeeDialogComponent,
     NewScheduleDialogComponent,
-    ScheduleComponent
+    ScheduleComponent,
+    NewShiftDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -88,7 +90,8 @@ import { ScheduleComponent } from './components/pages/schedule/schedule.componen
   ],
   entryComponents: [
     NewEmployeeDialogComponent,
-    NewScheduleDialogComponent
+    NewScheduleDialogComponent,
+    NewShiftDialogComponent
   ],
   providers: [
     AngularFireAuthGuard,
