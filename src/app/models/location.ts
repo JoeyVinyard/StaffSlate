@@ -34,6 +34,10 @@ export class Location {
         })
     }
 
+    fetchEmployee(employeeId: string): Observable<Employee> {
+        return this.document.collection("employees").doc<Employee>(employeeId).valueChanges();
+    }
+
     loadSchedules(): Observable<Schedule[]> {
         return this.document.collection<Schedule>("schedules").valueChanges();
     }

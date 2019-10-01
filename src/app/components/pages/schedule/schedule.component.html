@@ -1,11 +1,11 @@
 <div class="container">
     <table class="schedule" *ngIf="sheets">
         <tr>
-            <th>{{sheets[0].label}}</th>
-            <th *ngFor="let t of times">{{t}}</th>
+            <th class="label">{{sheets[0].label}}</th>
+            <th class="time" *ngFor="let t of times">{{formatTime(t)}}</th>
         </tr>
         <tr *ngFor="let shift of sheets[0].shifts">
-            <!-- <td>{{shift.empId}}</td> -->
+            <td class="name">{{shift.employeeName}}</td>
         </tr>
     </table>
 </div>

@@ -13,4 +13,24 @@
 
 .schedule {
     width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+}
+
+.label {
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.name {
+    font-weight: bold;
+    border-right: 1px solid black;
+}
+
+.time {
+    border-bottom: 1px solid black;
+}
+
+td {
+    text-align: center;
 }

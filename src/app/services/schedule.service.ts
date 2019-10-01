@@ -12,16 +12,19 @@ export class ScheduleService {
   currentLocationDoc: AngularFirestoreDocument;
   currentScheduleSub: Subscription;
   currentSchedule: ReplaySubject<Schedule> = new ReplaySubject(1);
+  clOb: Subscription;
 
   loadSchedule(scheduleId: string): void {
-    let clOb = this.locationService.currentLocation.subscribe((location) => {
+    this.clOb = this.locationService.currentLocation.subscribe((location) => {
       if(this.currentScheduleSub) {
         this.currentScheduleSub.unsubscribe();
       }
       this.currentScheduleSub =  this.currentLocationDoc.collection("schedules").doc<Schedule>(scheduleId).valueChanges().subscribe((scheduleData) => {
         this.currentSchedule.next(new Schedule(scheduleData, this.currentLocationDoc.collection("schedules").doc<Schedule>(scheduleId)));
       });
-      clOb.unsubscribe()
+      if(this.clOb){
+        this.clOb.unsubscribe();
+      }
     });
   }
 
