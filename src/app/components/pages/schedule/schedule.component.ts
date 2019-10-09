@@ -25,7 +25,7 @@ export class ScheduleComponent {
   
   private openNewShiftDialog(): void {
     const dialogRef = this.dialog.open(NewShiftDialogComponent, {
-      width: '300px',
+      width: '400px',
     });
     // dialogRef.afterClosed().subscribe((employee: Employee) => {
     //   if (employee) {

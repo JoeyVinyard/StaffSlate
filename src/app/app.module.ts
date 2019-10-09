@@ -26,6 +26,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 // Config Files
 import { appRoutes } from "./routes";
@@ -83,6 +84,7 @@ import { NewShiftDialogComponent } from './components/pages/schedule/new-shift-d
     MatSelectModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatAutocompleteModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireStorageModule,

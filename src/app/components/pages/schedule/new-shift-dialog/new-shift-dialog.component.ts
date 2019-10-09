@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Employee } from 'src/app/models/employee';
+import { LocationService } from 'src/app/services/location.service';
+import { Location } from 'src/app/models/location';
 
 @Component({
   selector: 'app-new-shift-dialog',
@@ -10,44 +12,52 @@ import { Employee } from 'src/app/models/employee';
 })
 export class NewShiftDialogComponent {
 
-  email = new FormControl('', [Validators.required, Validators.email]);
-  firstName = new FormControl('', [Validators.required]);
-  lastName = new FormControl('', [Validators.required]);
+  employee = new FormControl('', [Validators.required]);
+  // firstName = new FormControl('', [Validators.required]);
+  // lastName = new FormControl('', [Validators.required]);
 
-  getEmailError(): string {
-    if (this.email.hasError("required")) {
-      return "Email is required";
-    } else if (this.email.hasError("email")) {
-      return "Not a valid email";
+  getEmployeeError(): string {
+    if (this.employee.hasError("required")) {
+      return "Please select an Employee";
     } else {
       return "";
     }
   }
 
-  getFirstNameError(): string {
-    if (this.firstName.hasError("required")) {
-      return "First name is required";
-    } else {
-      return "";
-    }
-  }
-
-  getLastNameError(): string {
-    if (this.lastName.hasError("required")) {
-      return "Last name is required";
-    } else {
-      return "";
-    }
-  }
+  location: Location;
 
   submit(): void {
     this.dialogRef.close({
-      firstName: this.firstName.value,
-      lastName: this.lastName.value,
-      email: this.email.value
+      // firstName: this.firstName.value,
+      // lastName: this.lastName.value,
+      // email: this.email.value
     } as Employee);
   }
 
-  constructor(public dialogRef: MatDialogRef<NewShiftDialogComponent>) { }
+  displayFn(emp: Employee): string {
+    if(emp) {
+      return emp.firstName + " " + emp.lastName;
+    } else {
+      return "";
+    }
+  }
+
+  getNames(employees: Map<string, Employee>) {
+    if(employees){
+      return Array.from(employees.values())
+        .filter((e) => (e.firstName + " " + e.lastName).toLowerCase().includes(this.employee.value))
+        .sort((a,b) => a.firstName.charCodeAt(0) - b.firstName.charCodeAt(0));
+    } else {
+      return [];
+    }
+  }
+
+  constructor(
+    public dialogRef: MatDialogRef<NewShiftDialogComponent>,
+    private locationService: LocationService) {
+      locationService.currentLocation.subscribe((location) => {
+        this.location = location;
+      });
+    }
 
 }

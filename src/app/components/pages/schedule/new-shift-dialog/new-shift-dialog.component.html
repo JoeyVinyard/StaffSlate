@@ -1,10 +1,13 @@
-<h1 mat-dialog-title>New Schedule</h1>
+<h1 mat-dialog-title>Add Shift</h1>
 <div class="content" mat-dialog-content>
     <mat-form-field>
-        <input matInput [formControl]="label" placeholder="Schedule Name">
-        <mat-error *ngIf="label.invalid">{{getLabelError()}}</mat-error>
+        <input matInput [formControl]="employee" placeholder="Employee" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let emp of getNames(location.getEmployees() | async)" [value]="emp">{{emp.firstName + ' ' + emp.lastName}}</mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="employee.invalid">{{getEmployeeError()}}</mat-error>
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" [disabled]="label.invalid" (click)="submit()">Create Schedule</button>
+    <button mat-raised-button color="primary" (click)="submit()">Add Shift</button>
 </div>
