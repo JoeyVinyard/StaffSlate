@@ -34,10 +34,24 @@ export class NewShiftDialogComponent implements AfterViewInit {
       this.shiftEnd.setValue(this.timeArrayToString(incremented));
       this.shiftEndField.minute = incremented[1];
     });
+    this.sheet.valueChanges.subscribe((s: Sheet) => {
+      this.shiftStart.setValue(s.openTime.hours + ":" + s.openTime.minutes)
+      this.shiftStartField.changeHour(s.openTime.hours);
+      this.shiftStartField.changeMinute(s.openTime.minutes);
+
+      this.shiftEnd.setValue(s.openTime.hours+1 + ":" + s.openTime.minutes)
+      this.shiftEndField.changeHour(s.openTime.hours+1);
+      this.shiftEndField.changeMinute(s.openTime.minutes);
+    });
   }
 
   private timeArrayToString(time: number[]): string {
-    return time.map(m => m.toString()).join(":");
+    return time.map((m) => {
+      if(m < 10) {
+        return "0"+m;
+      }
+      return m.toString()
+    }).join(":");
   }
 
   private changeByIncrement(original: string, changed: string): number[] {
