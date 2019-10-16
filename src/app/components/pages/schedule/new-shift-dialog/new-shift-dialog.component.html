@@ -18,6 +18,7 @@
     <div class="time-container">
         <mat-label>Shift Start:</mat-label>
         <ngx-timepicker-field #start [controlOnly]="true" [defaultTime]="'07:00'"></ngx-timepicker-field>
+        <mat-error *ngIf="shiftStart.invalid">{{getShiftStartError()}}</mat-error>
         <div class="spacer"></div>
         <mat-label>Shift End:</mat-label>
         <ngx-timepicker-field #end [controlOnly]="true"></ngx-timepicker-field>

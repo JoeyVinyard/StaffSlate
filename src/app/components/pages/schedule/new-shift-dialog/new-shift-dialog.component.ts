@@ -40,7 +40,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
     return time.map(m => m.toString()).join(":");
   }
 
-  changeByIncrement(original: string, changed: string): number[] {
+  private changeByIncrement(original: string, changed: string): number[] {
     original = original ? original : "00:00"
     let splitOriginal = original.split(":").map(m => Number.parseInt(m));
     let splitChanged = changed.split(":").map(m => Number.parseInt(m));
@@ -60,6 +60,30 @@ export class NewShiftDialogComponent implements AfterViewInit {
   getEmployeeError(): string {
     if (this.employee.hasError("required")) {
       return "Please select an Employee";
+    } else {
+      return "";
+    }
+  }
+
+  getSheetError(): string {
+    if (this.sheet.hasError("required")) {
+      return "Please select a Sheet";
+    } else {
+      return "";
+    }
+  }
+
+  getShiftStartError(): string {
+    if (this.shiftStart.hasError("required")) {
+      return "Please select a time";
+    } else {
+      return "";
+    }
+  }
+
+  getShiftEndError(): string {
+    if (this.shiftEnd.hasError("required")) {
+      return "Please select a time";
     } else {
       return "";
     }
