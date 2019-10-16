@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularFittextModule } from 'angular-fittext';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 // Angular Fire Imports
 import { AngularFireModule } from '@angular/fire';
@@ -88,7 +89,8 @@ import { NewShiftDialogComponent } from './components/pages/schedule/new-shift-d
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireStorageModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    NgxMaterialTimepickerModule
   ],
   entryComponents: [
     NewEmployeeDialogComponent,

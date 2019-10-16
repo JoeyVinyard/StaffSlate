@@ -24,8 +24,10 @@
     "@angular/platform-browser-dynamic": "~8.2.3",
     "@angular/router": "~8.2.3",
     "angular-fittext": "^2.1.1",
+    "convert-time": "^0.3.0",
     "firebase": "^6.4.1",
     "hammerjs": "^2.0.8",
+    "ngx-material-timepicker": "^5.2.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"

@@ -9,6 +9,7 @@ import { Employee } from 'src/app/models/employee';
 import { Shift } from 'src/app/models/shift';
 import { MatDialog } from '@angular/material';
 import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-schedule',
@@ -26,6 +27,7 @@ export class ScheduleComponent {
   private openNewShiftDialog(): void {
     const dialogRef = this.dialog.open(NewShiftDialogComponent, {
       width: '400px',
+      data: this.sheets
     });
     // dialogRef.afterClosed().subscribe((employee: Employee) => {
     //   if (employee) {
@@ -70,10 +72,14 @@ export class ScheduleComponent {
     public dialog: MatDialog) {
     activatedRoute.paramMap.subscribe((map) => {
       
+      let scheduleSub: Subscription;
       locationService.currentLocation.subscribe((location) => {
         this.currentLocation = location;
         let scheduleId = map.get("scheduleId");
-        this.scheduleService.loadSchedule(scheduleId).subscribe((schedule) => {
+        if(scheduleSub) {
+          scheduleSub.unsubscribe();
+        }
+        scheduleSub = this.scheduleService.loadSchedule(scheduleId).subscribe((schedule) => {
           this.currentSchedule = schedule;
           this.parseSchedule();
         });

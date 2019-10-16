@@ -7,6 +7,21 @@
         </mat-autocomplete>
         <mat-error *ngIf="employee.invalid">{{getEmployeeError()}}</mat-error>
     </mat-form-field>
+    <mat-form-field>
+        <mat-label>Sheet</mat-label>
+        <mat-select [formControl]="sheet">
+            <mat-option *ngFor="let s of sheets" [value]="s.label">
+                {{s.label}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div class="time-container">
+        <mat-label>Shift Start:</mat-label>
+        <ngx-timepicker-field #start [controlOnly]="true" [defaultTime]="'07:00'"></ngx-timepicker-field>
+        <div class="spacer"></div>
+        <mat-label>Shift End:</mat-label>
+        <ngx-timepicker-field #end [controlOnly]="true"></ngx-timepicker-field>
+    </div>
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button color="primary" (click)="submit()">Add Shift</button>

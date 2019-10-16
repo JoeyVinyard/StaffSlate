@@ -1,3 +1,17 @@
 .content * {
     width: 100%;
+    padding-bottom: 5px;
+}
+
+.time-container {
+    margin-bottom: 50px;
+    margin-top: 2px;
+}
+
+.spacer {
+    height: 20px;
+}
+
+label {
+    margin-bottom: 5px;
 }
