@@ -10,6 +10,7 @@ import { Shift } from 'src/app/models/shift';
 import { MatDialog } from '@angular/material';
 import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.component';
 import { Subscription } from 'rxjs';
+import { Time } from '@angular/common';
 
 @Component({
   selector: 'app-schedule',
@@ -20,7 +21,9 @@ export class ScheduleComponent {
   
   private currentSchedule: Schedule;
   private sheets: Sheet[];
+  private curSheet: Sheet;
   private currentLocation: Location;
+  private timeColumns: Time[] = [];
   
   private times: number[] = [];
   
@@ -38,25 +41,56 @@ export class ScheduleComponent {
     // });
   }
 
-  private isInShift(time: number, shift: Shift): boolean {
-    return (time >= shift.startTime && time < shift.endTime);
+  private convertTimeToNum(t: Time): number {
+    return t.hours*100 + t.minutes;
+  }
+
+  private isInShift(time: Time, shift: Shift): boolean {
+    return (this.convertTimeToNum(time) >= this.convertTimeToNum(shift.startTime)
+      && this.convertTimeToNum(time) < this.convertTimeToNum(shift.endTime));
   }
   
-  private formatTime(time: number): string {
-    if(time == 0)  {
-      return "12am"
-    } else if(time < 12) {
-      return time + "am";
-    } else if(time == 12) {
-      return "12pm";
+  generateTimeColumns(): Time[] {
+    let s = this.curSheet.openTime.hours + this.curSheet.openTime.minutes/60;
+    let e = this.curSheet.closeTime.hours + this.curSheet.closeTime.minutes / 60;
+    let numColumns = Math.floor(e-s+1)*(60/this.curSheet.timeIncrement);
+    let times: Time[] = [];
+    let h = this.curSheet.openTime.hours;
+    let m = this.curSheet.openTime.minutes;
+    times.push(this.curSheet.openTime);
+    for(let i = 0; i < numColumns-1; i++) {
+      m+= this.curSheet.timeIncrement;
+      if(m % 60 == 0) {
+        m = 0;
+        h++;
+      }
+      let t = {
+        hours: h,
+        minutes: m
+      } as Time
+      times.push(t);
+    }
+    return times;
+  }
+
+  private formatTime(time: Time): string {
+    let m = time.minutes < 10 ? "0"+time.minutes : time.minutes;
+    if(time.hours == 0) {
+      return `12:${m}am`;
+    } else if(time.hours < 12) {
+      return `${time.hours}:${m}am`;
+    } else if(time.hours == 12) {
+      return `${time.hours}:${m}pm`;
     } else {
-      return time%12 + "pm";
+      return `${time.hours%12}:${m}pm`;
     }
   }
   
   parseSchedule(): void {
     this.currentSchedule.loadSheets().subscribe((sheets) => {
       this.sheets = sheets;
+      this.curSheet = sheets[0];
+      this.timeColumns = this.generateTimeColumns();
     });
   }
   
@@ -85,11 +119,5 @@ export class ScheduleComponent {
         });
       });
     });
-    
-    
-    //debug
-    for(let i = 7; i < 21; i++) {
-      this.times.push(i);
-    }
   }
 }

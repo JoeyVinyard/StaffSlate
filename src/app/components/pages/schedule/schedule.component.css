@@ -2,6 +2,7 @@
     background-color: #F8F8F8;
     height: calc(100% - 114px);
     width: 100%;
+    overflow-x: scroll;
 }
 .footer {
     height: 50px;
@@ -28,6 +29,7 @@
 
 th {
     border-bottom: 1px solid black;
+    width: 80px;
 }
 
 td {

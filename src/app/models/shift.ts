@@ -1,5 +1,7 @@
+import { Time } from '@angular/common';
+
 export interface Shift {
-    startTime: number;
-    endTime: number;
+    startTime: Time;
+    endTime: Time;
     empId: string;
 }

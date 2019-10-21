@@ -1,18 +1,18 @@
 <div class="container">
-    <table class="schedule" *ngIf="sheets">
+    <table class="schedule" *ngIf="curSheet">
         <tr>
-            <th class="label">{{sheets[0].label}}</th>
+            <th class="label">{{curSheet.label}}</th>
             <th class="hbuffer"></th>
-            <th class="time" *ngFor="let t of times">{{formatTime(t)}}</th>
+            <th class="time" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
         </tr>
-        <ng-container *ngFor="let shift of sheets[0].shifts">
+        <ng-container *ngFor="let shift of curSheet.shifts">
             <tr class="vbuffer">
                 <td class="name"></td>
             </tr>
             <tr>
                 <td class="name">{{parseName((currentLocation.getEmployees() | async).get(shift.empId))}}</td>
                 <td class="hbuffer"></td>
-                <td *ngFor="let t of times" [ngClass]="{'shaded': isInShift(t, shift)}"></td>
+                <td *ngFor="let t of timeColumns" [ngClass]="{'shaded': isInShift(t, shift)}"></td>
             </tr>
         </ng-container>
     </table>
