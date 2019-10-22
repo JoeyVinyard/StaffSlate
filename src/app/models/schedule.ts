@@ -1,19 +1,17 @@
-import { AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestoreDocument, DocumentChangeAction } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Sheet } from './sheet';
 
 export class Schedule {
-    document: AngularFirestoreDocument;
     label: string;
     id: string;
 
-    public loadSheets(): Observable<Sheet[]> {
-        return this.document.collection<Sheet>("sheets").valueChanges();
+    public loadSheets(): Observable<DocumentChangeAction<Sheet>[]> {
+        return this.document.collection<Sheet>("sheets").snapshotChanges();
     }
 
-    constructor(scheduleData: Schedule, document: AngularFirestoreDocument) {
+    constructor(scheduleData: Schedule, public document: AngularFirestoreDocument<Schedule>) {
         this.label = scheduleData.label;
         this.id = scheduleData.id;
-        this.document = document;
     }
 }

@@ -10,9 +10,9 @@ import { Subscription, ReplaySubject, Observable } from 'rxjs';
 export class ScheduleService {
 
   currentLocationDoc: AngularFirestoreDocument;
-  currentScheduleSub: Subscription;
   currentSchedule: ReplaySubject<Schedule> = new ReplaySubject(1);
-  clOb: Subscription;
+  private currentScheduleSub: Subscription;
+  private clOb: Subscription;
 
   loadSchedule(scheduleId: string): Observable<Schedule> {
     this.clOb = this.locationService.currentLocation.subscribe((location) => {

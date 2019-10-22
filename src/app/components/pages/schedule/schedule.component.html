@@ -5,7 +5,7 @@
             <th class="hbuffer"></th>
             <th class="time" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
         </tr>
-        <ng-container *ngFor="let shift of curSheet.shifts">
+        <ng-container *ngFor="let shift of shifts">
             <tr class="vbuffer">
                 <td class="name"></td>
             </tr>
@@ -18,5 +18,5 @@
     </table>
 </div>
 <div class="footer">
-    <button mat-raised-button color="primary" [disabled]="currentLocation == null" (click)="openNewShiftDialog()">Add Shift</button>
+    <button mat-raised-button color="primary" [disabled]="curSheet == null" (click)="openNewShiftDialog()">Add Shift</button>
 </div>

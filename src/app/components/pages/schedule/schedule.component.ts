@@ -9,8 +9,9 @@ import { Employee } from 'src/app/models/employee';
 import { Shift } from 'src/app/models/shift';
 import { MatDialog } from '@angular/material';
 import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.component';
-import { Subscription } from 'rxjs';
 import { Time } from '@angular/common';
+import { SheetService } from 'src/app/services/sheet.service';
+import { NewShift } from 'src/app/models/new-shift';
 
 @Component({
   selector: 'app-schedule',
@@ -19,10 +20,11 @@ import { Time } from '@angular/common';
 })
 export class ScheduleComponent {
   
-  private currentSchedule: Schedule;
-  private sheets: Sheet[];
-  private curSheet: Sheet;
   private currentLocation: Location;
+  private currentSchedule: Schedule;
+  private curSheet: Sheet;
+  private sheets: Sheet[];
+  private shifts: Shift[];
   private timeColumns: Time[] = [];
   
   private times: number[] = [];
@@ -32,13 +34,11 @@ export class ScheduleComponent {
       width: '400px',
       data: this.sheets
     });
-    // dialogRef.afterClosed().subscribe((employee: Employee) => {
-    //   if (employee) {
-    //     this.loadedLocation.addEmployee(employee)
-    //       .then(() => this.addEmployeeResult(true))
-    //       .catch(() => this.addEmployeeResult(false));
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe((newShift: NewShift) => {
+      if(newShift) {
+        newShift.sheet.document.collection("shifts").add(newShift.shift);
+      }
+    });
   }
 
   private convertTimeToNum(t: Time): number {
@@ -88,8 +88,14 @@ export class ScheduleComponent {
   
   parseSchedule(): void {
     this.currentSchedule.loadSheets().subscribe((sheets) => {
-      this.sheets = sheets;
-      this.curSheet = sheets[0];
+      this.sheets = sheets.map((s) => {
+        let sheet: Sheet = new Sheet(s.payload.doc.data(), this.currentSchedule.document.collection("sheets").doc(s.payload.doc.id));
+        return sheet;
+      });
+      this.curSheet = this.sheets[0];
+      this.curSheet.loadDisplayShifts().subscribe((shifts: Shift[]) => {
+        this.shifts = shifts;
+      })
       this.timeColumns = this.generateTimeColumns();
     });
   }
@@ -100,24 +106,34 @@ export class ScheduleComponent {
   
   constructor(
     private locationService: LocationService,
+    private sheetService: SheetService,
     private scheduleService: ScheduleService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog) {
+
+    locationService.currentLocation.subscribe((location) => {
+      this.currentLocation = location;
+    })
+
     activatedRoute.paramMap.subscribe((map) => {
-      
-      let scheduleSub: Subscription;
-      locationService.currentLocation.subscribe((location) => {
-        this.currentLocation = location;
-        let scheduleId = map.get("scheduleId");
-        if(scheduleSub) {
-          scheduleSub.unsubscribe();
-        }
-        scheduleSub = this.scheduleService.loadSchedule(scheduleId).subscribe((schedule) => {
-          this.currentSchedule = schedule;
-          this.parseSchedule();
-        });
+      this.scheduleService.loadSchedule(map.get("scheduleId")).subscribe((schedule) => {
+        this.currentSchedule = schedule;
+        this.parseSchedule();
       });
+
+      // let scheduleSub: Subscription;
+      // locationService.currentLocation.subscribe((location) => {
+      //   this.currentLocation = location;
+      //   let scheduleId = map.get("scheduleId");
+      //   if(scheduleSub) {
+      //     scheduleSub.unsubscribe();
+      //   }
+      //   scheduleSub = this.scheduleService.loadSchedule(scheduleId).subscribe((schedule) => {
+      //     this.currentSchedule = schedule;
+      //     this.parseSchedule();
+      //   });
+      // });
     });
   }
 }

@@ -18,11 +18,11 @@
     <div class="time-container">
         <mat-label>Shift Start:</mat-label>
         <ngx-timepicker-field #start [controlOnly]="true" [disabled]="!sheet.value"></ngx-timepicker-field>
-        <mat-error *ngIf="shiftStart.invalid  && !shiftStart.pristine">{{getShiftStartError()}}</mat-error>
+        <mat-error *ngIf="sheet.value">{{getShiftStartError()}}</mat-error>
         <div class="spacer"></div>
         <mat-label>Shift End:</mat-label>
         <ngx-timepicker-field #end [controlOnly]="true" [disabled]="!sheet.value"></ngx-timepicker-field>
-        <mat-error *ngIf="shiftEnd.invalid && !shiftEnd.pristine">{{getShiftEndError()}}</mat-error>
+        <mat-error *ngIf="sheet.value">{{getShiftEndError()}}</mat-error>
     </div>
 </div>
 <div mat-dialog-actions>

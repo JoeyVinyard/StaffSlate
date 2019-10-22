@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Inject } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Employee } from 'src/app/models/employee';
 import { LocationService } from 'src/app/services/location.service';
@@ -7,6 +7,9 @@ import { Location } from 'src/app/models/location';
 import * as convertTime from "convert-time";
 import { Sheet } from 'src/app/models/sheet';
 import { NgxTimepickerFieldComponent } from 'ngx-material-timepicker';
+import { Shift } from 'src/app/models/shift';
+import { Time } from '@angular/common';
+import { NewShift } from 'src/app/models/new-shift';
 
 @Component({
   selector: 'app-new-shift-dialog',
@@ -54,6 +57,14 @@ export class NewShiftDialogComponent implements AfterViewInit {
     }).join(":");
   }
 
+  private timeStringToObj(time: string): Time {
+    let parts = time.split(":");
+    return {
+      hours: Number.parseInt(parts[0]),
+      minutes: Number.parseInt(parts[1])
+    } as Time;
+  }
+
   private changeByIncrement(original: string, changed: string): number[] {
     original = original ? original : "00:00"
     let splitOriginal = original.split(":").map(m => Number.parseInt(m));
@@ -98,6 +109,8 @@ export class NewShiftDialogComponent implements AfterViewInit {
   getShiftEndError(): string {
     if (this.shiftEnd.hasError("required")) {
       return "Please select a time";
+    } else if (this.shiftStart.value >= this.shiftEnd.value) {
+      return "Shift must start before it ends"
     } else {
       return "";
     }
@@ -106,15 +119,14 @@ export class NewShiftDialogComponent implements AfterViewInit {
   location: Location;
 
   submit(): void {
-    console.log(this.employee.value);
-    console.log(this.sheet.value);
-    console.log(this.shiftStart.value);
-    console.log(this.shiftEnd.value);
     this.dialogRef.close({
-      // firstName: this.firstName.value,
-      // lastName: this.lastName.value,
-      // email: this.email.value
-    } as Employee);
+      shift: {
+        empId: this.employee.value.id,
+        startTime: this.timeStringToObj(this.shiftStart.value),
+        endTime: this.timeStringToObj(this.shiftEnd.value)
+      } as Shift,
+      sheet: this.sheet.value
+    } as NewShift);
   }
 
   displayFn(emp: Employee): string {
