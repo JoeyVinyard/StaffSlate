@@ -94,7 +94,13 @@ export class ScheduleComponent {
       });
       this.curSheet = this.sheets[0];
       this.curSheet.loadDisplayShifts().subscribe((shifts: Shift[]) => {
-        this.shifts = shifts;
+        this.shifts = shifts.sort((a, b) => {
+          let r = this.convertTimeToNum(a.startTime) - this.convertTimeToNum(b.startTime);
+          if(r == 0) {
+            return this.convertTimeToNum(a.endTime) - this.convertTimeToNum(b.endTime);
+          }
+          return r;
+        });
       })
       this.timeColumns = this.generateTimeColumns();
     });
@@ -121,19 +127,6 @@ export class ScheduleComponent {
         this.currentSchedule = schedule;
         this.parseSchedule();
       });
-
-      // let scheduleSub: Subscription;
-      // locationService.currentLocation.subscribe((location) => {
-      //   this.currentLocation = location;
-      //   let scheduleId = map.get("scheduleId");
-      //   if(scheduleSub) {
-      //     scheduleSub.unsubscribe();
-      //   }
-      //   scheduleSub = this.scheduleService.loadSchedule(scheduleId).subscribe((schedule) => {
-      //     this.currentSchedule = schedule;
-      //     this.parseSchedule();
-      //   });
-      // });
     });
   }
 }
