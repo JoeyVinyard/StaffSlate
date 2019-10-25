@@ -24,14 +24,16 @@ export class NewShiftDialogComponent implements AfterViewInit {
   shiftEnd = new FormControl('', [Validators.required, 
     (control: AbstractControl) => {
       let t = this.timeStringToObj(control.value);
-      if (this.sheet.value) {
-        return { "endTooLate": t.hours >= (<Sheet>this.sheet.value).closeTime.hours && t.minutes > (<Sheet>this.sheet.value).closeTime.minutes };
+      if (this.sheet.value
+        && (t.hours >= (<Sheet>this.sheet.value).closeTime.hours && t.minutes > (<Sheet>this.sheet.value).closeTime.minutes
+        || t.hours > (<Sheet>this.sheet.value).closeTime.hours)) {
+        return { "endTooLate": true };
       }
       return {};
     },
     (control: AbstractControl) => {
-      if (this.shiftStart.value) {
-        return { "overlap": this.compareTimes(this.shiftStart.value, control.value) };
+      if (this.shiftStart.value && this.compareTimes(this.shiftStart.value, control.value)) {
+        return { "overlap": true };
       }
       return {};
     },
@@ -110,7 +112,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
   private compareTimes(t1: string, t2: string): boolean {
     let to1 = this.timeStringToObj(t1);
     let to2 = this.timeStringToObj(t2);
-    return (to1.hours>=to2.hours && to1.minutes>=to2.minutes);
+    return (to1.hours > to2.hours || (to1.hours==to2.hours && to1.minutes>=to2.minutes));
   }
 
   getEmployeeError(): string {
