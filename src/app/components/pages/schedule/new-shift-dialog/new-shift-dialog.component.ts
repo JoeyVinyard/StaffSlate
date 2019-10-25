@@ -21,7 +21,21 @@ export class NewShiftDialogComponent implements AfterViewInit {
   employee = new FormControl('', [Validators.required]);
   sheet = new FormControl('', [Validators.required]);
   shiftStart = new FormControl('', [Validators.required]);
-  shiftEnd = new FormControl('', [Validators.required]);
+  shiftEnd = new FormControl('', [Validators.required, 
+    (control: AbstractControl) => {
+      let t = this.timeStringToObj(control.value);
+      if (this.sheet.value) {
+        return { "endTooLate": t.hours >= (<Sheet>this.sheet.value).closeTime.hours && t.minutes > (<Sheet>this.sheet.value).closeTime.minutes };
+      }
+      return {};
+    },
+    (control: AbstractControl) => {
+      if (this.shiftStart.value) {
+        return { "overlap": this.compareTimes(this.shiftStart.value, control.value) };
+      }
+      return {};
+    },
+  ]);
 
   @ViewChild("start", { static: true }) shiftStartField: NgxTimepickerFieldComponent;
   @ViewChild("end", {static: true}) shiftEndField: NgxTimepickerFieldComponent;
@@ -29,14 +43,19 @@ export class NewShiftDialogComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.shiftStartField.registerOnChange((value: string) => {
       let incremented = this.changeByIncrement(this.shiftStart.value, convertTime(value));
-      this.shiftStart.setValue(this.timeArrayToString(incremented));
-      this.shiftStartField.minute = incremented[1];
+      this.shiftStart.setValue(this.timeToString(incremented));
+      if(this.shiftStartField.minute != incremented.minutes) {
+        this.shiftStartField.changeMinute(incremented.minutes);
+      }
     });
     this.shiftEndField.registerOnChange((value: string) => {
       let incremented = this.changeByIncrement(this.shiftEnd.value, convertTime(value));
-      this.shiftEnd.setValue(this.timeArrayToString(incremented));
-      this.shiftEndField.minute = incremented[1];
+      this.shiftEnd.setValue(this.timeToString(incremented));
+      if(this.shiftEndField.minute != incremented.minutes) {
+        this.shiftEndField.changeMinute(incremented.minutes);
+      }
     });
+
     this.sheet.valueChanges.subscribe((s: Sheet) => {
       this.shiftStart.setValue(s.openTime.hours + ":" + s.openTime.minutes)
       this.shiftStartField.changeHour(s.openTime.hours);
@@ -48,13 +67,12 @@ export class NewShiftDialogComponent implements AfterViewInit {
     });
   }
 
-  private timeArrayToString(time: number[]): string {
-    return time.map((m) => {
-      if(m < 10) {
-        return "0"+m;
-      }
-      return m.toString()
-    }).join(":");
+  private timeToString(time: Time): string {
+    return `${time.hours}:${time.minutes}`;
+  }
+
+  private timeToNumber(time: Time): number {
+    return time.hours * 100 + time.minutes;
   }
 
   private timeStringToObj(time: string): Time {
@@ -65,21 +83,34 @@ export class NewShiftDialogComponent implements AfterViewInit {
     } as Time;
   }
 
-  private changeByIncrement(original: string, changed: string): number[] {
+  private buildTimeFromString(time: string): Time {
+    let split = time.split(":").map(m => Number.parseInt(m));
+    return {
+      hours: split[0],
+      minutes: split[1]
+    } as Time;
+  }
+
+  private changeByIncrement(original: string, changed: string): Time {
     original = original ? original : "00:00"
-    let splitOriginal = original.split(":").map(m => Number.parseInt(m));
-    let splitChanged = changed.split(":").map(m => Number.parseInt(m));
-    let minutesOriginal = splitOriginal[1]
-    let minutesNew = splitChanged[1];
-    if(minutesOriginal < minutesNew) {
-      minutesNew = (minutesOriginal + 30)%60;
-    } else if(minutesOriginal > minutesNew) {
-      minutesNew = Math.abs(minutesOriginal - 30)%60;
+    let o = this.buildTimeFromString(original);
+    let c = this.buildTimeFromString(changed);
+    if(o.minutes == c.minutes) {
+      c.minutes = o.minutes;
+      return c;
+    } else if(o.minutes - c.minutes < 0) {
+      c.minutes = o.minutes + (<Sheet>this.sheet.value).timeIncrement;
     } else {
-      return splitChanged;
+      c.minutes = o.minutes - (<Sheet>this.sheet.value).timeIncrement;
     }
-    splitChanged[1] = minutesNew;
-    return splitChanged;
+    c.minutes = c.minutes%60;
+    return c;
+  }
+
+  private compareTimes(t1: string, t2: string): boolean {
+    let to1 = this.timeStringToObj(t1);
+    let to2 = this.timeStringToObj(t2);
+    return (to1.hours>=to2.hours && to1.minutes>=to2.minutes);
   }
 
   getEmployeeError(): string {
@@ -107,10 +138,13 @@ export class NewShiftDialogComponent implements AfterViewInit {
   }
 
   getShiftEndError(): string {
+    let t = this.timeStringToObj(this.shiftEnd.value);
     if (this.shiftEnd.hasError("required")) {
       return "Please select a time";
-    } else if (this.shiftStart.value >= this.shiftEnd.value) {
-      return "Shift must start before it ends"
+    } else if (this.shiftEnd.hasError("endTooLate")) {
+      return "Shift cannot end after closing time";
+    } else if (this.shiftEnd.hasError("overlap")) {
+      return "Shift must start before it ends";
     } else {
       return "";
     }
