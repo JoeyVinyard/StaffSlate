@@ -4,12 +4,46 @@
     width: 100%;
     overflow-x: scroll;
 }
+
 .footer {
     height: 50px;
     width: 100%;
     background-image: linear-gradient(#F0F0F0, #D5D5D5);;
     border-top: 2px solid lightgrey;
     box-sizing: border-box;
+}
+
+.sheets {
+    margin: 0;
+    margin-left: 30px;
+    height: 100%;
+    list-style-type: none;
+    padding: 0;
+}
+
+.sheets li {
+    display: inline-block;
+    height: 48px;
+    line-height: 48px;
+}
+
+.sheet {
+    border-left: 2px solid #BBB;
+    padding: 0 10px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+li.sheet:nth-last-child(2) {
+    border-right: 2px solid #BBB;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
 }
 
 .schedule {

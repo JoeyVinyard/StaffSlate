@@ -18,5 +18,13 @@
     </table>
 </div>
 <div class="footer">
-    <button mat-raised-button color="primary" [disabled]="curSheet == null" (click)="openNewShiftDialog()">Add Shift</button>
+    <ul class="sheets">
+        <li class="sheet">Monday</li>
+        <li class="sheet">Tuesday</li>
+        <li class="sheet">Wednesday</li>
+        <li class="sheet">Thursday</li>
+        <li class="sheet">Friday</li>
+        <li class="right" (click)="openNewShiftDialog()">Add Shift</li>
+    </ul>
+    
 </div>
