@@ -8,7 +8,7 @@
 .footer {
     height: 50px;
     width: 100%;
-    background-image: linear-gradient(#F0F0F0, #D5D5D5);;
+    background-image: linear-gradient(#EEE, #CCC);
     border-top: 2px solid lightgrey;
     box-sizing: border-box;
 }
@@ -25,17 +25,44 @@
     display: inline-block;
     height: 48px;
     line-height: 48px;
+    vertical-align: top;
 }
 
 .sheet {
-    border-left: 2px solid #BBB;
+    border-left: 1px solid #BBB;
+    color: #888;
     padding: 0 10px;
     text-align: center;
     box-sizing: border-box;
+    font-weight: 500;
+}
+
+.sheet:hover {
+    background-color: #CCC;
+    cursor: pointer;
+}
+
+.sheet:active {
+    background-image: linear-gradient( #DDD, #CCC);
+}
+
+.selectedSheet {
+    color: rebeccapurple;
+    background-color: #EFEFEF
 }
 
 li.sheet:nth-last-child(2) {
-    border-right: 2px solid #BBB;
+    border-right: 1px solid #BBB;
+}
+
+.addSheet {
+    color: rebeccapurple;
+    cursor: pointer;
+    font-size: 26px;
+    height: 26px;
+    margin-right: 10px;
+    vertical-align: middle;
+    width: 26px;
 }
 
 .left {

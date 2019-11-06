@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>Add Shift</h1>
+<div class="content" mat-dialog-content>
+    <mat-form-field>
+        <input matInput [formControl]="employee" placeholder="Employee" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let emp of getNames(location.getEmployees() | async)" [value]="emp">
+                {{emp.firstName + ' ' + emp.lastName}}</mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="employee.invalid">{{getEmployeeError()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Sheet</mat-label>
+        <mat-select [formControl]="sheet">
+            <mat-option *ngFor="let s of sheets" [value]="s">
+                {{s.label}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div class="time-container">
+        <mat-label>Shift Start:</mat-label>
+        <ngx-timepicker-field #start [controlOnly]="true" [disabled]="!sheet.value"></ngx-timepicker-field>
+        <mat-error *ngIf="sheet.value">{{getShiftStartError()}}</mat-error>
+        <div class="spacer"></div>
+        <mat-label>Shift End:</mat-label>
+        <ngx-timepicker-field #end [controlOnly]="true" [disabled]="!sheet.value"></ngx-timepicker-field>
+        <mat-error *ngIf="sheet.value">{{getShiftEndError()}}</mat-error>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary"
+        [disabled]="employee.invalid || sheet.invalid || shiftStart.invalid || shiftEnd.invalid" (click)="submit()">Add
+        Shift</button>
+</div>
