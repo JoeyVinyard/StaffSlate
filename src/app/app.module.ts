@@ -49,6 +49,7 @@ import { NewScheduleDialogComponent } from './components/pages/schedules/new-sch
 import { ScheduleComponent } from './components/pages/schedule/schedule.component';
 import { NewShiftDialogComponent } from './components/pages/schedule/new-shift-dialog/new-shift-dialog.component';
 import { NewSheetDialogComponent } from './components/pages/schedule/new-sheet-dialog/new-sheet-dialog.component';
+import { TimeSelectComponent } from './components/utility/time-select/time-select.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { NewSheetDialogComponent } from './components/pages/schedule/new-sheet-d
     NewScheduleDialogComponent,
     ScheduleComponent,
     NewShiftDialogComponent,
-    NewSheetDialogComponent
+    NewSheetDialogComponent,
+    TimeSelectComponent
   ],
   imports: [
     BrowserModule,

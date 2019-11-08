@@ -4,12 +4,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Employee } from 'src/app/models/employee';
 import { LocationService } from 'src/app/services/location.service';
 import { Location } from 'src/app/models/location';
-import * as convertTime from "convert-time";
 import { Sheet } from 'src/app/models/sheet';
 import { NgxTimepickerFieldComponent } from 'ngx-material-timepicker';
 import { Shift } from 'src/app/models/shift';
 import { Time } from '@angular/common';
 import { NewShift } from 'src/app/models/new-shift';
+import { TimeSelectComponent } from 'src/app/components/utility/time-select/time-select.component';
 
 @Component({
   selector: 'app-new-shift-dialog',
@@ -39,38 +39,32 @@ export class NewShiftDialogComponent implements AfterViewInit {
     },
   ]);
 
-  @ViewChild("start", { static: true }) shiftStartField: NgxTimepickerFieldComponent;
-  @ViewChild("end", {static: true}) shiftEndField: NgxTimepickerFieldComponent;
+  @ViewChild("start", { static: true }) shiftStartField: TimeSelectComponent;
+  @ViewChild("end", {static: true}) shiftEndField: TimeSelectComponent;
 
   ngAfterViewInit() {
-    this.shiftStartField.registerOnChange((value: string) => {
-      let incremented = this.changeByIncrement(this.shiftStart.value, convertTime(value));
-      this.shiftStart.setValue(this.timeToString(incremented));
-      if(this.shiftStartField.minute != incremented.minutes) {
-        this.shiftStartField.changeMinute(incremented.minutes);
-      }
-    });
-    this.shiftEndField.registerOnChange((value: string) => {
-      let incremented = this.changeByIncrement(this.shiftEnd.value, convertTime(value));
-      this.shiftEnd.setValue(this.timeToString(incremented));
-      if(this.shiftEndField.minute != incremented.minutes) {
-        this.shiftEndField.changeMinute(incremented.minutes);
-      }
-    });
+    // this.shiftStartField.registerOnChange((value: string) => {
+    //   let incremented = this.changeByIncrement(this.shiftStart.value, convertTime(value));
+    //   this.shiftStart.setValue(this.timeToString(incremented));
+    //   if(this.shiftStartField.minute != incremented.minutes) {
+    //     this.shiftStartField.changeMinute(incremented.minutes);
+    //   }
+    // });
+    // this.shiftEndField.registerOnChange((value: string) => {
+    //   let incremented = this.changeByIncrement(this.shiftEnd.value, convertTime(value));
+    //   this.shiftEnd.setValue(this.timeToString(incremented));
+    //   if(this.shiftEndField.minute != incremented.minutes) {
+    //     this.shiftEndField.changeMinute(incremented.minutes);
+    //   }
+    // });
 
     this.sheet.valueChanges.subscribe((s: Sheet) => {
       this.shiftStart.setValue(s.openTime.hours + ":" + s.openTime.minutes)
-      this.shiftStartField.changeHour(s.openTime.hours);
-      this.shiftStartField.changeMinute(s.openTime.minutes);
+      this.shiftStartField.setTime(s.openTime);
 
       this.shiftEnd.setValue(s.openTime.hours+1 + ":" + s.openTime.minutes)
-      this.shiftEndField.changeHour(s.openTime.hours+1);
-      this.shiftEndField.changeMinute(s.openTime.minutes);
+      this.shiftEndField.setTime({hours: s.openTime.hours +1, minutes: 0});
     });
-  }
-
-  private timeToString(time: Time): string {
-    return `${time.hours}:${time.minutes}`;
   }
 
   private timeToNumber(time: Time): number {
@@ -83,30 +77,6 @@ export class NewShiftDialogComponent implements AfterViewInit {
       hours: Number.parseInt(parts[0]),
       minutes: Number.parseInt(parts[1])
     } as Time;
-  }
-
-  private buildTimeFromString(time: string): Time {
-    let split = time.split(":").map(m => Number.parseInt(m));
-    return {
-      hours: split[0],
-      minutes: split[1]
-    } as Time;
-  }
-
-  private changeByIncrement(original: string, changed: string): Time {
-    original = original ? original : "00:00"
-    let o = this.buildTimeFromString(original);
-    let c = this.buildTimeFromString(changed);
-    if(o.minutes == c.minutes) {
-      c.minutes = o.minutes;
-      return c;
-    } else if(o.minutes - c.minutes < 0) {
-      c.minutes = o.minutes + (<Sheet>this.sheet.value).timeIncrement;
-    } else {
-      c.minutes = o.minutes - (<Sheet>this.sheet.value).timeIncrement;
-    }
-    c.minutes = c.minutes%60;
-    return c;
   }
 
   private compareTimes(t1: string, t2: string): boolean {

@@ -17,11 +17,13 @@
     </mat-form-field>
     <div class="time-container">
         <mat-label>Shift Start:</mat-label>
-        <ngx-timepicker-field #start [controlOnly]="true" [disabled]="!sheet.value"></ngx-timepicker-field>
+        <app-time-select #start [disabled]="!sheet.value" [control]="shiftStart"></app-time-select>
+        <!-- <ngx-timepicker-field #start [controlOnly]="true" [disabled]="!sheet.value"></ngx-timepicker-field> -->
         <mat-error *ngIf="sheet.value">{{getShiftStartError()}}</mat-error>
         <div class="spacer"></div>
         <mat-label>Shift End:</mat-label>
-        <ngx-timepicker-field #end [controlOnly]="true" [disabled]="!sheet.value"></ngx-timepicker-field>
+        <app-time-select #end [disabled]="!sheet.value" [control]="shiftEnd"></app-time-select>
+        <!-- <ngx-timepicker-field #end [controlOnly]="true" [disabled]="!sheet.value"></ngx-timepicker-field> -->
         <mat-error *ngIf="sheet.value">{{getShiftEndError()}}</mat-error>
     </div>
 </div>
