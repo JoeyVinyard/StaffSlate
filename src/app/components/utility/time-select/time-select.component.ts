@@ -2,7 +2,7 @@ import { Component, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgxTimepickerFieldComponent } from 'ngx-material-timepicker';
 import { Time } from '@angular/common';
-import * as convertTime from "convert-time";
+import { ClockFaceTime } from 'ngx-material-timepicker/src/app/material-timepicker/models/clock-face-time.interface';
 
 @Component({
   selector: 'app-time-select',
@@ -17,52 +17,72 @@ export class TimeSelectComponent implements AfterViewInit {
 
   @ViewChild("time", {static: true}) timePicker: NgxTimepickerFieldComponent;
 
+  lastMinute: number;
+  am: boolean = true;
+
   ngAfterViewInit() {
-    this.timePicker.registerOnChange((value: string) => {
-      let incremented = this.changeByIncrement(this.control.value, convertTime(value));
-      this.control.setValue(this.timeToString(incremented));
-      if (this.timePicker.minute != incremented.minutes) {
-        this.timePicker.changeMinute(incremented.minutes);
+    this.timePicker.minute$.subscribe((cft: ClockFaceTime) => {
+      if(this.lastMinute == null) {
+        this.lastMinute = cft.time;
       }
+      if(this.lastMinute != cft.time) {
+        let newMinute = this.increment(cft.time);
+        this.lastMinute = newMinute;
+        this.timePicker.changeMinute(newMinute);
+        this.control.setValue({
+          hours: this.control.value.hours,
+          minutes: newMinute || 0
+        });
+      }
+    });
+    this.timePicker.hour$.subscribe((cft: ClockFaceTime) => {
+      this.control.setValue({
+        hours: this.convertHours(cft.time),
+        minutes: this.control.value.minutes || 0
+      });
+    });
+    this.timePicker.period$.subscribe((tp) => {
+      this.am = tp == "AM";
+      this.control.setValue({
+        hours: this.convertHours(this.control.value.hours),
+        minutes: this.control.value.minutes || 0
+      });
     });
   }
 
   public setTime(time: Time) {
-    // this.timePicker.hour = time.hours;
-    // this.timePicker.minute = time.minutes;
     this.timePicker.changeHour(time.hours);
     this.timePicker.changeMinute(time.minutes);
   }
 
-  private changeByIncrement(original: string, changed: string): Time {
-    original = original ? original : "00:00"
-    let o = this.buildTimeFromString(original);
-    let c = this.buildTimeFromString(changed);
-    if (o.minutes == c.minutes) {
-      c.minutes = o.minutes;
-      return c;
-    } else if (o.minutes - c.minutes < 0) {
-      c.minutes = o.minutes + this.timeIncrement;
+  //Converts a 12h time format to 24h
+  private convertHours(h: number): number {
+    if(this.am){
+      if(h == 12) {
+        return 0;
+      }
+      return h;
     } else {
-      c.minutes = o.minutes - this.timeIncrement;
+      if(h == 12) {
+        return h;
+      } else {
+        return h+12;
+      }
     }
-    c.minutes = c.minutes % 60;
-    return c;
   }
 
-  private buildTimeFromString(time: string): Time {
-    let split = time.split(":").map(m => Number.parseInt(m));
-    return {
-      hours: split[0],
-      minutes: split[1]
-    } as Time;
+  private increment(newMinutes: number): number {
+    if (this.lastMinute == newMinutes) {
+      newMinutes = this.lastMinute;
+      return newMinutes;
+    } else if (this.lastMinute - newMinutes < 0) {
+      newMinutes = this.lastMinute + this.timeIncrement;
+    } else {
+      newMinutes = this.lastMinute - this.timeIncrement;
+    }
+    newMinutes = newMinutes % 60;
+    return newMinutes;
   }
-
-  private timeToString(time: Time): string {
-    return `${time.hours}:${time.minutes}`;
-  }
-
-
 
   constructor() { }
 
