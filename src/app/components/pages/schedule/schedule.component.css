@@ -65,6 +65,14 @@ li.sheet:nth-last-child(2) {
     width: 26px;
 }
 
+.addShift {
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 6px;
+    margin-right: 6px;
+    line-height: 36px;
+}
+
 .left {
     float: left;
 }
