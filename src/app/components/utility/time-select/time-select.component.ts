@@ -21,6 +21,12 @@ export class TimeSelectComponent implements AfterViewInit {
   am: boolean = true;
 
   ngAfterViewInit() {
+    if(!this.control.value) {
+      this.control.setValue({
+        hours: 0,
+        minutes: 0
+      })
+    }
     this.timePicker.minute$.subscribe((cft: ClockFaceTime) => {
       if(this.lastMinute == null) {
         this.lastMinute = cft.time;

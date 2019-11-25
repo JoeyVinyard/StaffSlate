@@ -17,9 +17,9 @@ import { TimeSelectComponent } from 'src/app/components/utility/time-select/time
 })
 export class NewShiftDialogComponent implements AfterViewInit {
 
-  employee = new FormControl('', [Validators.required]);
-  sheet = new FormControl('', [Validators.required]);
-  shiftStart = new FormControl('', [Validators.required,
+  employee: FormControl = new FormControl('', [Validators.required]);
+  sheet: FormControl = new FormControl('', [Validators.required]);
+  shiftStart: FormControl = new FormControl('', [Validators.required,
     (control: AbstractControl) => {
       if (this.sheet.value && this.compareTimesGT(this.sheet.value.openTime, control.value)) {
         return { "startTooEarly": true}

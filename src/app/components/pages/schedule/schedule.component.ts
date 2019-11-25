@@ -12,6 +12,7 @@ import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.com
 import { Time } from '@angular/common';
 import { SheetService } from 'src/app/services/sheet.service';
 import { NewShift } from 'src/app/models/new-shift';
+import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.component';
 
 @Component({
   selector: 'app-schedule',
@@ -31,6 +32,18 @@ export class ScheduleComponent {
   
   private openNewShiftDialog(): void {
     const dialogRef = this.dialog.open(NewShiftDialogComponent, {
+      width: '400px',
+      data: this.sheets
+    });
+    dialogRef.afterClosed().subscribe((newShift: NewShift) => {
+      if(newShift) {
+        newShift.sheet.document.collection("shifts").add(newShift.shift);
+      }
+    });
+  }
+
+  private openNewSheetDialog(): void {
+    const dialogRef = this.dialog.open(NewSheetDialogComponent, {
       width: '400px',
       data: this.sheets
     });

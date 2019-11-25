@@ -99,7 +99,8 @@ import { TimeSelectComponent } from './components/utility/time-select/time-selec
   entryComponents: [
     NewEmployeeDialogComponent,
     NewScheduleDialogComponent,
-    NewShiftDialogComponent
+    NewShiftDialogComponent,
+    NewSheetDialogComponent
   ],
   providers: [
     AngularFireAuthGuard,
