@@ -44,12 +44,12 @@ export class ScheduleComponent {
 
   private openNewSheetDialog(): void {
     const dialogRef = this.dialog.open(NewSheetDialogComponent, {
-      width: '400px',
-      data: this.sheets
+      width: '400px'
     });
-    dialogRef.afterClosed().subscribe((newShift: NewShift) => {
-      if(newShift) {
-        newShift.sheet.document.collection("shifts").add(newShift.shift);
+    dialogRef.afterClosed().subscribe((sheet: Sheet) => {
+      if(sheet) {
+        this.currentSchedule.document.collection("sheets").add(sheet);
+        // newShift.sheet.document.collection("shifts").add(newShift.shift);
       }
     });
   }

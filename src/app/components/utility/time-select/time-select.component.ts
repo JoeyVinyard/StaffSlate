@@ -13,10 +13,13 @@ export class TimeSelectComponent implements AfterViewInit {
 
   @Input() disabled: boolean;
   @Input() control: FormControl;
-  @Input() timeIncrement: number = 30;
+  @Input() set setTimeIncrement(timeIncrement: string) {
+    this.timeIncrement = Number.parseInt(timeIncrement) || 30;
+  }
 
   @ViewChild("time", {static: true}) timePicker: NgxTimepickerFieldComponent;
 
+  timeIncrement: number = 30;
   lastMinute: number;
   am: boolean = true;
 

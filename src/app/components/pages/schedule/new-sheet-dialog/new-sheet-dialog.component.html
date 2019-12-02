@@ -4,18 +4,25 @@
         <input matInput [formControl]="sheet" placeholder="Sheet Name">
         <mat-error *ngIf="sheet.invalid">{{getSheetError()}}</mat-error>
     </mat-form-field>
+    <mat-form-field>
+        <mat-label>Time Increment</mat-label>
+        <mat-select [formControl]="timeIncrement">
+            <mat-option [value]="15">15 Minutes</mat-option>
+            <mat-option [value]="30">30 Minutes</mat-option>
+            <mat-option [value]="60">1 Hour</mat-option>
+        </mat-select>
+        <mat-error *ngIf="sheet.value">{{getIncrementError()}}</mat-error>
+    </mat-form-field>
     <div class="time-container">
         <mat-label>Open Time:</mat-label>
-        <app-time-select #openSheet [disabled]="!sheet.value" [control]="open"></app-time-select>
+        <app-time-select #openSheet [control]="open" [setTimeIncrement]="timeIncrement.value"></app-time-select>
         <mat-error *ngIf="sheet.value">{{getOpenError()}}</mat-error>
         <div class="spacer"></div>
         <mat-label>Close Time:</mat-label>
-        <app-time-select #closeSheet [disabled]="!sheet.value" [control]="close"></app-time-select>
+        <app-time-select #closeSheet [control]="close" [setTimeIncrement]="timeIncrement.value"></app-time-select>
         <mat-error *ngIf="sheet.value">{{getCloseError()}}</mat-error>
     </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary"
-        [disabled]="sheet.invalid || open.invalid || close.invalid" (click)="submit()">Add
-        Shift</button>
+    <button mat-raised-button color="primary" [disabled]="sheet.invalid || open.invalid || close.invalid" (click)="submit()">Add Sheet</button>
 </div>
