@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, Inject } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, Inject, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Employee } from 'src/app/models/employee';
@@ -7,7 +7,6 @@ import { Location } from 'src/app/models/location';
 import { Sheet } from 'src/app/models/sheet';
 import { Shift } from 'src/app/models/shift';
 import { Time } from '@angular/common';
-import { NewShift } from 'src/app/models/new-shift';
 import { TimeSelectComponent } from 'src/app/components/utility/time-select/time-select.component';
 
 @Component({
@@ -18,10 +17,9 @@ import { TimeSelectComponent } from 'src/app/components/utility/time-select/time
 export class NewShiftDialogComponent implements AfterViewInit {
 
   employee: FormControl = new FormControl('', [Validators.required]);
-  sheet: FormControl = new FormControl('', [Validators.required]);
   shiftStart: FormControl = new FormControl('', [Validators.required,
     (control: AbstractControl) => {
-      if (this.sheet.value && this.compareTimesGT(this.sheet.value.openTime, control.value)) {
+      if (this.sheet && this.compareTimesGT(this.sheet.openTime, control.value)) {
         return { "startTooEarly": true}
       }
       return {};
@@ -29,7 +27,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
   );
   shiftEnd = new FormControl('', [Validators.required, 
     (control: AbstractControl) => {
-        if (this.sheet.value && this.compareTimesGT(control.value, this.sheet.value.closeTime)) {
+        if (this.sheet && this.compareTimesGT(control.value, this.sheet.closeTime)) {
         return { "endTooLate": true };
       }
       return {};
@@ -49,13 +47,12 @@ export class NewShiftDialogComponent implements AfterViewInit {
     this.shiftStart.valueChanges.subscribe(() => {
       this.shiftEnd.updateValueAndValidity();
     });
-    this.sheet.valueChanges.subscribe((s: Sheet) => {
-      this.shiftStart.setValue(s.openTime.hours + ":" + s.openTime.minutes)
-      this.shiftStartField.setTime(s.openTime);
-
-      this.shiftEnd.setValue(s.openTime.hours+1 + ":" + s.openTime.minutes)
-      this.shiftEndField.setTime({hours: s.openTime.hours +1, minutes: 0});
-    });
+    this.shiftStart.setValue(this.sheet.openTime.hours + ":" + this.sheet.openTime.minutes)
+    this.shiftStartField.setTime(this.sheet.openTime);
+    
+    this.shiftEnd.setValue(this.sheet.openTime.hours+1 + ":" + this.sheet.openTime.minutes)
+    this.shiftEndField.setTime({hours: this.sheet.openTime.hours +1, minutes: 0});
+    this.cdr.detectChanges();
   }
 
   private compareTimesGTE(t1: Time, t2: Time): boolean {
@@ -71,14 +68,6 @@ export class NewShiftDialogComponent implements AfterViewInit {
   getEmployeeError(): string {
     if (this.employee.hasError("required")) {
       return "Please select an Employee";
-    } else {
-      return "";
-    }
-  }
-
-  getSheetError(): string {
-    if (this.sheet.hasError("required")) {
-      return "Please select a Sheet";
     } else {
       return "";
     }
@@ -110,13 +99,10 @@ export class NewShiftDialogComponent implements AfterViewInit {
 
   submit(): void {
     this.dialogRef.close({
-      shift: {
-        empId: this.employee.value.id,
-        startTime: this.shiftStart.value,
-        endTime: this.shiftEnd.value
-      } as Shift,
-      sheet: this.sheet.value
-    } as NewShift);
+      empId: this.employee.value.id,
+      startTime: this.shiftStart.value,
+      endTime: this.shiftEnd.value
+    } as Shift);
   }
 
   displayFn(emp: Employee): string {
@@ -140,11 +126,11 @@ export class NewShiftDialogComponent implements AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<NewShiftDialogComponent>,
     private locationService: LocationService,
-    @Inject(MAT_DIALOG_DATA) public sheets: Sheet[]
+    private cdr: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public sheet: Sheet
     ) {
       locationService.currentLocation.subscribe((location) => {
         this.location = location;
       });
     }
-
 }

@@ -30,7 +30,7 @@
         >{{sheets[sheetNum].label}}</div>
     </div>
     <div class="filler"></div>
-    <button mat-raised-button color="primary" class="addShift right" (click)="openNewShiftDialog()">Add Shift</button>
+    <button mat-raised-button color="primary" class="addShift right" [disabled]="!sheets" (click)="openNewShiftDialog()">Add Shift</button>
 </mat-toolbar>
 <!-- <div class="footer">
      <ul class="footer-items">

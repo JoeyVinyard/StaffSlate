@@ -11,7 +11,6 @@ import { MatDialog } from '@angular/material';
 import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.component';
 import { Time } from '@angular/common';
 import { SheetService } from 'src/app/services/sheet.service';
-import { NewShift } from 'src/app/models/new-shift';
 import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.component';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
@@ -34,11 +33,11 @@ export class ScheduleComponent {
   private openNewShiftDialog(): void {
     const dialogRef = this.dialog.open(NewShiftDialogComponent, {
       width: '400px',
-      data: this.sheets
+      data: this.curSheet
     });
-    dialogRef.afterClosed().subscribe((newShift: NewShift) => {
+    dialogRef.afterClosed().subscribe((newShift: Shift) => {
       if(newShift) {
-        newShift.sheet.document.collection("shifts").add(newShift.shift);
+        this.curSheet.document.collection("shifts").add(newShift);
       }
     });
   }
