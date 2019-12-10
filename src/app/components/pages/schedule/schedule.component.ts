@@ -99,23 +99,28 @@ export class ScheduleComponent {
     }
   }
   
+  loadSheet(label?: string): void {
+    label = label || "";
+    this.curSheet = this.sheets.find(sh => sh.label == label) || this.sheets[0];
+    this.curSheet.loadDisplayShifts().subscribe((shifts: Shift[]) => {
+      this.shifts = shifts.sort((a, b) => {
+        let r = this.convertTimeToNum(a.startTime) - this.convertTimeToNum(b.startTime);
+        if(r == 0) {
+          return this.convertTimeToNum(a.endTime) - this.convertTimeToNum(b.endTime);
+        }
+        return r;
+      });
+    })
+    this.timeColumns = this.generateTimeColumns();
+  }
+
   parseSchedule(): void {
     this.currentSchedule.loadSheets().subscribe((sheets) => {
       this.sheets = sheets.map((s) => {
         let sheet: Sheet = new Sheet(s.payload.doc.data(), this.currentSchedule.document.collection("sheets").doc(s.payload.doc.id));
         return sheet;
       });
-      this.curSheet = this.sheets[0];
-      this.curSheet.loadDisplayShifts().subscribe((shifts: Shift[]) => {
-        this.shifts = shifts.sort((a, b) => {
-          let r = this.convertTimeToNum(a.startTime) - this.convertTimeToNum(b.startTime);
-          if(r == 0) {
-            return this.convertTimeToNum(a.endTime) - this.convertTimeToNum(b.endTime);
-          }
-          return r;
-        });
-      })
-      this.timeColumns = this.generateTimeColumns();
+      this.loadSheet();
     });
   }
   

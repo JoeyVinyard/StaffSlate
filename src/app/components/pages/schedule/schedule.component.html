@@ -18,10 +18,9 @@
     </table>
 </div>
 <div class="footer">
-    <ul class="sheets">
+    <ul class="footer-items">
         <li><mat-icon class="addSheet" (click)="openNewSheetDialog()">add</mat-icon></li>
-        <li class="sheet" *ngFor="let sheet of sheets">{{sheet.label}}</li>
+        <li class="sheet" *ngFor="let sheet of sheets" [ngClass]="{'selectedSheet': sheet.label==curSheet.label}" (click)="loadSheet(sheet.label)">{{sheet.label}}</li>
         <button mat-raised-button color="primary" class="addShift right" (click)="openNewShiftDialog()">Add Shift</button>
     </ul>
-    
 </div>
