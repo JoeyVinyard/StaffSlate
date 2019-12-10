@@ -17,10 +17,25 @@
         </ng-container>
     </table>
 </div>
-<div class="footer">
-    <ul class="footer-items">
-        <li><mat-icon class="addSheet" (click)="openNewSheetDialog()">add</mat-icon></li>
-        <li class="sheet" *ngFor="let sheet of sheets" [ngClass]="{'selectedSheet': sheet.label==curSheet.label}" (click)="loadSheet(sheet.label)">{{sheet.label}}</li>
+<mat-toolbar class="footer">
+    <div class="addSheet">
+        <mat-icon (click)="openNewSheetDialog()">add</mat-icon>
+    </div>
+        <div *ngIf="currentSchedule && sheets" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)">
+        <div class="sheet"
+            *ngFor="let sheetNum of currentSchedule.sheetOrder"
+            [ngClass]="{'selectedSheet': sheets[sheetNum].label==curSheet.label}"
+            (click)="loadSheet(sheets[sheetNum].label)"
+            cdkDrag cdkDragLockAxis="x"
+        >{{sheets[sheetNum].label}}</div>
+    </div>
+    <div class="filler"></div>
+    <button mat-raised-button color="primary" class="addShift right" (click)="openNewShiftDialog()">Add Shift</button>
+</mat-toolbar>
+<!-- <div class="footer">
+     <ul class="footer-items">
+        <li></li>
+        <li class="sheet" >{{sheet.label}}</li>
         <button mat-raised-button color="primary" class="addShift right" (click)="openNewShiftDialog()">Add Shift</button>
     </ul>
-</div>
+</div> -->

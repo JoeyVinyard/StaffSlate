@@ -28,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // Config Files
 import { appRoutes } from "./routes";
@@ -90,6 +91,7 @@ import { TimeSelectComponent } from './components/utility/time-select/time-selec
     MatDialogModule,
     MatSnackBarModule,
     MatAutocompleteModule,
+    DragDropModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireStorageModule,

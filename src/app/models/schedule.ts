@@ -5,6 +5,7 @@ import { Sheet } from './sheet';
 export class Schedule {
     label: string;
     id: string;
+    sheetOrder: number[];
 
     public loadSheets(): Observable<DocumentChangeAction<Sheet>[]> {
         return this.document.collection<Sheet>("sheets").snapshotChanges();
@@ -13,5 +14,6 @@ export class Schedule {
     constructor(scheduleData: Schedule, public document: AngularFirestoreDocument<Schedule>) {
         this.label = scheduleData.label;
         this.id = scheduleData.id;
+        this.sheetOrder = scheduleData.sheetOrder;
     }
 }

@@ -13,6 +13,7 @@ import { Time } from '@angular/common';
 import { SheetService } from 'src/app/services/sheet.service';
 import { NewShift } from 'src/app/models/new-shift';
 import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.component';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-schedule',
@@ -49,8 +50,20 @@ export class ScheduleComponent {
     dialogRef.afterClosed().subscribe((sheet: Sheet) => {
       if(sheet) {
         this.currentSchedule.document.collection("sheets").add(sheet);
-        // newShift.sheet.document.collection("shifts").add(newShift.shift);
+        this.currentSchedule.sheetOrder.push(this.currentSchedule.sheetOrder.length);
+        this.currentSchedule.document.update({
+          sheetOrder: this.currentSchedule.sheetOrder
+        });
       }
+    });
+  }
+
+  dropSheetLabel(dropEv: CdkDragDrop<HTMLDivElement>) {
+    let v = this.currentSchedule.sheetOrder[dropEv.previousIndex];
+    this.currentSchedule.sheetOrder[dropEv.previousIndex] = this.currentSchedule.sheetOrder[dropEv.currentIndex];
+    this.currentSchedule.sheetOrder[dropEv.currentIndex] = v;
+    this.currentSchedule.document.update({
+      sheetOrder: this.currentSchedule.sheetOrder
     });
   }
 
@@ -100,6 +113,9 @@ export class ScheduleComponent {
   }
   
   loadSheet(label?: string): void {
+    if(label && label == this.curSheet.label) {
+      return;
+    }
     label = label || "";
     this.curSheet = this.sheets.find(sh => sh.label == label) || this.sheets[0];
     this.curSheet.loadDisplayShifts().subscribe((shifts: Shift[]) => {
