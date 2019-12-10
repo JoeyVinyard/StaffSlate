@@ -1,7 +1,7 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { TimeSelectComponent } from 'src/app/components/utility/time-select/time-select.component';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { NewShiftDialogComponent } from '../new-shift-dialog/new-shift-dialog.component';
 import { Sheet } from 'src/app/models/sheet';
 
@@ -68,6 +68,13 @@ export class NewSheetDialogComponent implements AfterViewInit {
     }
   }
 
-  constructor(public dialogRef: MatDialogRef<NewShiftDialogComponent>) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {sheet:Sheet}, public dialogRef: MatDialogRef<NewShiftDialogComponent>) {
+    if(data.sheet) {
+      this.sheet.setValue(data.sheet.label);
+      this.open.setValue(data.sheet.openTime);
+      this.close.setValue(data.sheet.closeTime);
+      this.timeIncrement.setValue(data.sheet.timeIncrement);
+    }
+  }
 
 }

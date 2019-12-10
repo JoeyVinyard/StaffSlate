@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, Input, AfterViewInit, ViewChild, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgxTimepickerFieldComponent } from 'ngx-material-timepicker';
 import { Time } from '@angular/common';
@@ -9,7 +9,7 @@ import { ClockFaceTime } from 'ngx-material-timepicker/src/app/material-timepick
   templateUrl: './time-select.component.html',
   styleUrls: ['./time-select.component.css']
 })
-export class TimeSelectComponent implements AfterViewInit {
+export class TimeSelectComponent implements AfterViewInit, OnInit {
 
   @Input() disabled: boolean;
   @Input() control: FormControl;
@@ -22,6 +22,10 @@ export class TimeSelectComponent implements AfterViewInit {
   timeIncrement: number = 30;
   lastMinute: number;
   am: boolean = true;
+
+  ngOnInit() {
+    this.timePicker.defaultTime = this.control.value.hours + ":" + this.control.value.minutes;
+  }
 
   ngAfterViewInit() {
     if(!this.control.value) {

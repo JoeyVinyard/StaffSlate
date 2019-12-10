@@ -24,5 +24,5 @@
     </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" [disabled]="sheet.invalid || open.invalid || close.invalid" (click)="submit()">Add Sheet</button>
+    <button mat-raised-button color="primary" [disabled]="sheet.invalid || open.invalid || close.invalid" (click)="submit()">{{data.sheet? "Save" : "Add"}} Sheet</button>
 </div>

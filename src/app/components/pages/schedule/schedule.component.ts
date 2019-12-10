@@ -42,17 +42,24 @@ export class ScheduleComponent {
     });
   }
 
-  private openNewSheetDialog(): void {
+  private openNewSheetDialog(sheet?: Sheet): void {
     const dialogRef = this.dialog.open(NewSheetDialogComponent, {
-      width: '400px'
+      width: '400px',
+      data: {
+        sheet: sheet
+      }
     });
-    dialogRef.afterClosed().subscribe((sheet: Sheet) => {
-      if(sheet) {
-        this.currentSchedule.document.collection("sheets").add(sheet);
-        this.currentSchedule.sheetOrder.push(this.currentSchedule.sheetOrder.length);
-        this.currentSchedule.document.update({
-          sheetOrder: this.currentSchedule.sheetOrder
-        });
+    dialogRef.afterClosed().subscribe((newSheet: Sheet) => {
+      if(newSheet) {
+        if(sheet) {
+          sheet.document.update(newSheet);
+        } else {
+          this.currentSchedule.document.collection("sheets").add(newSheet);
+          this.currentSchedule.sheetOrder.push(this.currentSchedule.sheetOrder.length);
+          this.currentSchedule.document.update({
+            sheetOrder: this.currentSchedule.sheetOrder
+          });
+        }
       }
     });
   }

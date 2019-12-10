@@ -27,15 +27,16 @@
             [ngClass]="{'selectedSheet': sheets[sheetNum].label==curSheet.label}"
             (click)="loadSheet(sheets[sheetNum].label)"
             cdkDrag cdkDragLockAxis="x"
-        >{{sheets[sheetNum].label}}</div>
+        >{{sheets[sheetNum].label}}
+            <button *ngIf="sheets[sheetNum].label==curSheet.label" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
+                <mat-icon class="dropdown-arrow" >arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="deleteSheet(sheetNum)">Delete</button>
+                <button mat-menu-item (click)="openNewSheetDialog(sheets[sheetNum])">Edit</button>
+            </mat-menu>
+        </div>
     </div>
     <div class="filler"></div>
     <button mat-raised-button color="primary" class="addShift right" [disabled]="!sheets" (click)="openNewShiftDialog()">Add Shift</button>
 </mat-toolbar>
-<!-- <div class="footer">
-     <ul class="footer-items">
-        <li></li>
-        <li class="sheet" >{{sheet.label}}</li>
-        <button mat-raised-button color="primary" class="addShift right" (click)="openNewShiftDialog()">Add Shift</button>
-    </ul>
-</div> -->
