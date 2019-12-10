@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Danger Zone!</h1>
+<div class="content" mat-dialog-content>
+    You are about to permanently delete "{{data}}"
+</div>
+<div class="buttons" mat-dialog-actions>
+    <button mat-raised-button color="warn" (click)="submit()">Delete</button>
+    <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+</div>

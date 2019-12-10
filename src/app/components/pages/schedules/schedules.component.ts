@@ -29,6 +29,7 @@ export class SchedulesComponent {
     });
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
       if (schedule) {
+        schedule.sheetOrder = [];
         this.loadedLocation.addSchedule(schedule)
           .then(() => this.addScheduleResult(true))
           .catch((err) => {

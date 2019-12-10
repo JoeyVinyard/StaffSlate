@@ -51,6 +51,7 @@ import { ScheduleComponent } from './components/pages/schedule/schedule.componen
 import { NewShiftDialogComponent } from './components/pages/schedule/new-shift-dialog/new-shift-dialog.component';
 import { NewSheetDialogComponent } from './components/pages/schedule/new-sheet-dialog/new-sheet-dialog.component';
 import { TimeSelectComponent } from './components/utility/time-select/time-select.component';
+import { DeleteSheetConfirmationComponent } from './components/pages/schedule/delete-sheet-confirmation/delete-sheet-confirmation.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { TimeSelectComponent } from './components/utility/time-select/time-selec
     ScheduleComponent,
     NewShiftDialogComponent,
     NewSheetDialogComponent,
-    TimeSelectComponent
+    TimeSelectComponent,
+    DeleteSheetConfirmationComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +104,8 @@ import { TimeSelectComponent } from './components/utility/time-select/time-selec
     NewEmployeeDialogComponent,
     NewScheduleDialogComponent,
     NewShiftDialogComponent,
-    NewSheetDialogComponent
+    NewSheetDialogComponent,
+    DeleteSheetConfirmationComponent
   ],
   providers: [
     AngularFireAuthGuard,

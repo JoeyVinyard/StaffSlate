@@ -13,6 +13,7 @@ import { Time } from '@angular/common';
 import { SheetService } from 'src/app/services/sheet.service';
 import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.component';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { DeleteSheetConfirmationComponent } from './delete-sheet-confirmation/delete-sheet-confirmation.component';
 
 @Component({
   selector: 'app-schedule',
@@ -30,6 +31,28 @@ export class ScheduleComponent {
   
   private times: number[] = [];
   
+  private openNewSheetDeleteConfirmation(): void {
+    const dialogRef = this.dialog.open(DeleteSheetConfirmationComponent, {
+      width: '500px',
+      data: this.curSheet.label
+    });
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if(confirmed) {
+        let i = this.sheets.indexOf(this.curSheet);
+        let del = this.currentSchedule.sheetOrder.splice(i,1)[0];
+        this.currentSchedule.sheetOrder.forEach((v,i) => {
+          if(v > del){
+            this.currentSchedule.sheetOrder[i]=v-1;
+          }
+        })
+        this.currentSchedule.document.update({
+          sheetOrder: this.currentSchedule.sheetOrder
+        });
+        this.curSheet.document.delete();
+      }
+    });
+  }
+
   private openNewShiftDialog(): void {
     const dialogRef = this.dialog.open(NewShiftDialogComponent, {
       width: '400px',
@@ -54,11 +77,12 @@ export class ScheduleComponent {
         if(sheet) {
           sheet.document.update(newSheet);
         } else {
-          this.currentSchedule.document.collection("sheets").add(newSheet);
-          this.currentSchedule.sheetOrder.push(this.currentSchedule.sheetOrder.length);
-          this.currentSchedule.document.update({
-            sheetOrder: this.currentSchedule.sheetOrder
-          });
+          this.currentSchedule.document.collection("sheets").add(newSheet).then(() => {
+            this.currentSchedule.sheetOrder.push(this.currentSchedule.sheetOrder.length);
+            this.currentSchedule.document.update({
+              sheetOrder: this.currentSchedule.sheetOrder
+            });
+          })
         }
       }
     });

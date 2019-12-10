@@ -31,8 +31,8 @@
             <button *ngIf="sheets[sheetNum].label==curSheet.label" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
                 <mat-icon class="dropdown-arrow" >arrow_drop_down</mat-icon>
             </button>
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="deleteSheet(sheetNum)">Delete</button>
+            <mat-menu xPosition="before" #menu="matMenu">
+                <button mat-menu-item (click)="openNewSheetDeleteConfirmation()">Delete</button>
                 <button mat-menu-item (click)="openNewSheetDialog(sheets[sheetNum])">Edit</button>
             </mat-menu>
         </div>
