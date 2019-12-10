@@ -58,7 +58,7 @@
     background-color: #EFEFEF
 }
 
-li.sheet:nth-last-child(2) {
+.sheet:last-child {
     border-right: 1px solid #BBB;
 }
 
@@ -131,4 +131,12 @@ td {
 
 .filler {
     flex: 1 1 auto;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.sheets.cdk-drop-list-dragging .sheet:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
