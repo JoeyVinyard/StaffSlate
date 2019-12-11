@@ -10,11 +10,11 @@
     <div class="time-container">
         <mat-label>Shift Start:</mat-label>
         <app-time-select #start [control]="shiftStart"></app-time-select>
-        <mat-error *ngIf="shiftStart.dirty">{{getShiftStartError()}}</mat-error>
+        <mat-error>{{getShiftStartError()}}</mat-error>
         <div class="spacer"></div>
         <mat-label>Shift End:</mat-label>
         <app-time-select #end [control]="shiftEnd"></app-time-select>
-        <mat-error *ngIf="shiftStart.dirty">{{getShiftEndError()}}</mat-error>
+        <mat-error>{{getShiftEndError()}}</mat-error>
     </div>
 </div>
 <div mat-dialog-actions>
