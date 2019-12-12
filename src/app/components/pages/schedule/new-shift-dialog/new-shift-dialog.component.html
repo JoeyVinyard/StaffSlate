@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Add Shift</h1>
+<h1 mat-dialog-title>{{data.shift ? "Edit" : "Add"}} Shift</h1>
 <div class="content" mat-dialog-content>
     <mat-form-field>
         <input matInput [formControl]="employee" placeholder="Employee" [matAutocomplete]="auto">
@@ -18,5 +18,5 @@
     </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" [disabled]="employee.invalid || shiftStart.invalid || shiftEnd.invalid" (click)="submit()">Add Shift</button>
+    <button mat-raised-button color="primary" [disabled]="employee.invalid || shiftStart.invalid || shiftEnd.invalid" (click)="submit()">{{data.shift ? "Save Change" : "Add Shift"}}</button>
 </div>

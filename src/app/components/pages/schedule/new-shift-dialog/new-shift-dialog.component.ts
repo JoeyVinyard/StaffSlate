@@ -19,7 +19,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
   employee: FormControl = new FormControl('', [Validators.required]);
   shiftStart: FormControl = new FormControl('', [Validators.required,
     (control: AbstractControl) => {
-      if (this.sheet && this.compareTimesGT(this.sheet.openTime, control.value)) {
+      if (this.data.sheet && this.compareTimesGT(this.data.sheet.openTime, control.value)) {
         return { "startTooEarly": true}
       }
       return {};
@@ -27,7 +27,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
   );
   shiftEnd = new FormControl('', [Validators.required, 
     (control: AbstractControl) => {
-        if (this.sheet && this.compareTimesGT(control.value, this.sheet.closeTime)) {
+        if (this.data.sheet && this.compareTimesGT(control.value, this.data.sheet.closeTime)) {
         return { "endTooLate": true };
       }
       return {};
@@ -47,11 +47,13 @@ export class NewShiftDialogComponent implements AfterViewInit {
     this.shiftStart.valueChanges.subscribe(() => {
       this.shiftEnd.updateValueAndValidity();
     });
-    this.shiftStart.setValue(this.sheet.openTime.hours + ":" + this.sheet.openTime.minutes)
-    this.shiftStartField.setTime(this.sheet.openTime);
-    
-    this.shiftEnd.setValue(this.sheet.openTime.hours+1 + ":" + this.sheet.openTime.minutes)
-    this.shiftEndField.setTime({hours: this.sheet.openTime.hours +1, minutes: 0});
+    if(!this.data.shift) {
+      this.shiftStart.setValue(this.data.sheet.openTime.hours + ":" + this.data.sheet.openTime.minutes)
+      this.shiftStartField.setTime(this.data.sheet.openTime);
+      
+      this.shiftEnd.setValue(this.data.sheet.openTime.hours+1 + ":" + this.data.sheet.openTime.minutes)
+      this.shiftEndField.setTime({hours: this.data.sheet.openTime.hours +1, minutes: 0});
+    }
     this.cdr.detectChanges();
   }
 
@@ -127,10 +129,17 @@ export class NewShiftDialogComponent implements AfterViewInit {
     public dialogRef: MatDialogRef<NewShiftDialogComponent>,
     private locationService: LocationService,
     private cdr: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public sheet: Sheet
+    @Inject(MAT_DIALOG_DATA) public data: {sheet: Sheet, shift: Shift}
     ) {
       locationService.currentLocation.subscribe((location) => {
         this.location = location;
       });
+      if(data.shift) {
+        this.location.getEmployees().subscribe((emps: Map<string, Employee>) => {
+          this.employee.setValue(emps.get(data.shift.empId));
+          this.shiftStart.setValue(data.shift.startTime);
+          this.shiftEnd.setValue(data.shift.endTime);
+        }).unsubscribe();
+      }
     }
 }

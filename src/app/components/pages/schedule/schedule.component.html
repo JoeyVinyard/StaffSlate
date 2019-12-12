@@ -3,16 +3,30 @@
         <tr>
             <th class="label">{{curSheet.label}}</th>
             <th class="hbuffer"></th>
-            <th class="time" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
+            <th class="time timeColumn" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
         </tr>
         <ng-container *ngFor="let shift of shifts">
             <tr class="vbuffer">
-                <td class="name"></td>
+                <td class="name-container"></td>
+                <td class="hbuffer"></td>
+                <td class="timeColumn" *ngFor="let t of timeColumns"></td>
+
             </tr>
             <tr>
-                <td class="name">{{parseName((currentLocation.getEmployees() | async).get(shift.empId))}}</td>
+                <td class="name-container" (mouseenter)="enter(shift)">
+                    <span class="name-text">
+                        {{parseName((currentLocation.getEmployees() | async).get(shift.empId))}}
+                    </span>
+                    <button *ngIf="hovered == shift" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-emp-container">
+                        <mat-icon class="dropdown-arrow-emp" >arrow_drop_down</mat-icon>
+                    </button>
+                    <mat-menu xPosition="before" #menu="matMenu">
+                        <button mat-menu-item (click)="openNewShiftDialog(shift)">Edit</button>
+                        <button mat-menu-item (click)="deleteShift(shift)">Delete</button>
+                    </mat-menu>
+                </td>
                 <td class="hbuffer"></td>
-                <td *ngFor="let t of timeColumns" [ngClass]="{'shaded': isInShift(t, shift)}"></td>
+                <td *ngFor="let t of timeColumns" class="timeColumn" [ngClass]="{'shaded': isInShift(t, shift)}"></td>
             </tr>
         </ng-container>
     </table>

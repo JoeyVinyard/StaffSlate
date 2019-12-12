@@ -14,6 +14,7 @@ import { SheetService } from 'src/app/services/sheet.service';
 import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.component';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DeleteSheetConfirmationComponent } from './delete-sheet-confirmation/delete-sheet-confirmation.component';
+import { DocumentChangeAction } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-schedule',
@@ -30,6 +31,7 @@ export class ScheduleComponent {
   private timeColumns: Time[] = [];
   
   private times: number[] = [];
+  private hovered: Shift = null;
   
   private openNewSheetDeleteConfirmation(): void {
     const dialogRef = this.dialog.open(DeleteSheetConfirmationComponent, {
@@ -53,14 +55,21 @@ export class ScheduleComponent {
     });
   }
 
-  private openNewShiftDialog(): void {
+  private openNewShiftDialog(shift?: Shift): void {
     const dialogRef = this.dialog.open(NewShiftDialogComponent, {
       width: '400px',
-      data: this.curSheet
+      data: {
+        sheet: this.curSheet,
+        shift: shift
+      }
     });
     dialogRef.afterClosed().subscribe((newShift: Shift) => {
       if(newShift) {
-        this.curSheet.document.collection("shifts").add(newShift);
+        if(shift) {
+          this.curSheet.document.collection("shifts").doc(shift.id).update(newShift);
+        } else {
+          this.curSheet.document.collection("shifts").add(newShift);
+        }
       }
     });
   }
@@ -88,7 +97,13 @@ export class ScheduleComponent {
     });
   }
 
-  dropSheetLabel(dropEv: CdkDragDrop<HTMLDivElement>) {
+  private deleteShift(shift: Shift) {
+    this.curSheet.document.collection("shifts").doc(shift.id).delete().catch((err) => {
+      console.error(err);
+    });
+  }
+
+  private dropSheetLabel(dropEv: CdkDragDrop<HTMLDivElement>) {
     let v = this.currentSchedule.sheetOrder[dropEv.previousIndex];
     this.currentSchedule.sheetOrder[dropEv.previousIndex] = this.currentSchedule.sheetOrder[dropEv.currentIndex];
     this.currentSchedule.sheetOrder[dropEv.currentIndex] = v;
@@ -106,7 +121,7 @@ export class ScheduleComponent {
       && this.convertTimeToNum(time) < this.convertTimeToNum(shift.endTime));
   }
   
-  generateTimeColumns(): Time[] {
+  private generateTimeColumns(): Time[] {
     let s = this.curSheet.openTime.hours + this.curSheet.openTime.minutes/60;
     let e = this.curSheet.closeTime.hours + this.curSheet.closeTime.minutes / 60;
     let numColumns = Math.floor(e-s+1)*(60/this.curSheet.timeIncrement);
@@ -141,14 +156,23 @@ export class ScheduleComponent {
       return `${time.hours%12}:${m}pm`;
     }
   }
-  
-  loadSheet(label?: string): void {
+
+  private enter(shift: Shift) {
+    this.hovered = shift;
+  }
+
+  private loadSheet(label?: string): void {
     if(label && label == this.curSheet.label) {
       return;
     }
     label = label || "";
-    this.curSheet = this.sheets.find(sh => sh.label == label) || this.sheets[0];
-    this.curSheet.loadDisplayShifts().subscribe((shifts: Shift[]) => {
+    this.curSheet = this.sheets.find(sh => sh.label == label) || this.sheets[this.currentSchedule.sheetOrder[0]];
+    this.curSheet.loadShifts().subscribe((shiftSnapshots: DocumentChangeAction<Shift>[]) => {
+      let shifts = shiftSnapshots.map((s) => {
+        let sd = s.payload.doc.data()
+        sd.id = s.payload.doc.id
+        return sd;
+      });
       this.shifts = shifts.sort((a, b) => {
         let r = this.convertTimeToNum(a.startTime) - this.convertTimeToNum(b.startTime);
         if(r == 0) {
@@ -160,7 +184,7 @@ export class ScheduleComponent {
     this.timeColumns = this.generateTimeColumns();
   }
 
-  parseSchedule(): void {
+  private parseSchedule(): void {
     this.currentSchedule.loadSheets().subscribe((sheets) => {
       this.sheets = sheets.map((s) => {
         let sheet: Sheet = new Sheet(s.payload.doc.data(), this.currentSchedule.document.collection("sheets").doc(s.payload.doc.id));
@@ -170,7 +194,7 @@ export class ScheduleComponent {
     });
   }
   
-  parseName(emp: Employee) {
+  private parseName(emp: Employee) {
     return `${emp.firstName} ${emp.lastName.substring(0,1)}.`;
   }
   

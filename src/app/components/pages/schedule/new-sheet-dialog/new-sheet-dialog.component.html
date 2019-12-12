@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Add Sheet</h1>
+<h1 mat-dialog-title>{{data.sheet ? "Save" : "Add"}} Sheet</h1>
 <div class="content" mat-dialog-content>
     <mat-form-field>
         <input matInput [formControl]="sheet" placeholder="Sheet Name">
@@ -24,5 +24,5 @@
     </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" [disabled]="sheet.invalid || open.invalid || close.invalid" (click)="submit()">{{data.sheet? "Save" : "Add"}} Sheet</button>
+    <button mat-raised-button color="primary" [disabled]="sheet.invalid || open.invalid || close.invalid" (click)="submit()">{{data.sheet ? "Save Change" : "Add Sheet"}} </button>
 </div>

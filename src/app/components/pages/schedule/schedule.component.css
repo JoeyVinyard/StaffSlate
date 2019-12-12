@@ -21,6 +21,7 @@
     background: transparent;
     border-radius: 4px;
 }
+
 .cdk-drag-placeholder {
     opacity: 0;
 }
@@ -84,6 +85,14 @@
     line-height: 36px;
 }
 
+.time {
+    min-width: 75px;
+}
+
+.timeColumn {
+    border-right: 1px solid #222;
+}
+
 .left {
     float: left;
 }
@@ -94,7 +103,7 @@
 
 .schedule {
     width: 100%;
-    table-layout: fixed;
+    table-layout: auto;
     border-spacing: 0;
 }
 
@@ -103,9 +112,33 @@
     min-width: 100px;
 }
 
-.name {
-    font-weight: bold;
+.name-container {
     border-right: 1px solid black;
+}
+
+.name-text {
+    width: calc(100% - 20px);
+    height: 24px;
+    line-height: 24px;
+    float: left;
+    overflow-x: hidden;
+}
+
+.dropdown-arrow-emp-container {
+    float: right;
+    height: 20px;
+    width: 20px;
+    vertical-align: center;
+}
+
+.dropdown-arrow-emp {
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+}
+
+.mat-icon-button {
+    line-height: 20px;
 }
 
 th {
@@ -152,7 +185,7 @@ td {
     width: 20px;
 }
 
-.dropdown-arrow:hover {
+.dropdown-arrow:hover, .dropdown-arrow-emp:hover {
     background-color: #CFCFCF;
     cursor: pointer;
 }
