@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnChanges, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Schedule } from 'src/app/models/schedule';
 import { Location } from 'src/app/models/location';
@@ -7,7 +7,7 @@ import { Sheet } from 'src/app/models/sheet';
 import { LocationService } from 'src/app/services/location.service';
 import { Employee } from 'src/app/models/employee';
 import { Shift } from 'src/app/models/shift';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatMenu } from '@angular/material';
 import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.component';
 import { Time } from '@angular/common';
 import { SheetService } from 'src/app/services/sheet.service';
@@ -28,11 +28,16 @@ export class ScheduleComponent {
   private curSheet: Sheet;
   private sheets: Sheet[];
   private shifts: Shift[];
+  private createdShifts: Shift[];
+  private remainingSpace: number = 0;
   private timeColumns: Time[] = [];
   
   private times: number[] = [];
   private hovered: Shift = null;
   
+  @ViewChild("schedule", {static: false}) scheduleEl: ElementRef<HTMLElement>;
+  @ViewChild("container", {static: false}) containerEl: ElementRef<HTMLElement>;
+
   private openNewSheetDeleteConfirmation(): void {
     const dialogRef = this.dialog.open(DeleteSheetConfirmationComponent, {
       width: '500px',
@@ -116,9 +121,18 @@ export class ScheduleComponent {
     return t.hours*100 + t.minutes;
   }
 
-  private isInShift(time: Time, shift: Shift): boolean {
-    return (this.convertTimeToNum(time) >= this.convertTimeToNum(shift.startTime)
-      && this.convertTimeToNum(time) < this.convertTimeToNum(shift.endTime));
+  private shouldShade(time: Time, shift: Shift, left: boolean): boolean {
+    let convertedTime = this.convertTimeToNum(time);
+    let convertedStart = this.convertTimeToNum(shift.startTime);
+    let convertedEnd = this.convertTimeToNum(shift.endTime);
+    return this.isInShift(convertedTime, convertedStart, convertedEnd)
+    && (!left || (left && convertedTime != convertedStart))
+    && (left || (!left && convertedTime != convertedEnd));
+
+  }
+
+  private isInShift(time: number, start: number, end: number) {
+    return time >= start && time <= end;
   }
   
   private generateTimeColumns(): Time[] {
@@ -161,6 +175,21 @@ export class ScheduleComponent {
     this.hovered = shift;
   }
 
+  private makeDummyRows(containerHeight: number, numRows: number) {
+    let baseHeight = 22; //Header row
+    let rowHeight = 34; //26px row height, 8 px buffer
+    let dummyShifts = Math.floor(((containerHeight - baseHeight) - (numRows*rowHeight))/rowHeight);
+    this.createdShifts = Array.from(this.shifts);
+    for(let i = 0; i < dummyShifts; i++){
+      this.createdShifts.push(null);
+    }
+    this.remainingSpace = (containerHeight - baseHeight)%rowHeight;
+  }
+
+  private resizeSchedule() {
+    this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
+  }
+
   private loadSheet(label?: string): void {
     if(label && label == this.curSheet.label) {
       return;
@@ -180,6 +209,7 @@ export class ScheduleComponent {
         }
         return r;
       });
+      this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
     })
     this.timeColumns = this.generateTimeColumns();
   }

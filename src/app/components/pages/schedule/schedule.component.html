@@ -1,18 +1,27 @@
-<div class="container">
-    <table class="schedule" *ngIf="curSheet">
+<div (window:resize)="resizeSchedule()" #container class="container">
+    <table #schedule class="schedule" *ngIf="curSheet">
         <tr>
             <th class="label">{{curSheet.label}}</th>
             <th class="hbuffer"></th>
-            <th class="time timeColumn" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
+            <th class="time timeColumn" colspan="2" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
         </tr>
-        <ng-container *ngFor="let shift of shifts">
-            <tr class="vbuffer">
+        <ng-container *ngFor="let shift of createdShifts; let i = index">
+            <tr class="vbuffer" [ngClass]="{'shift': i%2==0}">
                 <td class="name-container"></td>
                 <td class="hbuffer"></td>
-                <td class="timeColumn" *ngFor="let t of timeColumns"></td>
-
+                <td class="timeColumn" colspan="2" *ngFor="let t of timeColumns"></td>
             </tr>
-            <tr>
+            <tr *ngIf="!shift" [ngClass]="{'shift': i%2==0}">
+                <td class="name-container">
+                    <span class="name-text"></span>
+                </td>
+                <td class="hbuffer"></td>
+                <ng-container *ngFor="let t of timeColumns">
+                    <td></td>
+                    <td class="timeColumn"></td>
+                </ng-container>
+            </tr>
+            <tr *ngIf="shift" [ngClass]="{'shift': i%2==0}">
                 <td class="name-container" (mouseenter)="enter(shift)">
                     <span class="name-text">
                         {{parseName((currentLocation.getEmployees() | async).get(shift.empId))}}
@@ -26,7 +35,22 @@
                     </mat-menu>
                 </td>
                 <td class="hbuffer"></td>
-                <td *ngFor="let t of timeColumns" class="timeColumn" [ngClass]="{'shaded': isInShift(t, shift)}"></td>
+                <ng-container *ngFor="let t of timeColumns">
+                    <td [ngClass]="{'shaded': shouldShade(t, shift, true)}"></td>
+                    <td class="timeColumn" [ngClass]="{'shaded': shouldShade(t, shift, false)}"></td>
+                </ng-container>
+            </tr>
+            <tr class="vbuffer" [ngClass]="{'shift': i%2==0}">
+                <td class="name-container"></td>
+                <td class="hbuffer"></td>
+                <td class="timeColumn" colspan="2" *ngFor="let t of timeColumns"></td>
+            </tr>
+        </ng-container>
+        <ng-container>
+            <tr [ngStyle]="{'height':remainingSpace+'px'}">
+                <td class="name-container"></td>
+                <td class="hbuffer"></td>
+                <td class="timeColumn" colspan="2" *ngFor="let t of timeColumns"></td>
             </tr>
         </ng-container>
     </table>

@@ -89,10 +89,6 @@
     min-width: 75px;
 }
 
-.timeColumn {
-    border-right: 1px solid #222;
-}
-
 .left {
     float: left;
 }
@@ -103,24 +99,25 @@
 
 .schedule {
     width: 100%;
-    table-layout: auto;
+    table-layout: fixed;
     border-spacing: 0;
 }
 
+.label, .name-container, .timeColumn {
+    border-right: 1px solid #333;
+}
+
 .label {
-    border-right: 1px solid black;
     min-width: 100px;
 }
 
-.name-container {
-    border-right: 1px solid black;
-}
-
 .name-text {
-    width: calc(100% - 20px);
+    width: calc(100% - 25px);
+    margin-left: 5px;
     height: 24px;
     line-height: 24px;
     float: left;
+    text-align: left;
     overflow-x: hidden;
 }
 
@@ -141,8 +138,12 @@
     line-height: 20px;
 }
 
+.shift {
+    background-color: #eee;
+}
+
 th {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #222;
     width: 80px;
 }
 
@@ -155,11 +156,16 @@ td {
 }
 
 .vbuffer {
-    height: 5px;
+    height: 4px;
 }
+/* 
+.vbuffer * {
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+} */
 
 .shaded {
-    background-color: #555;
+    background-color: #778;
 }
 
 .filler {
