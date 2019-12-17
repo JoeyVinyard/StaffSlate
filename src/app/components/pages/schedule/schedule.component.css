@@ -158,11 +158,6 @@ td {
 .vbuffer {
     height: 4px;
 }
-/* 
-.vbuffer * {
-    border-top: 1px solid #222;
-    border-bottom: 1px solid #222;
-} */
 
 .shaded {
     background-color: #778;

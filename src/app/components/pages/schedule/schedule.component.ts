@@ -15,6 +15,7 @@ import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.com
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DeleteSheetConfirmationComponent } from './delete-sheet-confirmation/delete-sheet-confirmation.component';
 import { DocumentChangeAction } from '@angular/fire/firestore';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-schedule',
@@ -190,6 +191,13 @@ export class ScheduleComponent {
     this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
   }
 
+  private getViewLink(): string {
+    let locationId = this.currentLocation.document.ref.id;
+    let scheduleId = this.currentSchedule.id;
+    console.log(locationId, scheduleId);
+    return "";
+  }
+
   private loadSheet(label?: string): void {
     if(label && label == this.curSheet.label) {
       return;
@@ -231,14 +239,21 @@ export class ScheduleComponent {
   constructor(
     private locationService: LocationService,
     private sheetService: SheetService,
+    private userService: UserService,
     private scheduleService: ScheduleService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog) {
 
-    locationService.currentLocation.subscribe((location) => {
-      this.currentLocation = location;
-    })
+    userService.getCurrentUserInfo().subscribe((userInfo) => {
+      locationService.currentLocation.subscribe((location) => {
+        this.currentLocation = location;
+        if(!userInfo.locations.find((loc) => loc.key == location.document.ref.id)) {
+          router.navigateByUrl('schedules');
+        }
+      });
+    });
+
 
     activatedRoute.paramMap.subscribe((map) => {
       this.scheduleService.loadSchedule(map.get("scheduleId")).subscribe((schedule) => {
