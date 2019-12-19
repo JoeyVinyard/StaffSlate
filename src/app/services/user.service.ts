@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { User } from 'firebase';
 import { UserInfo } from '../models/user-info';
+import { Location } from '../models/location';
 import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
@@ -18,6 +19,20 @@ export class UserService {
 
   public logout(): Promise<void> {
     return this.afAuth.auth.signOut();
+  }
+
+  public userCanAccessLocation(locationId: string): Promise<boolean> {
+    return new Promise((res, rej) => {
+      this.afAuth.authState.subscribe((state) => {
+        if(state) {
+          this.currentUserInfo.subscribe((user: UserInfo) => {
+            res(!!(user.locations.find((loc) => loc.key == locationId)));
+          });
+        } else {
+          res(!!state);
+        }
+      });
+    });
   }
 
   private loadUserInfo(user: User): void {
