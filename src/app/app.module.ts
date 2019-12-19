@@ -12,6 +12,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 // Material Imports
 import { MatCardModule } from '@angular/material/card';
@@ -97,6 +98,7 @@ import { DeleteSheetConfirmationComponent } from './components/pages/schedule/de
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireStorageModule,
+    AngularFireFunctionsModule,
     FlexLayoutModule,
     NgxMaterialTimepickerModule
   ],

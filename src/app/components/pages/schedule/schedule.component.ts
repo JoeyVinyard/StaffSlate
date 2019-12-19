@@ -245,13 +245,8 @@ export class ScheduleComponent {
     private router: Router,
     public dialog: MatDialog) {
 
-    userService.getCurrentUserInfo().subscribe((userInfo) => {
-      locationService.currentLocation.subscribe((location) => {
-        this.currentLocation = location;
-        if(!userInfo.locations.find((loc) => loc.key == location.document.ref.id)) {
-          router.navigateByUrl('schedules');
-        }
-      });
+    locationService.currentLocation.subscribe((location) => {
+      this.currentLocation = location;
     });
 
 
