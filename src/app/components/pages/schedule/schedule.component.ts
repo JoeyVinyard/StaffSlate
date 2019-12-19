@@ -4,7 +4,6 @@ import { Schedule } from 'src/app/models/schedule';
 import { Location } from 'src/app/models/location';
 import { ScheduleService } from 'src/app/services/schedule.service';
 import { Sheet } from 'src/app/models/sheet';
-import { LocationService } from 'src/app/services/location.service';
 import { Employee } from 'src/app/models/employee';
 import { Shift } from 'src/app/models/shift';
 import { MatDialog, MatMenu } from '@angular/material';
@@ -16,6 +15,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DeleteSheetConfirmationComponent } from './delete-sheet-confirmation/delete-sheet-confirmation.component';
 import { DocumentChangeAction } from '@angular/fire/firestore';
 import { UserService } from 'src/app/services/user.service';
+import { LocationService } from 'src/app/services/location.service';
 
 @Component({
   selector: 'app-schedule',
@@ -24,7 +24,6 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class ScheduleComponent {
   
-  private currentLocation: Location;
   private currentSchedule: Schedule;
   private curSheet: Sheet;
   private sheets: Sheet[];
@@ -192,10 +191,8 @@ export class ScheduleComponent {
   }
 
   private getViewLink(): string {
-    let locationId = this.currentLocation.document.ref.id;
-    let scheduleId = this.currentSchedule.id;
-    console.log(locationId, scheduleId);
-    return "";
+    return `http://localhost:4200${this.router.url}/${this.currentSchedule.viewId}`;  
+    // return `http://localhost:4200/schedule/1jJcKnmmFvQTeTLIzDVf/I3ECXBQ0YpBSEcB2NIc5`;
   }
 
   private loadSheet(label?: string): void {
@@ -237,23 +234,22 @@ export class ScheduleComponent {
   }
   
   constructor(
-    private locationService: LocationService,
     private sheetService: SheetService,
     private userService: UserService,
+    private locationService: LocationService,
     private scheduleService: ScheduleService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog) {
 
-    locationService.currentLocation.subscribe((location) => {
-      this.currentLocation = location;
-    });
-
 
     activatedRoute.paramMap.subscribe((map) => {
-      this.scheduleService.loadSchedule(map.get("scheduleId")).subscribe((schedule) => {
-        this.currentSchedule = schedule;
-        this.parseSchedule();
+      this.locationService.loadLocation(map.get("locationId")).subscribe((location) => {
+        this.scheduleService.loadSchedule(location, map.get("scheduleId")).subscribe((schedule) => {
+          this.currentSchedule = schedule;
+          this.parseSchedule();
+          console.log(this.getViewLink());
+        });
       });
     });
   }

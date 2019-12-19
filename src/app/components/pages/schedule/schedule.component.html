@@ -24,7 +24,7 @@
             <tr *ngIf="shift" [ngClass]="{'shift': i%2==0}">
                 <td class="name-container" (mouseenter)="enter(shift)">
                     <span class="name-text">
-                        {{parseName((currentLocation.getEmployees() | async).get(shift.empId))}}
+                        {{parseName(((locationService.currentLocation | async).getEmployees() | async).get(shift.empId))}}
                     </span>
                     <button *ngIf="hovered == shift" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-emp-container">
                         <mat-icon class="dropdown-arrow-emp" >arrow_drop_down</mat-icon>

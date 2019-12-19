@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Location } from '../models/location';
 import { UserInfo } from '../models/user-info';
 import { Subscription, ReplaySubject } from 'rxjs';
@@ -14,7 +14,7 @@ export class LocationService {
     public currentLocation: ReplaySubject<Location> = new ReplaySubject(1);
     public currentLocationKey: string = "";
 
-    public loadLocation(locationId: string): void {
+    public loadLocation(locationId: string): ReplaySubject<Location> {
         if(this.currentLocationSub) {
             this.currentLocationSub.unsubscribe();
         }
@@ -22,6 +22,7 @@ export class LocationService {
         this.currentLocationSub = this.afs.collection("locations").doc<Location>(locationId).valueChanges().subscribe((locationData: Location) => {
             this.currentLocation.next(new Location(locationData, this.afs.collection("locations").doc<Location>(locationId)));
         });
+        return this.currentLocation;
     }
 
     constructor(private afs: AngularFirestore, private userService: UserService) {

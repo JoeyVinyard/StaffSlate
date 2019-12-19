@@ -50,6 +50,10 @@ export class Location {
         // return this.document.collection("employees").doc<Employee>(employeeId).valueChanges();
     // }
 
+    loadScheduleData(scheduleId: string): Observable<Schedule> {
+        return this.document.collection("schedules").doc<Schedule>(scheduleId).valueChanges();
+    }
+
     loadSchedules(): Observable<Schedule[]> {
         return this.document.collection<Schedule>("schedules").valueChanges();
     }

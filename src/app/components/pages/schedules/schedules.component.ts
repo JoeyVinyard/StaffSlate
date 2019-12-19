@@ -20,7 +20,7 @@ export class SchedulesComponent {
 
 
   private openSchedule(schedule: Schedule) {
-      this.router.navigate(["schedule", schedule.id]);
+    this.router.navigate(["schedule", this.loadedLocation.document.ref.id, schedule.id]);
   }
   
   private openNewScheduleDialog(): void {
