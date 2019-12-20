@@ -19,7 +19,7 @@ export class LocationGuard implements CanActivate {
             if (next.paramMap.has("viewId")) {
               this.locationService.loadLocation(next.paramMap.get("locationId")).subscribe((location) => {
                 location.loadScheduleData(next.paramMap.get("scheduleId")).subscribe((schedule) => {
-                  res(schedule.viewId == next.paramMap.get("viewId"));
+                  res(schedule.viewId == next.paramMap.get("viewId") || this.router.parseUrl("/dashboard"));
                 });
               });
             } else {
