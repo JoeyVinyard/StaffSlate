@@ -1,28 +1,30 @@
 <div (window:resize)="resizeSchedule()" #container class="container">
     <table #schedule class="schedule" *ngIf="curSheet">
         <tr>
-            <th class="label">{{curSheet.label}}</th>
+            <th class="label rightBorder">{{curSheet.label}}</th>
+            <th class="hoursColumn rightBorder"></th>
             <th class="hbuffer"></th>
-            <th class="time timeColumn" colspan="2" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
+            <th class="time rightBorder" colspan="2" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
         </tr>
         <ng-container *ngFor="let shift of createdShifts; let i = index">
             <tr class="vbuffer" [ngClass]="{'shift': i%2==0}">
-                <td class="name-container"></td>
+                <td class="rightBorder"></td>
+                <td class="hoursColumn rightBorder"></td>
                 <td class="hbuffer"></td>
-                <td class="timeColumn" colspan="2" *ngFor="let t of timeColumns"></td>
+                <td class="rightBorder" colspan="2" *ngFor="let t of timeColumns"></td>
             </tr>
+            <!-- Dummy shift rows to make table appear filled out -->
             <tr *ngIf="!shift" [ngClass]="{'shift': i%2==0}">
-                <td class="name-container">
-                    <span class="name-text"></span>
-                </td>
+                <td class="name rightBorder"></td>
+                <td class="hoursColumn rightBorder"></td>
                 <td class="hbuffer"></td>
                 <ng-container *ngFor="let t of timeColumns">
-                    <td></td>
-                    <td class="timeColumn"></td>
+                    <td class="rightBorder" colspan="2"></td>
                 </ng-container>
             </tr>
+            <!-- Actual Shift data -->
             <tr *ngIf="shift" [ngClass]="{'shift': i%2==0}">
-                <td class="name-container" (mouseenter)="enter(shift)">
+                <td class="name rightBorder" (mouseenter)="enter(shift)">
                     <span class="name-text">
                         {{parseName(((locationService.currentLocation | async).getEmployees() | async).get(shift.empId))}}
                     </span>
@@ -34,23 +36,28 @@
                         <button mat-menu-item (click)="deleteShift(shift)">Delete</button>
                     </mat-menu>
                 </td>
+                <td class="hoursColumn rightBorder">
+                    {{getHourSpan(shift)}}
+                </td>
                 <td class="hbuffer"></td>
                 <ng-container *ngFor="let t of timeColumns">
                     <td [ngClass]="{'shaded': shouldShade(t, shift, true)}"></td>
-                    <td class="timeColumn" [ngClass]="{'shaded': shouldShade(t, shift, false)}"></td>
+                    <td class="rightBorder" [ngClass]="{'shaded': shouldShade(t, shift, false)}"></td>
                 </ng-container>
             </tr>
             <tr class="vbuffer" [ngClass]="{'shift': i%2==0}">
-                <td class="name-container"></td>
+                <td class="rightBorder"></td>
+                <td class="hoursColumn rightBorder"></td>
                 <td class="hbuffer"></td>
-                <td class="timeColumn" colspan="2" *ngFor="let t of timeColumns"></td>
+                <td class="rightBorder" colspan="2" *ngFor="let t of timeColumns"></td>
             </tr>
         </ng-container>
         <ng-container>
             <tr [ngStyle]="{'height':remainingSpace+'px'}">
-                <td class="name-container"></td>
+                <td class="rightBorder"></td>
+                <td class="hoursColumn rightBorder"></td>
                 <td class="hbuffer"></td>
-                <td class="timeColumn" colspan="2" *ngFor="let t of timeColumns"></td>
+                <td class="rightBorder" colspan="2" *ngFor="let t of timeColumns"></td>
             </tr>
         </ng-container>
     </table>
@@ -59,7 +66,7 @@
     <div *ngIf="!(activatedRoute.data | async).guest" class="addSheet">
         <mat-icon (click)="openNewSheetDialog()">add</mat-icon>
     </div>
-        <div *ngIf="currentSchedule && sheets" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)">
+    <div *ngIf="currentSchedule && sheets" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)" [ngClass]="{'mobile': mobile()}">
         <div class="sheet"
             *ngFor="let sheetNum of currentSchedule.sheetOrder"
             [ngClass]="{'selectedSheet': sheets[sheetNum].label==curSheet.label}"

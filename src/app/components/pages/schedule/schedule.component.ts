@@ -1,7 +1,6 @@
-import { Component, ViewChild, AfterViewInit, OnChanges, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Schedule } from 'src/app/models/schedule';
-import { Location } from 'src/app/models/location';
 import { ScheduleService } from 'src/app/services/schedule.service';
 import { Sheet } from 'src/app/models/sheet';
 import { Employee } from 'src/app/models/employee';
@@ -137,7 +136,7 @@ export class ScheduleComponent {
   
   private generateTimeColumns(): Time[] {
     let s = this.curSheet.openTime.hours + this.curSheet.openTime.minutes/60;
-    let e = this.curSheet.closeTime.hours + this.curSheet.closeTime.minutes / 60;
+    let e = this.curSheet.closeTime.hours + this.curSheet.closeTime.minutes/60;
     let numColumns = Math.floor(e-s+1)*(60/this.curSheet.timeIncrement);
     let times: Time[] = [];
     let h = this.curSheet.openTime.hours;
@@ -188,6 +187,14 @@ export class ScheduleComponent {
 
   private resizeSchedule() {
     this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
+  }
+
+  private getHourSpan(shift: Shift): string {
+    return `${this.formatTime(shift.startTime)} - ${this.formatTime(shift.endTime)}`
+  }
+
+  private mobile() {
+    return window.innerWidth < 400;
   }
 
   private getViewLink(): string {
