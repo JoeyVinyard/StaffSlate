@@ -56,17 +56,18 @@
     </table>
 </div>
 <mat-toolbar class="footer">
-    <div class="addSheet">
+    <div *ngIf="!(activatedRoute.data | async).guest" class="addSheet">
         <mat-icon (click)="openNewSheetDialog()">add</mat-icon>
     </div>
         <div *ngIf="currentSchedule && sheets" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)">
         <div class="sheet"
             *ngFor="let sheetNum of currentSchedule.sheetOrder"
             [ngClass]="{'selectedSheet': sheets[sheetNum].label==curSheet.label}"
+            [cdkDragDisabled]="(activatedRoute.data | async).guest"
             (click)="loadSheet(sheets[sheetNum].label)"
             cdkDrag cdkDragLockAxis="x"
         >{{sheets[sheetNum].label}}
-            <button *ngIf="sheets[sheetNum].label==curSheet.label" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
+            <button *ngIf="sheets[sheetNum].label==curSheet.label && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
                 <mat-icon class="dropdown-arrow" >arrow_drop_down</mat-icon>
             </button>
             <mat-menu xPosition="before" #menu="matMenu">
@@ -76,5 +77,5 @@
         </div>
     </div>
     <div class="filler"></div>
-    <button mat-raised-button color="primary" class="addShift right" [disabled]="!sheets" (click)="openNewShiftDialog()">Add Shift</button>
+    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="addShift right" [disabled]="!sheets" (click)="openNewShiftDialog()">Add Shift</button>
 </mat-toolbar>

@@ -51,7 +51,8 @@ export const appRoutes: Routes = [
     {
         path: "schedule/:locationId/:scheduleId/:viewId",
         component: ScheduleComponent,
-        canActivate: [LocationGuard]
+        canActivate: [LocationGuard],
+        data: {guest: true}
     },
     {
         path: "settings",

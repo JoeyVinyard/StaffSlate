@@ -242,7 +242,6 @@ export class ScheduleComponent {
     private router: Router,
     public dialog: MatDialog) {
 
-
     activatedRoute.paramMap.subscribe((map) => {
       this.locationService.loadLocation(map.get("locationId")).subscribe((location) => {
         this.scheduleService.loadSchedule(location, map.get("scheduleId")).subscribe((schedule) => {
