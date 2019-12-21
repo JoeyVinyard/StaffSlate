@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, Inject, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, Inject } from '@angular/core';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Employee } from 'src/app/models/employee';
@@ -47,14 +47,6 @@ export class NewShiftDialogComponent implements AfterViewInit {
     this.shiftStart.valueChanges.subscribe(() => {
       this.shiftEnd.updateValueAndValidity();
     });
-    if(!this.data.shift) {
-      this.shiftStart.setValue(this.data.sheet.openTime.hours + ":" + this.data.sheet.openTime.minutes)
-      this.shiftStartField.setTime(this.data.sheet.openTime);
-      
-      this.shiftEnd.setValue(this.data.sheet.openTime.hours+1 + ":" + this.data.sheet.openTime.minutes)
-      this.shiftEndField.setTime({hours: this.data.sheet.openTime.hours +1, minutes: 0});
-    }
-    this.cdr.detectChanges();
   }
 
   private compareTimesGTE(t1: Time, t2: Time): boolean {
@@ -128,7 +120,6 @@ export class NewShiftDialogComponent implements AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<NewShiftDialogComponent>,
     private locationService: LocationService,
-    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: {sheet: Sheet, shift: Shift}
     ) {
       locationService.currentLocation.subscribe((location) => {
@@ -140,6 +131,9 @@ export class NewShiftDialogComponent implements AfterViewInit {
           this.shiftStart.setValue(data.shift.startTime);
           this.shiftEnd.setValue(data.shift.endTime);
         }).unsubscribe();
+      } else {
+        this.shiftStart.setValue({hours: this.data.sheet.openTime.hours, minutes: this.data.sheet.openTime.minutes})
+        this.shiftEnd.setValue({hours: this.data.sheet.closeTime.hours, minutes: this.data.sheet.closeTime.minutes})
       }
     }
 }
