@@ -10,12 +10,12 @@
     <div class="time-container">
         <mat-label class="label">Shift Start:</mat-label>
         <input class="time" [ngxTimepicker]="start" [min]="timeService.timeToString(data.sheet.openTime)" [max]="shiftEnd.value" [formControl]="shiftStart" readonly>
-        <ngx-material-timepicker [minutesGap]="30" #start></ngx-material-timepicker>
+        <ngx-material-timepicker [minutesGap]="data.sheet.timeIncrement" #start></ngx-material-timepicker>
         <mat-error>{{getShiftStartError()}}</mat-error>
         <div class="spacer"></div>
         <mat-label class="label">Shift End:</mat-label>
         <input class="time" [ngxTimepicker]="end" [min]="shiftStart.value" [max]="timeService.timeToString(data.sheet.closeTime)" [formControl]="shiftEnd" readonly>
-        <ngx-material-timepicker [minutesGap]="30" #end></ngx-material-timepicker>
+        <ngx-material-timepicker [minutesGap]="data.sheet.timeIncrement" #end></ngx-material-timepicker>
         <mat-error>{{getShiftEndError()}}</mat-error>
     </div>
 </div>

@@ -9,18 +9,21 @@
         <mat-select [formControl]="timeIncrement">
             <mat-option [value]="15">15 Minutes</mat-option>
             <mat-option [value]="30">30 Minutes</mat-option>
-            <mat-option [value]="60">1 Hour</mat-option>
         </mat-select>
         <mat-error *ngIf="sheet.value">{{getIncrementError()}}</mat-error>
     </mat-form-field>
     <div class="time-container">
-        <mat-label>Open Time:</mat-label>
+        <mat-label class="label">Open Time:</mat-label>
+        <input class="time" [ngxTimepicker]="start" [max]="close.value" [formControl]="open" readonly>
+        <ngx-material-timepicker [minutesGap]="timeIncrement.value" #start></ngx-material-timepicker>
         <mat-error *ngIf="sheet.value">{{getOpenError()}}</mat-error>
         <div class="spacer"></div>
-        <mat-label>Close Time:</mat-label>
+        <mat-label class="label">Close Time:</mat-label>
+        <input class="time" [ngxTimepicker]="end" [min]="open.value" [formControl]="close" readonly>
+        <ngx-material-timepicker [minutesGap]="timeIncrement.value" #end></ngx-material-timepicker>
         <mat-error *ngIf="sheet.value">{{getCloseError()}}</mat-error>
     </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" [disabled]="sheet.invalid || open.invalid || close.invalid" (click)="submit()">{{data.sheet ? "Save Change" : "Add Sheet"}} </button>
+    <button mat-raised-button color="primary" [disabled]="sheet.invalid || open.invalid || close.invalid || timeIncrement.invalid" (click)="submit()">{{data.sheet ? "Save Change" : "Add Sheet"}} </button>
 </div>

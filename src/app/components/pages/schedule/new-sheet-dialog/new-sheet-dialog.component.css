@@ -11,6 +11,25 @@
     height: 20px;
 }
 
-label {
-    margin-bottom: 5px;
+.time {
+    border: 0;
+    border-bottom: 1px solid #AAA;
+    font-size: 18px;
+    height: 100%;
+    margin-top: 4px;
+}
+
+.time:hover {
+    border-bottom: 1px solid purple;
+    transition: 0.5s;
+}
+
+.time:focus {
+    border-bottom: 1px solid purple;
+    transition: 0.5s;
+}
+
+.label {
+    font-size: 18px;
+    font-weight: 500;
 }
