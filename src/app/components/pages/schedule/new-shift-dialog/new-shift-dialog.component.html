@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{data.shift ? "Edit" : "Add"}} Shift</h1>
+<h1 mat-dialog-title class="title">{{data.shift ? "Edit" : "Add"}} Shift</h1>
 <div class="content" mat-dialog-content>
     <mat-form-field>
         <input matInput [formControl]="employee" placeholder="Employee" [matAutocomplete]="auto">
@@ -8,15 +8,17 @@
         <mat-error *ngIf="employee.invalid">{{getEmployeeError()}}</mat-error>
     </mat-form-field>
     <div class="time-container">
-        <mat-label>Shift Start:</mat-label>
-        <app-time-select #start [control]="shiftStart"></app-time-select>
+        <mat-label class="label">Shift Start:</mat-label>
+        <input class="time" [ngxTimepicker]="start" [min]="timeService.timeToString(data.sheet.openTime)" [max]="shiftEnd.value" [formControl]="shiftStart" readonly>
+        <ngx-material-timepicker [minutesGap]="30" #start></ngx-material-timepicker>
         <mat-error>{{getShiftStartError()}}</mat-error>
         <div class="spacer"></div>
-        <mat-label>Shift End:</mat-label>
-        <app-time-select #end [control]="shiftEnd"></app-time-select>
+        <mat-label class="label">Shift End:</mat-label>
+        <input class="time" [ngxTimepicker]="end" [min]="shiftStart.value" [max]="timeService.timeToString(data.sheet.closeTime)" [formControl]="shiftEnd" readonly>
+        <ngx-material-timepicker [minutesGap]="30" #end></ngx-material-timepicker>
         <mat-error>{{getShiftEndError()}}</mat-error>
     </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" [disabled]="employee.invalid || shiftStart.invalid || shiftEnd.invalid" (click)="submit()">{{data.shift ? "Save Change" : "Add Shift"}}</button>
+    <button mat-raised-button color="primary" [disabled]="employee.invalid || shiftStart.invalid || shiftEnd.invalid" (click)="submit()">{{data.shift ? "Save Changes" : "Add Shift"}}</button>
 </div>

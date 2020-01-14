@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Schedule } from 'src/app/models/schedule';
 import { ScheduleService } from 'src/app/services/schedule.service';
+import { TimeService } from 'src/app/services/time.service';
 import { Sheet } from 'src/app/models/sheet';
 import { Employee } from 'src/app/models/employee';
 import { Shift } from 'src/app/models/shift';
@@ -158,16 +159,7 @@ export class ScheduleComponent {
   }
 
   private formatTime(time: Time): string {
-    let m = time.minutes < 10 ? "0"+time.minutes : time.minutes;
-    if(time.hours == 0) {
-      return `12:${m}am`;
-    } else if(time.hours < 12) {
-      return `${time.hours}:${m}am`;
-    } else if(time.hours == 12) {
-      return `${time.hours}:${m}pm`;
-    } else {
-      return `${time.hours%12}:${m}pm`;
-    }
+    return this.timeService.timeToString(time);
   }
 
   private enter(shift: Shift) {
@@ -194,11 +186,11 @@ export class ScheduleComponent {
   }
 
   private mobile() {
-    return window.innerWidth < 400;
+    return window.innerWidth < 360;
   }
 
   private getViewLink(): string {
-    return `http://localhost:4200${this.router.url}/${this.currentSchedule.viewId}`;  
+    return `http://www.picostaff.com/${this.router.url}/${this.currentSchedule.viewId}`;
     // return `http://localhost:4200/schedule/1jJcKnmmFvQTeTLIzDVf/I3ECXBQ0YpBSEcB2NIc5`;
   }
 
@@ -245,6 +237,7 @@ export class ScheduleComponent {
     private userService: UserService,
     private locationService: LocationService,
     private scheduleService: ScheduleService,
+    private timeService: TimeService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog) {

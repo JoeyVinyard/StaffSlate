@@ -15,11 +15,9 @@
     </mat-form-field>
     <div class="time-container">
         <mat-label>Open Time:</mat-label>
-        <app-time-select #openSheet [control]="open" [setTimeIncrement]="timeIncrement.value"></app-time-select>
         <mat-error *ngIf="sheet.value">{{getOpenError()}}</mat-error>
         <div class="spacer"></div>
         <mat-label>Close Time:</mat-label>
-        <app-time-select #closeSheet [control]="close" [setTimeIncrement]="timeIncrement.value"></app-time-select>
         <mat-error *ngIf="sheet.value">{{getCloseError()}}</mat-error>
     </div>
 </div>

@@ -1,6 +1,5 @@
 import { Component, AfterViewInit, ViewChild, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { TimeSelectComponent } from 'src/app/components/utility/time-select/time-select.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { NewShiftDialogComponent } from '../new-shift-dialog/new-shift-dialog.component';
 import { Sheet } from 'src/app/models/sheet';
@@ -17,8 +16,8 @@ export class NewSheetDialogComponent implements AfterViewInit {
   close: FormControl = new FormControl('', [Validators.required]);
   timeIncrement: FormControl = new FormControl('', [Validators.required]);
 
-  @ViewChild("openSheet", { static: true }) openField: TimeSelectComponent;
-  @ViewChild("closeSheet", {static: true}) closeField: TimeSelectComponent;
+  @ViewChild("openSheet", { static: true }) openField;
+  @ViewChild("closeSheet", {static: true}) closeField;
 
   ngAfterViewInit() {
     this.open.valueChanges.subscribe(() => {

@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularFittextModule } from 'angular-fittext';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 // Angular Fire Imports
 import { AngularFireModule } from '@angular/fire';
@@ -30,6 +29,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 // Config Files
 import { appRoutes } from "./routes";
@@ -51,7 +51,6 @@ import { NewScheduleDialogComponent } from './components/pages/schedules/new-sch
 import { ScheduleComponent } from './components/pages/schedule/schedule.component';
 import { NewShiftDialogComponent } from './components/pages/schedule/new-shift-dialog/new-shift-dialog.component';
 import { NewSheetDialogComponent } from './components/pages/schedule/new-sheet-dialog/new-sheet-dialog.component';
-import { TimeSelectComponent } from './components/utility/time-select/time-select.component';
 import { DeleteSheetConfirmationComponent } from './components/pages/schedule/delete-sheet-confirmation/delete-sheet-confirmation.component';
 
 @NgModule({
@@ -70,7 +69,6 @@ import { DeleteSheetConfirmationComponent } from './components/pages/schedule/de
     ScheduleComponent,
     NewShiftDialogComponent,
     NewSheetDialogComponent,
-    TimeSelectComponent,
     DeleteSheetConfirmationComponent
   ],
   imports: [
