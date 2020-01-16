@@ -11,6 +11,7 @@ import { UserService } from './user.service';
 export class LocationService {
     
     private currentLocationSub: Subscription;
+    private cachedLocations: Map<string, Location> = new Map<string, Location>();
     public currentLocation: ReplaySubject<Location> = new ReplaySubject(1);
     public currentLocationKey: string = "";
 
@@ -19,9 +20,15 @@ export class LocationService {
             this.currentLocationSub.unsubscribe();
         }
         this.currentLocationKey = locationId;
-        this.currentLocationSub = this.afs.collection("locations").doc<Location>(locationId).valueChanges().subscribe((locationData: Location) => {
-            this.currentLocation.next(new Location(locationData, this.afs.collection("locations").doc<Location>(locationId)));
-        });
+        if(this.cachedLocations.has(locationId)){
+            this.currentLocation.next(this.cachedLocations.get(locationId));
+        } else {
+            this.currentLocationSub = this.afs.collection("locations").doc<Location>(locationId).valueChanges().subscribe((locationData: Location) => {
+                let location: Location = new Location(locationData, this.afs.collection("locations").doc<Location>(locationId))
+                this.currentLocation.next(location);
+                this.cachedLocations.set(locationId, location);
+            });
+        }
         return this.currentLocation;
     }
 

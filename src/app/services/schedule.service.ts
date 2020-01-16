@@ -11,15 +11,20 @@ import { Location } from '../models/location';
 export class ScheduleService {
 
   currentLocationDoc: AngularFirestoreDocument;
-  currentSchedule: ReplaySubject<Schedule> = new ReplaySubject(1);
+  private currentSchedule: ReplaySubject<Schedule> = new ReplaySubject(1);
   private currentScheduleSub: Subscription;
 
-  loadSchedule(location: Location, scheduleId: string): Observable<Schedule> {
+  public getCurrentSchedule(): Observable<Schedule> {
+    return this.currentSchedule;
+  }
+
+  public loadSchedule(location: Location, scheduleId: string): Observable<Schedule> {
     if(this.currentScheduleSub) {
       this.currentScheduleSub.unsubscribe();
     }
     this.currentScheduleSub =  this.currentLocationDoc.collection("schedules").doc<Schedule>(scheduleId).valueChanges().subscribe((scheduleData) => {
-      this.currentSchedule.next(new Schedule(scheduleData, this.currentLocationDoc.collection("schedules").doc<Schedule>(scheduleId)));
+      let schedule: Schedule = new Schedule(scheduleData, this.currentLocationDoc.collection("schedules").doc<Schedule>(scheduleId));
+      this.currentSchedule.next(schedule);
     });
     return this.currentSchedule;
   }

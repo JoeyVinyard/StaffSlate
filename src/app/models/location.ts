@@ -7,6 +7,7 @@ export class Location {
     label: string = "";
     id: string = "";
     private employees: ReplaySubject<Map<string, Employee>> = new ReplaySubject(1);
+    private cachedSchedules: Map<string, Schedule> = new Map<string, Schedule>();
     document: AngularFirestoreDocument<Location>;
 
     loadEmployees(): void {
@@ -45,11 +46,6 @@ export class Location {
         })
     }
 
-    // fetchEmployee(employeeId: string): Subject<Employee> {
-        
-        // return this.document.collection("employees").doc<Employee>(employeeId).valueChanges();
-    // }
-
     loadScheduleData(scheduleId: string): Observable<Schedule> {
         return this.document.collection("schedules").doc<Schedule>(scheduleId).valueChanges();
     }
@@ -60,12 +56,10 @@ export class Location {
 
     addSchedule(schedule: Schedule): Promise<void> {
         return new Promise((res, rej) => {
-            this.document.collection("schedules").add(schedule).then((ref: DocumentReference) => {
-                this.document.collection("schedules").doc(ref.id).update({ id: ref.id }).then(() => {
-                    res();
-                }).catch((err) => {
-                    rej(err);
-                });
+            this.document.collection("schedules").doc(schedule.label).set(schedule).then(() => {
+                res();
+            }).catch((err) => {
+                rej(err);
             });
         });
     }

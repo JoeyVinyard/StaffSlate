@@ -16,7 +16,7 @@ export class SheetService {
   private scOb: Subscription;
 
   loadSheet(sheetId: string): Observable<Sheet> {
-    this.scOb = this.scheduleService.currentSchedule.subscribe((schedule) => {
+    this.scOb = this.scheduleService.getCurrentSchedule().subscribe((schedule) => {
       if(this.currentSheetSub) {
         this.currentSheetSub.unsubscribe();
       }
@@ -31,7 +31,7 @@ export class SheetService {
   }
 
   constructor(private scheduleService: ScheduleService) {
-    this.scheduleService.currentSchedule.subscribe((schedule: Schedule) => {
+    this.scheduleService.getCurrentSchedule().subscribe((schedule: Schedule) => {
       this.currentScheduleDoc = schedule.document;
     });
   }

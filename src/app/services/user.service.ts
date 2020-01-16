@@ -3,14 +3,14 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { User } from 'firebase';
 import { UserInfo } from '../models/user-info';
-import { Location } from '../models/location';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
+  private currentSubscription: Subscription;
   private currentUserInfo: ReplaySubject<UserInfo> = new ReplaySubject(1);
 
   public getCurrentUserInfo(): Observable<UserInfo> {
@@ -18,6 +18,9 @@ export class UserService {
   }
 
   public logout(): Promise<void> {
+    if(this.currentSubscription) {
+      this.currentSubscription.unsubscribe();
+    }
     return this.afAuth.auth.signOut();
   }
 
@@ -36,7 +39,10 @@ export class UserService {
   }
 
   private loadUserInfo(user: User): void {
-    this.afs.collection("users").doc<UserInfo>(user.email).valueChanges().subscribe((userInfo) => {
+    if(this.currentSubscription) {
+      this.currentSubscription.unsubscribe();
+    }
+    this.currentSubscription = this.afs.collection("users").doc<UserInfo>(user.email).valueChanges().subscribe((userInfo) => {
       this.currentUserInfo.next(userInfo);
     });
   }
