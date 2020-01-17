@@ -30,6 +30,7 @@ export class ScheduleComponent implements OnDestroy{
   private remainingSpace: number = 0;
   private timeColumns: Time[] = [];
   private sheetSub: Subscription;
+  private shiftSub: Subscription;
   
   private times: number[] = [];
   private hovered: Shift = null;
@@ -64,7 +65,7 @@ export class ScheduleComponent implements OnDestroy{
         shift: shift
       }
     });
-    dialogRef.afterClosed().subscribe((newShift: Shift) => {
+    this.subscriptions.push(dialogRef.afterClosed().subscribe((newShift: Shift) => {
       if(newShift) {
         if(shift) {
           shift.document.update(newShift);
@@ -72,7 +73,7 @@ export class ScheduleComponent implements OnDestroy{
           this.curSheet.document.collection("shifts").add(newShift);
         }
       }
-    });
+    }));
   }
   
   private openNewSheetDialog(edit: boolean = false): void {
@@ -82,7 +83,7 @@ export class ScheduleComponent implements OnDestroy{
         sheet: edit ? this.curSheet : null
       }
     });
-    dialogRef.afterClosed().subscribe((newSheet: Sheet) => {
+    this.subscriptions.push(dialogRef.afterClosed().subscribe((newSheet: Sheet) => {
       if(newSheet) {
         if(edit) {
           this.curSheet.document.update(newSheet);
@@ -102,7 +103,7 @@ export class ScheduleComponent implements OnDestroy{
           })
         }
       }
-    });
+    }));
   }
   
   private deleteShift(shift: Shift) {
@@ -215,7 +216,10 @@ export class ScheduleComponent implements OnDestroy{
         return;
       }
       this.timeColumns = this.generateTimeColumns();
-      this.curSheet.loadShifts().subscribe((shifts) => {
+      if(this.shiftSub) {
+        this.shiftSub.unsubscribe();
+      }
+      this.shiftSub = this.curSheet.loadShifts().subscribe((shifts) => {
         this.shifts = shifts.sort((a, b) => {
           let r = this.convertTimeToNum(a.startTime) - this.convertTimeToNum(b.startTime);
           if(r == 0) {

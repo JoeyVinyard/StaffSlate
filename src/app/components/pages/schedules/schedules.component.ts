@@ -31,7 +31,7 @@ export class SchedulesComponent implements OnDestroy {
       width: '300px',
       data: schedule
     });
-    dialogRef.afterClosed().subscribe((newSchedule: Schedule) => {
+    this.subscriptions.push(dialogRef.afterClosed().subscribe((newSchedule: Schedule) => {
       if (newSchedule) {
         if(schedule) {
           let i = this.loadedLocation.schedules.findIndex(s => s.key == schedule.key);
@@ -47,7 +47,7 @@ export class SchedulesComponent implements OnDestroy {
             });
         }
       }
-    });
+    }));
   }
 
   private addScheduleResult(success: boolean): void {
