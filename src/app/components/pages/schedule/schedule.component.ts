@@ -113,12 +113,12 @@ export class ScheduleComponent implements OnDestroy{
   }
   
   private dropSheetLabel(dropEv: CdkDragDrop<HTMLDivElement>) {
-    // let v = this.currentSchedule.sheetOrder[dropEv.previousIndex];
-    // this.currentSchedule.sheetOrder[dropEv.previousIndex] = this.currentSchedule.sheetOrder[dropEv.currentIndex];
-    // this.currentSchedule.sheetOrder[dropEv.currentIndex] = v;
-    // this.currentSchedule.document.update({
-    //   sheetOrder: this.currentSchedule.sheetOrder
-    // });
+    console.log(dropEv);
+    let spliced = this.currentSchedule.sheets.splice(dropEv.previousIndex,1)[0];
+    this.currentSchedule.sheets.splice(dropEv.currentIndex,0,spliced);
+    this.currentSchedule.document.update({
+      sheets: this.currentSchedule.sheets
+    });
   }
   
   private convertTimeToNum(t: Time): number {
