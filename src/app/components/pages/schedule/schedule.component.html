@@ -69,17 +69,17 @@
     <div *ngIf="currentSchedule && curSheet" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)" [ngClass]="{'mobile': mobile()}">
         <div class="sheet"
             *ngFor="let sheet of currentSchedule.sheets"
-            [ngClass]="{'selectedSheet': sheet==curSheet.label}"
+            [ngClass]="{'selectedSheet': sheet.display==curSheet.label}"
             [cdkDragDisabled]="(activatedRoute.data | async).guest"
-            (click)="displaySheetClick(sheet)"
+            (click)="displaySheetClick(sheet.key)"
             cdkDrag cdkDragLockAxis="x"
-        >{{sheet}}
-            <button *ngIf="sheet==curSheet.label && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
+        >{{sheet.display}}
+            <button *ngIf="sheet.display==curSheet.label && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
                 <mat-icon class="dropdown-arrow" >arrow_drop_down</mat-icon>
             </button>
             <mat-menu xPosition="before" #menu="matMenu">
                 <button mat-menu-item (click)="openNewSheetDeleteConfirmation()">Delete</button>
-                <button mat-menu-item (click)="openNewSheetDialog(sheets[sheetNum])">Edit</button>
+                <button mat-menu-item (click)="openNewSheetDialog(true)">Edit</button>
             </mat-menu>
         </div>
     </div>

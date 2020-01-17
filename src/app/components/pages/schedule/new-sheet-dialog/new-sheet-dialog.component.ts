@@ -15,7 +15,7 @@ export class NewSheetDialogComponent implements AfterViewInit {
   sheet: FormControl = new FormControl('', [Validators.required]);
   open: FormControl = new FormControl('12:00 am', [Validators.required]);
   close: FormControl = new FormControl('11:00 pm', [Validators.required]);
-  timeIncrement: FormControl = new FormControl('30', [Validators.required]);
+  timeIncrement: FormControl = new FormControl(30, [Validators.required]);
 
   @ViewChild("openSheet", { static: true }) openField;
   @ViewChild("closeSheet", {static: true}) closeField;

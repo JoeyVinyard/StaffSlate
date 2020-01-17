@@ -13,6 +13,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DeleteSheetConfirmationComponent } from './delete-sheet-confirmation/delete-sheet-confirmation.component';
 import { LocationService } from 'src/app/services/location.service';
 import { Subscription } from 'rxjs';
+import { DocumentReference } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-schedule',
@@ -24,11 +25,11 @@ export class ScheduleComponent implements OnDestroy{
   private subscriptions: Subscription[] = [];
   private currentSchedule: Schedule;
   private curSheet: Sheet;
-  private sheets: Sheet[];
   private shifts: Shift[];
   private createdShifts: Shift[];
   private remainingSpace: number = 0;
   private timeColumns: Time[] = [];
+  private sheetSub: Subscription;
   
   private times: number[] = [];
   private hovered: Shift = null;
@@ -43,12 +44,14 @@ export class ScheduleComponent implements OnDestroy{
     });
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if(confirmed) {
-        let i = this.sheets.indexOf(this.curSheet);
+        let i = this.currentSchedule.sheets.findIndex(id => id.display == this.curSheet.label);
         this.currentSchedule.sheets.splice(i,1)[0];
-        this.currentSchedule.document.update({
-          sheets: this.currentSchedule.sheets
+        this.curSheet.document.delete().then(() => {
+          this.sheetSub.unsubscribe();
+          this.currentSchedule.document.update({
+            sheets: this.currentSchedule.sheets
+          });
         });
-        this.curSheet.document.delete();
       }
     });
   }
@@ -72,20 +75,27 @@ export class ScheduleComponent implements OnDestroy{
     });
   }
   
-  private openNewSheetDialog(sheet?: Sheet): void {
+  private openNewSheetDialog(edit: boolean = false): void {
     const dialogRef = this.dialog.open(NewSheetDialogComponent, {
       width: '400px',
       data: {
-        sheet: sheet
+        sheet: edit ? this.curSheet : null
       }
     });
     dialogRef.afterClosed().subscribe((newSheet: Sheet) => {
       if(newSheet) {
-        if(sheet) {
-          sheet.document.update(newSheet);
+        if(edit) {
+          this.curSheet.document.update(newSheet);
+          if(this.curSheet.label != newSheet.label) {
+            let i = this.currentSchedule.sheets.findIndex(id => id.display == this.curSheet.label);
+            this.currentSchedule.sheets[i].display = newSheet.label;
+            this.currentSchedule.document.update({
+              sheets: this.currentSchedule.sheets
+            });
+          }
         } else {
-          this.currentSchedule.document.collection("sheets").doc(newSheet.label).set(newSheet).then(() => {
-            this.currentSchedule.sheets.push(newSheet.label);
+          this.currentSchedule.document.collection("sheets").add(newSheet).then((ref: DocumentReference) => {
+            this.currentSchedule.sheets.push({key: ref.id, display: newSheet.label});
             this.currentSchedule.document.update({
               sheets: this.currentSchedule.sheets
             });
@@ -196,10 +206,16 @@ export class ScheduleComponent implements OnDestroy{
   }
 
   private displaySheet(sheetLabel: string): void {
-    this.subscriptions.push(this.currentSchedule.loadSheetData(sheetLabel).subscribe((sheet) => {
+    if(this.sheetSub) {
+      this.sheetSub.unsubscribe();
+    }
+    this.sheetSub = this.currentSchedule.loadSheetData(sheetLabel).subscribe((sheet) => {
       this.curSheet = sheet;
+      if(!sheet) {
+        return;
+      }
       this.timeColumns = this.generateTimeColumns();
-      this.subscriptions.push(this.curSheet.loadShifts().subscribe((shifts) => {
+      this.curSheet.loadShifts().subscribe((shifts) => {
         this.shifts = shifts.sort((a, b) => {
           let r = this.convertTimeToNum(a.startTime) - this.convertTimeToNum(b.startTime);
           if(r == 0) {
@@ -208,8 +224,8 @@ export class ScheduleComponent implements OnDestroy{
           return r;
         });
         this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
-      }));
-    }));
+      });
+    });
   }
   
   private parseName(emp: Employee) {
@@ -231,7 +247,9 @@ export class ScheduleComponent implements OnDestroy{
           this.subscriptions.push(location.loadScheduleData(map.get("scheduleId")).subscribe((schedule) => {
             this.currentSchedule = schedule;
             if(schedule.sheets.length) {
-              this.displaySheet(schedule.sheets[0])
+              this.displaySheet(schedule.sheets[0].key)
+            } else {
+              this.curSheet = null;
             }
           }));
         }));
