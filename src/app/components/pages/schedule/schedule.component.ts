@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Schedule } from 'src/app/models/schedule';
 import { TimeService } from 'src/app/services/time.service';
@@ -20,7 +20,7 @@ import { DocumentReference } from '@angular/fire/firestore';
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.css']
 })
-export class ScheduleComponent implements OnDestroy{
+export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   private subscriptions: Subscription[] = [];
   private currentSchedule: Schedule;
@@ -240,24 +240,30 @@ export class ScheduleComponent implements OnDestroy{
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
+  ngAfterViewInit() {
+    this.subscriptions.push(this.activatedRoute.paramMap.subscribe((map) => {
+      this.subscriptions.push(this.locationService.loadLocation(map.get("locationId")).subscribe((location) => {
+        this.subscriptions.push(location.loadScheduleData(map.get("scheduleId")).subscribe((schedule) => {
+          this.currentSchedule = schedule;
+          if(schedule.sheets.length) {
+            this.displaySheet(schedule.sheets[0].key)
+            this.cdf.detectChanges();
+          } else {
+            this.curSheet = null;
+          }
+        }));
+      }));
+    }));
+  }
+
   constructor(
     private locationService: LocationService,
     private timeService: TimeService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    public dialog: MatDialog) {
-      this.subscriptions.push(this.activatedRoute.paramMap.subscribe((map) => {
-        this.subscriptions.push(this.locationService.loadLocation(map.get("locationId")).subscribe((location) => {
-          this.subscriptions.push(location.loadScheduleData(map.get("scheduleId")).subscribe((schedule) => {
-            this.currentSchedule = schedule;
-            if(schedule.sheets.length) {
-              this.displaySheet(schedule.sheets[0].key)
-            } else {
-              this.curSheet = null;
-            }
-          }));
-        }));
-      }));
+    public dialog: MatDialog,
+    private cdf: ChangeDetectorRef) {
+      
     }
   }
     
