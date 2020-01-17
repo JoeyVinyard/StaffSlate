@@ -22,6 +22,7 @@ import { DocumentReference } from '@angular/fire/firestore';
 })
 export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
+  private preventSheetChange: boolean = false;
   private subscriptions: Subscription[] = [];
   private currentSchedule: Schedule;
   private curSheet: Sheet;
@@ -113,9 +114,9 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
   
   private dropSheetLabel(dropEv: CdkDragDrop<HTMLDivElement>) {
-    console.log(dropEv);
     let spliced = this.currentSchedule.sheets.splice(dropEv.previousIndex,1)[0];
     this.currentSchedule.sheets.splice(dropEv.currentIndex,0,spliced);
+    this.preventSheetChange = true;
     this.currentSchedule.document.update({
       sheets: this.currentSchedule.sheets
     });
@@ -246,8 +247,12 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         this.subscriptions.push(location.loadScheduleData(map.get("scheduleId")).subscribe((schedule) => {
           this.currentSchedule = schedule;
           if(schedule.sheets.length) {
-            this.displaySheet(schedule.sheets[0].key)
-            this.cdf.detectChanges();
+            if(this.preventSheetChange) {
+              this.preventSheetChange = false;
+            } else {
+              this.displaySheet(schedule.sheets[0].key)
+              this.cdf.detectChanges();
+            }
           } else {
             this.curSheet = null;
           }
