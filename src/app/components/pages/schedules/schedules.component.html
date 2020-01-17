@@ -16,7 +16,7 @@
         <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="name">
                 <th mat-header-cell class="name" *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let schedule"  (click)="openSchedule(schedule)"> {{schedule.label}} </td>
+                <td mat-cell *matCellDef="let schedule" (click)="openSchedule(schedule)"> {{schedule}} </td>
             </ng-container>
             
             <ng-container matColumnDef="action">

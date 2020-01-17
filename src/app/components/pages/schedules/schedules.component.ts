@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { LocationService } from 'src/app/services/location.service';
 import { Location } from 'src/app/models/location';
 import { Schedule } from 'src/app/models/schedule';
@@ -6,21 +6,23 @@ import { MatTableDataSource, MatDialog, MatSnackBar } from '@angular/material';
 import { NewScheduleDialogComponent } from './new-schedule-dialog/new-schedule-dialog.component';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import { UserInfo } from 'src/app/models/user-info';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-schedules',
   templateUrl: './schedules.component.html',
   styleUrls: ['./schedules.component.css']
 })
-export class SchedulesComponent {
+export class SchedulesComponent implements OnDestroy {
 
-  dataSource = new MatTableDataSource<Schedule>();
+  dataSource = new MatTableDataSource<string>();
   displayedColumns: string[] = ['name', 'action'];
   private loadedLocation: Location;
+  private subscriptions: Subscription[] = [];
 
-
-  private openSchedule(schedule: Schedule) {
-    this.router.navigate(["schedule", this.loadedLocation.document.ref.id, schedule.id]);
+  private openSchedule(schedule: string) {
+    this.router.navigate(["schedule", this.loadedLocation.document.ref.id, schedule]);
   }
   
   private openNewScheduleDialog(): void {
@@ -29,7 +31,7 @@ export class SchedulesComponent {
     });
     dialogRef.afterClosed().subscribe((schedule: Schedule) => {
       if (schedule) {
-        schedule.sheetOrder = [];
+        schedule.sheets = []
         this.loadedLocation.addSchedule(schedule)
           .then(() => this.addScheduleResult(true))
           .catch((err) => {
@@ -53,7 +55,7 @@ export class SchedulesComponent {
   }
 
   private delete(schedule: Schedule): void {
-    this.loadedLocation.deleteSchedule(schedule.id).then(() => {
+    this.loadedLocation.deleteSchedule(schedule.label).then(() => {
       this.snackbar.open("Schedule succesfully deleted.", "Dismiss", {
         duration: 5000
       });
@@ -64,20 +66,22 @@ export class SchedulesComponent {
     })
   }
 
-  private parseSchedules(schedules: Schedule[]): void {
-    this.dataSource.data = schedules;
-    this.snackbar.dismiss();
-  }
-  
   private filter(f: string): void {
     this.dataSource.filter = f.trim().toLowerCase();
   }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
   constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
     this.snackbar.open("Loading Schedules...", "Dismiss");
-    this.locationService.currentLocation.subscribe((location: Location) => {
-      this.loadedLocation = location;
-      this.loadedLocation.loadSchedules().subscribe(this.parseSchedules.bind(this));
-    });
+    this.subscriptions.push(this.userService.getCurrentUserInfo().subscribe((userInfo: UserInfo) => {
+      this.subscriptions.push(this.locationService.loadLocation(userInfo.locations[0].key).subscribe((location: Location) => {
+        this.loadedLocation = location;
+        this.dataSource.data = location.schedules;
+        this.snackbar.dismiss();
+      }));
+    }));
   }
 }

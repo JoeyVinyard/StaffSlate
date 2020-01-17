@@ -66,15 +66,15 @@
     <div *ngIf="!(activatedRoute.data | async).guest" class="addSheet">
         <mat-icon (click)="openNewSheetDialog()">add</mat-icon>
     </div>
-    <div *ngIf="currentSchedule && sheets" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)" [ngClass]="{'mobile': mobile()}">
+    <div *ngIf="currentSchedule && curSheet" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)" [ngClass]="{'mobile': mobile()}">
         <div class="sheet"
-            *ngFor="let sheetNum of currentSchedule.sheetOrder"
-            [ngClass]="{'selectedSheet': sheets[sheetNum].label==curSheet.label}"
+            *ngFor="let sheet of currentSchedule.sheets"
+            [ngClass]="{'selectedSheet': sheet==curSheet.label}"
             [cdkDragDisabled]="(activatedRoute.data | async).guest"
-            (click)="loadSheet(sheets[sheetNum].label)"
+            (click)="displaySheetClick(sheet)"
             cdkDrag cdkDragLockAxis="x"
-        >{{sheets[sheetNum].label}}
-            <button *ngIf="sheets[sheetNum].label==curSheet.label && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
+        >{{sheet}}
+            <button *ngIf="sheet==curSheet.label && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
                 <mat-icon class="dropdown-arrow" >arrow_drop_down</mat-icon>
             </button>
             <mat-menu xPosition="before" #menu="matMenu">
@@ -84,5 +84,5 @@
         </div>
     </div>
     <div class="filler"></div>
-    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="addShift right" [disabled]="!sheets" (click)="openNewShiftDialog()">Add Shift</button>
+    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="addShift right" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
 </mat-toolbar>

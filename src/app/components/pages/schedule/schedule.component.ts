@@ -1,29 +1,27 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Schedule } from 'src/app/models/schedule';
-import { ScheduleService } from 'src/app/services/schedule.service';
 import { TimeService } from 'src/app/services/time.service';
 import { Sheet } from 'src/app/models/sheet';
 import { Employee } from 'src/app/models/employee';
 import { Shift } from 'src/app/models/shift';
-import { MatDialog, MatMenu } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.component';
 import { Time } from '@angular/common';
-import { SheetService } from 'src/app/services/sheet.service';
 import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.component';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DeleteSheetConfirmationComponent } from './delete-sheet-confirmation/delete-sheet-confirmation.component';
-import { DocumentChangeAction } from '@angular/fire/firestore';
-import { UserService } from 'src/app/services/user.service';
 import { LocationService } from 'src/app/services/location.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.css']
 })
-export class ScheduleComponent {
+export class ScheduleComponent implements OnDestroy{
   
+  private subscriptions: Subscription[] = [];
   private currentSchedule: Schedule;
   private curSheet: Sheet;
   private sheets: Sheet[];
@@ -37,7 +35,7 @@ export class ScheduleComponent {
   
   @ViewChild("schedule", {static: false}) scheduleEl: ElementRef<HTMLElement>;
   @ViewChild("container", {static: false}) containerEl: ElementRef<HTMLElement>;
-
+  
   private openNewSheetDeleteConfirmation(): void {
     const dialogRef = this.dialog.open(DeleteSheetConfirmationComponent, {
       width: '500px',
@@ -46,20 +44,15 @@ export class ScheduleComponent {
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if(confirmed) {
         let i = this.sheets.indexOf(this.curSheet);
-        let del = this.currentSchedule.sheetOrder.splice(i,1)[0];
-        this.currentSchedule.sheetOrder.forEach((v,i) => {
-          if(v > del){
-            this.currentSchedule.sheetOrder[i]=v-1;
-          }
-        })
+        this.currentSchedule.sheets.splice(i,1)[0];
         this.currentSchedule.document.update({
-          sheetOrder: this.currentSchedule.sheetOrder
+          sheets: this.currentSchedule.sheets
         });
         this.curSheet.document.delete();
       }
     });
   }
-
+  
   private openNewShiftDialog(shift?: Shift): void {
     const dialogRef = this.dialog.open(NewShiftDialogComponent, {
       width: '400px',
@@ -71,14 +64,14 @@ export class ScheduleComponent {
     dialogRef.afterClosed().subscribe((newShift: Shift) => {
       if(newShift) {
         if(shift) {
-          this.curSheet.document.collection("shifts").doc(shift.id).update(newShift);
+          shift.document.update(newShift);
         } else {
           this.curSheet.document.collection("shifts").add(newShift);
         }
       }
     });
   }
-
+  
   private openNewSheetDialog(sheet?: Sheet): void {
     const dialogRef = this.dialog.open(NewSheetDialogComponent, {
       width: '400px',
@@ -91,36 +84,36 @@ export class ScheduleComponent {
         if(sheet) {
           sheet.document.update(newSheet);
         } else {
-          this.currentSchedule.document.collection("sheets").add(newSheet).then(() => {
-            this.currentSchedule.sheetOrder.push(this.currentSchedule.sheetOrder.length);
+          this.currentSchedule.document.collection("sheets").doc(newSheet.label).set(newSheet).then(() => {
+            this.currentSchedule.sheets.push(newSheet.label);
             this.currentSchedule.document.update({
-              sheetOrder: this.currentSchedule.sheetOrder
+              sheets: this.currentSchedule.sheets
             });
           })
         }
       }
     });
   }
-
+  
   private deleteShift(shift: Shift) {
-    this.curSheet.document.collection("shifts").doc(shift.id).delete().catch((err) => {
+    shift.document.delete().catch((err) => {
       console.error(err);
     });
   }
-
+  
   private dropSheetLabel(dropEv: CdkDragDrop<HTMLDivElement>) {
-    let v = this.currentSchedule.sheetOrder[dropEv.previousIndex];
-    this.currentSchedule.sheetOrder[dropEv.previousIndex] = this.currentSchedule.sheetOrder[dropEv.currentIndex];
-    this.currentSchedule.sheetOrder[dropEv.currentIndex] = v;
-    this.currentSchedule.document.update({
-      sheetOrder: this.currentSchedule.sheetOrder
-    });
+    // let v = this.currentSchedule.sheetOrder[dropEv.previousIndex];
+    // this.currentSchedule.sheetOrder[dropEv.previousIndex] = this.currentSchedule.sheetOrder[dropEv.currentIndex];
+    // this.currentSchedule.sheetOrder[dropEv.currentIndex] = v;
+    // this.currentSchedule.document.update({
+    //   sheetOrder: this.currentSchedule.sheetOrder
+    // });
   }
-
+  
   private convertTimeToNum(t: Time): number {
     return t.hours*100 + t.minutes;
   }
-
+  
   private shouldShade(time: Time, shift: Shift, left: boolean): boolean {
     let convertedTime = this.convertTimeToNum(time);
     let convertedStart = this.convertTimeToNum(shift.startTime);
@@ -128,9 +121,9 @@ export class ScheduleComponent {
     return this.isInShift(convertedTime, convertedStart, convertedEnd)
     && (!left || (left && convertedTime != convertedStart))
     && (left || (!left && convertedTime != convertedEnd));
-
+    
   }
-
+  
   private isInShift(time: number, start: number, end: number) {
     return time >= start && time <= end;
   }
@@ -157,15 +150,15 @@ export class ScheduleComponent {
     }
     return times;
   }
-
+  
   private formatTime(time: Time): string {
     return this.timeService.timeToString(time);
   }
-
+  
   private enter(shift: Shift) {
     this.hovered = shift;
   }
-
+  
   private makeDummyRows(containerHeight: number, numRows: number) {
     let baseHeight = 22; //Header row
     let rowHeight = 34; //26px row height, 8 px buffer
@@ -176,80 +169,73 @@ export class ScheduleComponent {
     }
     this.remainingSpace = (containerHeight - baseHeight)%rowHeight;
   }
-
+  
   private resizeSchedule() {
     this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
   }
-
+  
   private getHourSpan(shift: Shift): string {
     return `${this.formatTime(shift.startTime)} - ${this.formatTime(shift.endTime)}`
   }
-
+  
   private mobile() {
     return window.innerWidth < 360;
   }
-
+  
   private getViewLink(): string {
     return `http://www.picostaff.com/${this.router.url}/${this.currentSchedule.viewId}`;
     // return `http://localhost:4200/schedule/1jJcKnmmFvQTeTLIzDVf/I3ECXBQ0YpBSEcB2NIc5`;
   }
-
-  private loadSheet(label?: string): void {
-    if(label && label == this.curSheet.label) {
+  
+  private displaySheetClick(sheetLabel: string): void {
+    if(this.curSheet.label == sheetLabel) {
       return;
+    } else {
+      this.displaySheet(sheetLabel);
     }
-    label = label || "";
-    this.curSheet = this.sheets.find(sh => sh.label == label) || this.sheets[this.currentSchedule.sheetOrder[0]];
-    this.curSheet.loadShifts().subscribe((shiftSnapshots: DocumentChangeAction<Shift>[]) => {
-      let shifts = shiftSnapshots.map((s) => {
-        let sd = s.payload.doc.data()
-        sd.id = s.payload.doc.id
-        return sd;
-      });
-      this.shifts = shifts.sort((a, b) => {
-        let r = this.convertTimeToNum(a.startTime) - this.convertTimeToNum(b.startTime);
-        if(r == 0) {
-          return this.convertTimeToNum(a.endTime) - this.convertTimeToNum(b.endTime);
-        }
-        return r;
-      });
-      this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
-    })
-    this.timeColumns = this.generateTimeColumns();
   }
 
-  private parseSchedule(): void {
-    this.currentSchedule.loadSheets().subscribe((sheets) => {
-      this.sheets = sheets.map((s) => {
-        let sheet: Sheet = new Sheet(s.payload.doc.data(), this.currentSchedule.document.collection("sheets").doc(s.payload.doc.id));
-        return sheet;
-      });
-      this.loadSheet();
-    });
+  private displaySheet(sheetLabel: string): void {
+    this.subscriptions.push(this.currentSchedule.loadSheetData(sheetLabel).subscribe((sheet) => {
+      this.curSheet = sheet;
+      this.timeColumns = this.generateTimeColumns();
+      this.subscriptions.push(this.curSheet.loadShifts().subscribe((shifts) => {
+        this.shifts = shifts.sort((a, b) => {
+          let r = this.convertTimeToNum(a.startTime) - this.convertTimeToNum(b.startTime);
+          if(r == 0) {
+            return this.convertTimeToNum(a.endTime) - this.convertTimeToNum(b.endTime);
+          }
+          return r;
+        });
+        this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
+      }));
+    }));
   }
   
   private parseName(emp: Employee) {
     return `${emp.firstName} ${emp.lastName.substring(0,1)}.`;
   }
-  
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+
   constructor(
-    private sheetService: SheetService,
-    private userService: UserService,
     private locationService: LocationService,
-    private scheduleService: ScheduleService,
     private timeService: TimeService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog) {
-
-    activatedRoute.paramMap.subscribe((map) => {
-      this.locationService.loadLocation(map.get("locationId")).subscribe((location) => {
-        this.scheduleService.loadSchedule(location, map.get("scheduleId")).subscribe((schedule) => {
-          this.currentSchedule = schedule;
-          this.parseSchedule();
-          console.log(this.getViewLink());
-        });
-      });
-    });
+      this.subscriptions.push(this.activatedRoute.paramMap.subscribe((map) => {
+        this.subscriptions.push(this.locationService.loadLocation(map.get("locationId")).subscribe((location) => {
+          this.subscriptions.push(location.loadScheduleData(map.get("scheduleId")).subscribe((schedule) => {
+            this.currentSchedule = schedule;
+            if(schedule.sheets.length) {
+              this.displaySheet(schedule.sheets[0])
+            }
+          }));
+        }));
+      }));
+    }
   }
-}
+    

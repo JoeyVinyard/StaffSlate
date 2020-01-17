@@ -69,7 +69,7 @@ export class EmployeesComponent {
 
   constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar) {
     this.snackbar.open("Loading Employees...", "Dismiss");
-    this.locationService.currentLocation.subscribe((location) => {
+    this.locationService.getCurrentLocation().subscribe((location) => {
       this.loadedLocation = location;
       this.loadedLocation.getEmployees().subscribe(this.parseEmployees.bind(this));
     });

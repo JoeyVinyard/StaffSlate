@@ -98,7 +98,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
     private timeService: TimeService,
     @Inject(MAT_DIALOG_DATA) public data: {sheet: Sheet, shift: Shift}
     ) {
-      locationService.currentLocation.subscribe((location) => {
+      locationService.getCurrentLocation().subscribe((location) => {
         this.location = location;
       });
       if(data.shift) {
