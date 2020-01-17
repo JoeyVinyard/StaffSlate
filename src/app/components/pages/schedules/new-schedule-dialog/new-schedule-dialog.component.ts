@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { Schedule } from 'src/app/models/schedule';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Identifier } from 'src/app/models/identifier';
 
 @Component({
   selector: 'app-new-schedule-dialog',
@@ -26,6 +27,10 @@ export class NewScheduleDialogComponent {
     } as Schedule);
   }
 
-  constructor(public dialogRef: MatDialogRef<NewScheduleDialogComponent>) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Identifier, public dialogRef: MatDialogRef<NewScheduleDialogComponent>) {
+    if(data) {
+      this.label.setValue(data.display);
+    }
+  }
 
 }

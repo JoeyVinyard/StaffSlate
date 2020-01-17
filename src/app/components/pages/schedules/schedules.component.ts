@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { UserInfo } from 'src/app/models/user-info';
 import { Subscription } from 'rxjs';
+import { Identifier } from 'src/app/models/identifier';
 
 @Component({
   selector: 'app-schedules',
@@ -16,28 +17,35 @@ import { Subscription } from 'rxjs';
 })
 export class SchedulesComponent implements OnDestroy {
 
-  dataSource = new MatTableDataSource<string>();
+  dataSource = new MatTableDataSource<Identifier>();
   displayedColumns: string[] = ['name', 'action'];
   private loadedLocation: Location;
   private subscriptions: Subscription[] = [];
 
-  private openSchedule(schedule: string) {
-    this.router.navigate(["schedule", this.loadedLocation.document.ref.id, schedule]);
+  private openSchedule(schedule: Identifier) {
+    this.router.navigate(["schedule", this.loadedLocation.document.ref.id, schedule.key]);
   }
   
-  private openNewScheduleDialog(): void {
+  private openNewScheduleDialog(schedule: Identifier = null): void {
     const dialogRef = this.dialog.open(NewScheduleDialogComponent, {
       width: '300px',
+      data: schedule
     });
-    dialogRef.afterClosed().subscribe((schedule: Schedule) => {
-      if (schedule) {
-        schedule.sheets = []
-        this.loadedLocation.addSchedule(schedule)
-          .then(() => this.addScheduleResult(true))
-          .catch((err) => {
-            console.error(err);
-            this.addScheduleResult(false);
-          });
+    dialogRef.afterClosed().subscribe((newSchedule: Schedule) => {
+      if (newSchedule) {
+        if(schedule) {
+          let i = this.loadedLocation.schedules.findIndex(s => s.key == schedule.key);
+          this.loadedLocation.schedules[i].display = newSchedule.label;
+          this.loadedLocation.document.update({schedules: this.loadedLocation.schedules});
+        } else {
+          newSchedule.sheets = []
+          this.loadedLocation.addSchedule(newSchedule)
+            .then(() => this.addScheduleResult(true))
+            .catch((err) => {
+              console.error(err);
+              this.addScheduleResult(false);
+            });
+        }
       }
     });
   }

@@ -2,10 +2,11 @@ import {  AngularFirestoreDocument, DocumentReference } from '@angular/fire/fire
 import { Observable, Subject, ReplaySubject, Subscription } from 'rxjs';
 import { Employee } from './employee';
 import { Schedule } from './schedule';
+import { Identifier } from './identifier';
 
 export class Location {
     label: string = "";
-    schedules: string[] = [];
+    schedules: Identifier[] = [];
     private employees: ReplaySubject<Map<string, Employee>> = new ReplaySubject(1);
     private currentSchedule: ReplaySubject<Schedule> = new ReplaySubject(1);
     private cachedSchedules: Map<string, Schedule> = new Map<string, Schedule>();
@@ -64,8 +65,8 @@ export class Location {
 
     public addSchedule(schedule: Schedule): Promise<void> {
         return new Promise((res, rej) => {
-            this.document.collection("schedules").doc(schedule.label).set(schedule).then(() => {
-                this.schedules.push(schedule.label);
+            this.document.collection("schedules").add(schedule).then((ref) => {
+                this.schedules.push({key: ref.id, display: schedule.label});
                 this.document.update({schedules: this.schedules}).then(() => {
                     res();
                 }).catch((err) => {
