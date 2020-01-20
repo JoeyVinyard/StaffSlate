@@ -241,7 +241,9 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   private printSchedule() {
     this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
       printSchedule.timeColumns = this.timeColumns;
-      this.aff.httpsCallable("exportSchedule")(printSchedule);
+      this.aff.httpsCallable("exportSchedule")(printSchedule).subscribe((data) => {
+        console.log(data);
+      })
     });
   }
 
