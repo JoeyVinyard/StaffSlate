@@ -14,6 +14,7 @@ import { DeleteSheetConfirmationComponent } from './delete-sheet-confirmation/de
 import { LocationService } from 'src/app/services/location.service';
 import { Subscription } from 'rxjs';
 import { DocumentReference } from '@angular/fire/firestore';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
   selector: 'app-schedule',
@@ -240,7 +241,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   private printSchedule() {
     this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
       printSchedule.timeColumns = this.timeColumns;
-      console.log(printSchedule);
+      this.aff.httpsCallable("exportSchedule")(printSchedule);
     });
   }
 
@@ -274,6 +275,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
+    private aff: AngularFireFunctions,
     private cdf: ChangeDetectorRef) {
       
     }

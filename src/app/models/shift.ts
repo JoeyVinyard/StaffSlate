@@ -15,3 +15,9 @@ export class Shift {
     }
 
 }
+
+export interface PrintShift {
+    startTime: Time;
+    endTime: Time;
+    empId: string;
+}

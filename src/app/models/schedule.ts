@@ -3,6 +3,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { Sheet, PrintSheet } from './sheet';
 import { Identifier } from './identifier';
 import { Time } from '@angular/common';
+import { Shift, PrintShift } from './shift';
 
 export class Schedule {
     label: string;
@@ -54,14 +55,29 @@ export class Schedule {
                 sheets.forEach((sheet: Sheet) => {
                     shiftPromises.push(new Promise<PrintSheet>((res,rej) => {
                         sheet.loadShifts().subscribe((shifts) => {
-                            let printSheet: PrintSheet = new PrintSheet(sheet);
-                            printSheet.shifts = shifts;
+                            let printSheet: PrintSheet = {
+                                label: sheet.label,
+                                openTime: sheet.openTime,
+                                closeTime: sheet.closeTime,
+                                shifts: null
+                            } as PrintSheet;
+                            printSheet.shifts = shifts.map((s: Shift) => {
+                                return {
+                                    empId: s.empId,
+                                    startTime: s.startTime,
+                                    endTime: s.endTime
+                                } as PrintShift;
+                            });
                             res(printSheet);
                         });
                     }));
                 });
                 Promise.all(shiftPromises).then((pSheets: PrintSheet[]) => {
-                    let pSchedule: PrintSchedule = new PrintSchedule(this.sheets, pSheets);
+                    let pSchedule: PrintSchedule = {
+                        timeColumns: null,
+                        sheetIds: this.sheets,
+                        sheets: pSheets
+                    } as PrintSchedule;
                     res(pSchedule);
                 });
             });
@@ -75,7 +91,8 @@ export class Schedule {
     }
 }
 
-export class PrintSchedule {
-    public timeColumns: Time[];
-    constructor(public sheetIds: Identifier[], public sheets: PrintSheet[]){}
+export interface PrintSchedule {
+    timeColumns: Time[];
+    sheetIds: Identifier[];
+    sheets: PrintSheet[];
 }

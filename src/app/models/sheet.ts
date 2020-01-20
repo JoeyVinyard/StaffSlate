@@ -1,4 +1,4 @@
-import { Shift } from './shift';
+import { Shift, PrintShift } from './shift';
 import { Time } from '@angular/common';
 import { AngularFirestoreDocument, DocumentChangeAction } from '@angular/fire/firestore';
 import { Observable, ReplaySubject } from 'rxjs';
@@ -31,15 +31,9 @@ export class Sheet {
     }
 }
 
-export class PrintSheet {
-    public label: string;
-    public shifts: Shift[];
-    public openTime: Time;
-    public closeTime: Time;
-
-    constructor(sheetData: Sheet){
-        this.label = sheetData.label;
-        this.openTime = sheetData.openTime;
-        this.closeTime = sheetData.closeTime;
-    }
+export interface PrintSheet {
+    label: string;
+    shifts: PrintShift[];
+    openTime: Time;
+    closeTime: Time;
 }
