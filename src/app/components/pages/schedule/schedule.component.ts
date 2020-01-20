@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Schedule } from 'src/app/models/schedule';
+import { Schedule, PrintSchedule } from 'src/app/models/schedule';
 import { TimeService } from 'src/app/services/time.service';
 import { Sheet } from 'src/app/models/sheet';
 import { Employee } from 'src/app/models/employee';
@@ -235,6 +235,13 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   private parseName(emp: Employee) {
     return `${emp.firstName} ${emp.lastName.substring(0,1)}.`;
+  }
+
+  private printSchedule() {
+    this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
+      printSchedule.timeColumns = this.timeColumns;
+      console.log(printSchedule);
+    });
   }
 
   ngOnDestroy() {

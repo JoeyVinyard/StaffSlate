@@ -50,10 +50,8 @@ export class Location {
 
     public loadScheduleData(scheduleId: string): Observable<Schedule> {
         if(this.cachedSchedules.has(scheduleId)) {
-            console.log("Loading cached", scheduleId);
             this.currentSchedule.next(this.cachedSchedules.get(scheduleId));
         } else {
-            console.log("Loading new", scheduleId);
             this.document.collection("schedules").doc<Schedule>(scheduleId).valueChanges().subscribe((schedule: Schedule) => {
                 let s = new Schedule(schedule, this.document.collection("schedules").doc<Schedule>(scheduleId));
                 this.currentSchedule.next(s);

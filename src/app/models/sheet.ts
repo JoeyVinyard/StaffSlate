@@ -9,19 +9,36 @@ export class Sheet {
     openTime: Time;
     closeTime: Time;
     private shifts: ReplaySubject<Shift[]> = new ReplaySubject(1);
+    private cachedShifts: Shift[];
 
     public loadShifts(): Observable<Shift[]> {
-        this.document.collection<Shift>("shifts").snapshotChanges().subscribe((shifts) => {
-            this.shifts.next(shifts.map((shift: DocumentChangeAction<Shift>) => {
-                return new Shift(shift.payload.doc.data(), this.document.collection<Shift>("shifts").doc(shift.payload.doc.id));
-            }));
-        })
+        if(!this.cachedShifts) {
+            this.document.collection<Shift>("shifts").snapshotChanges().subscribe((shifts) => {
+                this.cachedShifts = shifts.map((shift: DocumentChangeAction<Shift>) => {
+                    return new Shift(shift.payload.doc.data(), this.document.collection<Shift>("shifts").doc(shift.payload.doc.id));
+                });
+                this.shifts.next(this.cachedShifts);
+            })
+        }
         return this.shifts;
     }
 
     constructor(sheetData: Sheet, public document: AngularFirestoreDocument<Sheet>) {
         this.label = sheetData.label;
         this.timeIncrement = sheetData.timeIncrement;
+        this.openTime = sheetData.openTime;
+        this.closeTime = sheetData.closeTime;
+    }
+}
+
+export class PrintSheet {
+    public label: string;
+    public shifts: Shift[];
+    public openTime: Time;
+    public closeTime: Time;
+
+    constructor(sheetData: Sheet){
+        this.label = sheetData.label;
         this.openTime = sheetData.openTime;
         this.closeTime = sheetData.closeTime;
     }
