@@ -4,6 +4,7 @@ import { Sheet, PrintSheet } from './sheet';
 import { Identifier } from './identifier';
 import { Time } from '@angular/common';
 import { Shift, PrintShift } from './shift';
+import { Employee } from './employee';
 
 export class Schedule {
     label: string;
@@ -74,7 +75,6 @@ export class Schedule {
                 });
                 Promise.all(shiftPromises).then((pSheets: PrintSheet[]) => {
                     let pSchedule: PrintSchedule = {
-                        timeColumns: null,
                         sheetIds: this.sheets,
                         sheets: pSheets
                     } as PrintSchedule;
@@ -92,7 +92,8 @@ export class Schedule {
 }
 
 export interface PrintSchedule {
-    timeColumns: Time[];
     sheetIds: Identifier[];
     sheets: PrintSheet[];
+    timeIncrement: number;
+    employees: Map<string, Employee>
 }

@@ -52,6 +52,7 @@ import { ScheduleComponent } from './components/pages/schedule/schedule.componen
 import { NewShiftDialogComponent } from './components/pages/schedule/new-shift-dialog/new-shift-dialog.component';
 import { NewSheetDialogComponent } from './components/pages/schedule/new-sheet-dialog/new-sheet-dialog.component';
 import { DeleteSheetConfirmationComponent } from './components/pages/schedule/delete-sheet-confirmation/delete-sheet-confirmation.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { DeleteSheetConfirmationComponent } from './components/pages/schedule/de
     AngularFireStorageModule,
     AngularFireFunctionsModule,
     FlexLayoutModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
+    HttpClientModule
   ],
   entryComponents: [
     NewEmployeeDialogComponent,

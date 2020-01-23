@@ -15,6 +15,8 @@ import { LocationService } from 'src/app/services/location.service';
 import { Subscription } from 'rxjs';
 import { DocumentReference } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { Location } from 'src/app/models/location';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-schedule',
@@ -240,10 +242,21 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
 
   private printSchedule() {
     this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
-      printSchedule.timeColumns = this.timeColumns;
-      this.aff.httpsCallable("exportSchedule")(printSchedule).subscribe((data) => {
-        console.log(data);
-      })
+      printSchedule.timeIncrement = this.curSheet.timeIncrement;
+      this.locationService.getCurrentLocation().subscribe((location: Location) => {
+        location.getEmployees().subscribe((employees: Map<string, Employee>) => {
+          printSchedule.sheets.forEach((sheet) => {
+            sheet.shifts.forEach(s => s.empId = employees.get(s.empId).firstName);
+          })
+          this.aff.httpsCallable("exportSchedule")(printSchedule).subscribe((htmlData: string) => {
+            this.http.post("http://localhost:3000/pdf", {data: htmlData}, {responseType: 'arraybuffer', }).subscribe((data) => {
+              let file = new Blob([data], { type: 'application/pdf' });
+              let fUrl = URL.createObjectURL(file);
+              window.open(fUrl);
+            });
+          });
+        });
+      });
     });
   }
 
@@ -278,7 +291,8 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     private router: Router,
     public dialog: MatDialog,
     private aff: AngularFireFunctions,
-    private cdf: ChangeDetectorRef) {
+    private cdf: ChangeDetectorRef,
+    private http: HttpClient) {
       
     }
   }

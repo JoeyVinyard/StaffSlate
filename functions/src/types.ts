@@ -12,9 +12,9 @@ export interface PrintSheet {
 }
 
 export interface PrintSchedule {
-    timeColumns: Time[];
     sheetIds: Identifier[];
     sheets: PrintSheet[];
+    timeIncrement: number;
 }
 
 export interface Time {
