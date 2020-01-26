@@ -19,11 +19,11 @@ export const createViewId = functions.firestore.document("locations/{locationId}
     });
 
 export const exportSchedule = functions.https.onCall((data: PrintSchedule, context: CallableContext) => {
-    let s = data.sheets[0];
-    let id = data.sheetIds[0];
+    let generatedHTML: string[] = [];
 
-    let generatedHTML = exportSheet(s,id,data.timeIncrement);
-    generatedHTML;
+    data.sheets.forEach((ps: PrintSheet, i: number) => {
+        generatedHTML.push(exportSheet(ps,data.sheetIds[i],data.timeIncrement));
+    });
 
     return generatedHTML;
 });

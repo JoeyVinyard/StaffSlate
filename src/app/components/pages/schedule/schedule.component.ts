@@ -248,7 +248,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           printSchedule.sheets.forEach((sheet) => {
             sheet.shifts.forEach(s => s.empId = employees.get(s.empId).firstName);
           })
-          this.aff.httpsCallable("exportSchedule")(printSchedule).subscribe((htmlData: string) => {
+          this.aff.httpsCallable("exportSchedule")(printSchedule).subscribe((htmlData: string[]) => {
             this.http.post("http://localhost:3000/pdf", {data: htmlData}, {responseType: 'arraybuffer', }).subscribe((data) => {
               let file = new Blob([data], { type: 'application/pdf' });
               let fUrl = URL.createObjectURL(file);
