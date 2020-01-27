@@ -248,7 +248,8 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           printSchedule.sheets.forEach((sheet) => {
             sheet.shifts.forEach(s => s.empId = employees.get(s.empId).firstName);
           })
-          this.http.post("http://localhost:3000/pdf", {data: printSchedule}, {responseType: 'arraybuffer', }).subscribe((data) => {
+          this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer', }).subscribe((data) => {
+          // this.http.post("http://localhost:3000/pdf", {data: printSchedule}, {responseType: 'arraybuffer', }).subscribe((data) => {
             let file = new Blob([data], { type: 'application/pdf' });
             let fUrl = URL.createObjectURL(file);
             window.open(fUrl);
