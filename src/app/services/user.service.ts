@@ -52,7 +52,7 @@ export class UserService {
       if(user){
         this.loadUserInfo(user);
       } else {
-        this.currentUserInfo = null;
+        this.currentUserInfo.next(null);
       }
     });
   }
