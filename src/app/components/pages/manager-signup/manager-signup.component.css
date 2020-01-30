@@ -1,0 +1,44 @@
+.signup-card {
+    margin: auto;
+    margin-top: 5vh;
+    min-width: 150px;
+    max-width: 500px;
+}
+.signup-form {
+    width: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.first-name {
+    width: 45%;
+    margin-right: 5%;
+}
+
+.last-name {
+    width: 50%;
+}
+
+.submit {
+    margin-left: 0px;
+}
+
+.spacing {
+    height: 10px;
+}
+
+.logo {
+    text-align: center;
+    margin-top: 5vh;
+}
+
+.logo h1 {
+    margin: 0;
+}
+
+.logo h2 {
+    font-size: 4vh;
+    margin: 0;
+}

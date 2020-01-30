@@ -7,6 +7,7 @@ import { SchedulesComponent } from './components/pages/schedules/schedules.compo
 import { SettingsComponent } from './components/pages/settings/settings.component';
 import { ScheduleComponent } from './components/pages/schedule/schedule.component';
 import { LocationGuard } from './guards/location.guard';
+import { ManagerSignupComponent } from './components/pages/manager-signup/manager-signup.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
@@ -18,11 +19,12 @@ export const appRoutes: Routes = [
         pathMatch: "full"
     },
     {
+        path: "signup",
+        component: ManagerSignupComponent
+    },
+    {
         path: "login",
-        component: LoginComponent,
-        canActivate: [AngularFireAuthGuard],
-        data: {authGuardPipe: redirectLoggedInToDashboard}
-
+        component: LoginComponent
     },
     {
         path: "dashboard",

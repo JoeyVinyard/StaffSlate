@@ -1,0 +1,41 @@
+<div class="logo">
+    <h1 fittext [maxFontSize]="80" [delay]="0">PicoStaff</h1>
+    <h2>Employee Management System</h2>
+</div>
+<mat-card class="signup-card">
+    <mat-card-title>Register</mat-card-title>
+    <div class="spacing"></div>
+    <mat-card-content>
+        <form class="signup-form">
+            <mat-form-field class="full-width">
+                <mat-label>Email</mat-label>
+                <input matInput [formControl]="email" placeholder="Email" name="email">
+                <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="first-name">
+                <mat-label>First Name</mat-label>
+                <input matInput [formControl]="firstName" placeholder="First Name" name="firstName">
+                <mat-error *ngIf="firstName.invalid">{{getFirstNameError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="last-name">
+                <mat-label>Last Name</mat-label>
+                <input matInput [formControl]="lastName" placeholder="Last Name" name="lastName">
+                <mat-error *ngIf="lastName.invalid">{{getLastNameError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <mat-label>Password</mat-label>
+                <input matInput [formControl]="password" placeholder="Password" type="password" name="password">
+                <mat-error *ngIf="password.invalid">{{getPasswordError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <mat-label>Confirm Password</mat-label>
+                <input matInput [formControl]="conf_password" placeholder="Confirm Password" type="password" name="conf_password">
+                <mat-error *ngIf="conf_password.invalid">{{getConfPasswordError()}}</mat-error>
+            </mat-form-field>
+            <mat-error *ngIf="getRegisterError()">{{getRegisterError()}}</mat-error>
+        </form>
+    </mat-card-content>
+    <mat-card-actions class="submit">
+        <button mat-raised-button (click)="login()" color="primary">REGISTER</button>
+    </mat-card-actions>
+</mat-card>

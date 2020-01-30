@@ -53,6 +53,7 @@ import { NewShiftDialogComponent } from './components/pages/schedule/new-shift-d
 import { NewSheetDialogComponent } from './components/pages/schedule/new-sheet-dialog/new-sheet-dialog.component';
 import { DeleteSheetConfirmationComponent } from './components/pages/schedule/delete-sheet-confirmation/delete-sheet-confirmation.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ManagerSignupComponent } from './components/pages/manager-signup/manager-signup.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { HttpClientModule } from '@angular/common/http';
     ScheduleComponent,
     NewShiftDialogComponent,
     NewSheetDialogComponent,
-    DeleteSheetConfirmationComponent
+    DeleteSheetConfirmationComponent,
+    ManagerSignupComponent
   ],
   imports: [
     BrowserModule,
