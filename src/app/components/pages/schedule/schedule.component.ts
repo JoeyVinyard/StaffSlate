@@ -198,7 +198,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
   
   private getViewLink(): string {
-    return `http://www.picostaff.com/${this.router.url}/${this.currentSchedule.viewId}`;
+    return `http://www.picostaff.com${this.router.url}/${this.currentSchedule.viewId}`;
     // return `http://localhost:4200/schedule/1jJcKnmmFvQTeTLIzDVf/I3ECXBQ0YpBSEcB2NIc5`;
   }
   
@@ -248,7 +248,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           printSchedule.sheets.forEach((sheet) => {
             sheet.shifts.forEach(s => s.empId = employees.get(s.empId).firstName);
           })
-          this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer', }).subscribe((data) => {
+          this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer' }).subscribe((data) => {
           // this.http.post("http://localhost:3000/pdf", {data: printSchedule}, {responseType: 'arraybuffer', }).subscribe((data) => {
             let file = new Blob([data], { type: 'application/pdf' });
             let fUrl = URL.createObjectURL(file);
