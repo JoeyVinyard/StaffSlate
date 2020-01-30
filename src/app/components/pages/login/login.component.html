@@ -1,5 +1,5 @@
 <div class="logo">
-    <h1 fittext [maxFontSize]="80" [delay]="0">PicoStaff</h1>
+    <h1>PicoStaff</h1>
     <h2>Employee Management System</h2>
 </div>
 <mat-card class="login-card">
@@ -24,3 +24,4 @@
         <button mat-raised-button (click)="login()" color="primary">LOGIN</button>
     </mat-card-actions>
 </mat-card>
+<p class="login-redirect">Don't have an account? <a [routerLink]="['/register']" >Register</a></p>

@@ -25,6 +25,10 @@
     margin-left: 0px;
 }
 
+.submit button {
+    margin-bottom: 10px;
+}
+
 .spacing {
     height: 10px;
 }
@@ -35,10 +39,27 @@
 }
 
 .logo h1 {
+    font-size: calc(22px + 2vw);
     margin: 0;
 }
 
 .logo h2 {
-    font-size: 4vh;
+    font-size: calc(18px + 1.5vw);
     margin: 0;
+}
+
+.role {
+    font-size: 16px;
+}
+
+.role span {
+    font-weight: bold;
+}
+
+.login-redirect {
+    margin: auto;
+    padding: 16px;
+    text-align: left;
+    min-width: 150px;
+    max-width: 500px;
 }

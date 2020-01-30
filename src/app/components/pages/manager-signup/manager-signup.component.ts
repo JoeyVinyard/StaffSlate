@@ -23,6 +23,8 @@ export class ManagerSignupComponent {
   private getEmailError() {
     if(this.email.hasError("required")) {
       return "Email is required";
+    } else if(this.email.hasError("email")) {
+      return "Email not valid"
     } else {
       return "";
     }

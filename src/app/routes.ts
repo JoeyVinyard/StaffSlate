@@ -8,8 +8,9 @@ import { SettingsComponent } from './components/pages/settings/settings.componen
 import { ScheduleComponent } from './components/pages/schedule/schedule.component';
 import { LocationGuard } from './guards/location.guard';
 import { ManagerSignupComponent } from './components/pages/manager-signup/manager-signup.component';
+import { EmployeeRedirectComponent } from './employee-redirect/employee-redirect.component';
 
-const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['register']);
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
 
 export const appRoutes: Routes = [
@@ -19,12 +20,22 @@ export const appRoutes: Routes = [
         pathMatch: "full"
     },
     {
-        path: "signup",
-        component: ManagerSignupComponent
+        path: "register",
+        component: ManagerSignupComponent,
+        canActivate: [AngularFireAuthGuard],
+        data: {authGuardPipe: redirectLoggedInToDashboard}
     },
     {
         path: "login",
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [AngularFireAuthGuard],
+        data: {authGuardPipe: redirectLoggedInToDashboard}
+    },
+    {
+        path: "employee-redirect",
+        component: EmployeeRedirectComponent,
+        canActivate: [AngularFireAuthGuard],
+        data: {authGuardPipe: redirectLoggedInToDashboard}
     },
     {
         path: "dashboard",
