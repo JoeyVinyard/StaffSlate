@@ -55,6 +55,7 @@ import { DeleteSheetConfirmationComponent } from './components/pages/schedule/de
 import { HttpClientModule } from '@angular/common/http';
 import { ManagerSignupComponent } from './components/pages/manager-signup/manager-signup.component';
 import { EmployeeRedirectComponent } from './employee-redirect/employee-redirect.component';
+import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-redirect/email-confirm-redirect.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { EmployeeRedirectComponent } from './employee-redirect/employee-redirect
     NewSheetDialogComponent,
     DeleteSheetConfirmationComponent,
     ManagerSignupComponent,
-    EmployeeRedirectComponent
+    EmployeeRedirectComponent,
+    EmailConfirmRedirectComponent
   ],
   imports: [
     BrowserModule,

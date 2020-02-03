@@ -246,7 +246,15 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
       this.locationService.getCurrentLocation().subscribe((location: Location) => {
         location.getEmployees().subscribe((employees: Map<string, Employee>) => {
           printSchedule.sheets.forEach((sheet) => {
-            sheet.shifts.forEach(s => s.empId = employees.get(s.empId).firstName);
+            sheet.shifts.forEach(s => {
+              let e: Employee = employees.get(s.empId);
+              if(e) {
+                s.empId = `${s.empId = e.firstName} ${e.lastName.substr(0,1)}.`
+              } else {
+                console.log(s);
+                s.empId = "";
+              }
+            });
           })
           this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer' }).subscribe((data) => {
           // this.http.post("http://localhost:3000/pdf", {data: printSchedule}, {responseType: 'arraybuffer', }).subscribe((data) => {

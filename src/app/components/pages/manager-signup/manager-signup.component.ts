@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { PasswordValidator } from 'src/app/validators/password-validator';
+import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-manager-signup',
@@ -69,5 +71,18 @@ export class ManagerSignupComponent {
   }
   private getRegisterError() {}
 
-  constructor() { }
+  private register() {
+    this.userService.register({
+      email: this.email.value,
+      firstName: this.firstName.value,
+      lastName: this.lastName.value,
+      confirmed: false
+    }, this.password.value).then(() => {
+      this.router.navigateByUrl("/confirm");
+    }).catch((err) => {
+      console.error(err);
+    })
+  }
+
+  constructor(private userService: UserService, private router: Router) { }
 }

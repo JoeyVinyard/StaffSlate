@@ -1,0 +1,15 @@
+.box {
+    margin-top: 20%;
+    margin-left: 20%;
+    width: 60%;
+}
+p {
+    font-size: calc(16px + 1vw);
+    text-align: center;
+    width: 100%;
+}
+
+span {
+    color: blue;
+    text-decoration: underline;
+}

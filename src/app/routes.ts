@@ -9,6 +9,8 @@ import { ScheduleComponent } from './components/pages/schedule/schedule.componen
 import { LocationGuard } from './guards/location.guard';
 import { ManagerSignupComponent } from './components/pages/manager-signup/manager-signup.component';
 import { EmployeeRedirectComponent } from './employee-redirect/employee-redirect.component';
+import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-redirect/email-confirm-redirect.component';
+import { ConfirmEmailGuard } from './guards/confirm-email.guard';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['register']);
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
@@ -32,6 +34,12 @@ export const appRoutes: Routes = [
         data: {authGuardPipe: redirectLoggedInToDashboard}
     },
     {
+        path: "confirm",
+        component: EmailConfirmRedirectComponent,
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard],
+        data: {authGuardPipe: redirectUnauthorizedToLogin}
+    },
+    {
         path: "employee-redirect",
         component: EmployeeRedirectComponent,
         canActivate: [AngularFireAuthGuard],
@@ -40,25 +48,25 @@ export const appRoutes: Routes = [
     {
         path: "dashboard",
         component: DashboardComponent,
-        canActivate: [AngularFireAuthGuard],
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {
         path: "employees",
         component: EmployeesComponent,
-        canActivate: [AngularFireAuthGuard],
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {
         path: "schedules",
         component: SchedulesComponent,
-        canActivate: [AngularFireAuthGuard],
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {
         path: "schedule/:locationId/:scheduleId",
         component: ScheduleComponent,
-        canActivate: [AngularFireAuthGuard, LocationGuard],
+        canActivate: [AngularFireAuthGuard, LocationGuard, ConfirmEmailGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {

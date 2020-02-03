@@ -38,7 +38,7 @@ export class LoginComponent {
       return;
     } else {
       this.af.auth.signInWithEmailAndPassword(this.email.value, this.password.value).then(() => {
-        this.router.navigateByUrl("dashboard");
+        this.router.navigateByUrl("confirm");
       }).catch((err) => {
         this.loginError = "Error logging in. Username or Password may be incorrect."
       })
