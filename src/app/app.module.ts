@@ -54,7 +54,7 @@ import { NewSheetDialogComponent } from './components/pages/schedule/new-sheet-d
 import { DeleteSheetConfirmationComponent } from './components/pages/schedule/delete-sheet-confirmation/delete-sheet-confirmation.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ManagerSignupComponent } from './components/pages/manager-signup/manager-signup.component';
-import { EmployeeRedirectComponent } from './employee-redirect/employee-redirect.component';
+import { EmployeeRedirectComponent } from './components/pages/employee-redirect/employee-redirect.component';
 import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-redirect/email-confirm-redirect.component';
 
 @NgModule({

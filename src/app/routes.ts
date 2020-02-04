@@ -8,7 +8,7 @@ import { SettingsComponent } from './components/pages/settings/settings.componen
 import { ScheduleComponent } from './components/pages/schedule/schedule.component';
 import { LocationGuard } from './guards/location.guard';
 import { ManagerSignupComponent } from './components/pages/manager-signup/manager-signup.component';
-import { EmployeeRedirectComponent } from './employee-redirect/employee-redirect.component';
+import { EmployeeRedirectComponent } from './components/pages/employee-redirect/employee-redirect.component';
 import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-redirect/email-confirm-redirect.component';
 import { ConfirmEmailGuard } from './guards/confirm-email.guard';
 
