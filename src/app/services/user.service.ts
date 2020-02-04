@@ -4,7 +4,6 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { User } from 'firebase';
 import { UserInfo } from '../models/user-info';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
-import { SignupInfo } from '../models/signup-info';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,7 @@ export class UserService {
     return this.currentUserInfo;
   }
 
-  public register(info: SignupInfo, password: string): Promise<void> {
+  public register(info: UserInfo, password: string): Promise<void> {
     return new Promise<void>((res,rej) => {
       this.afAuth.auth.createUserWithEmailAndPassword(info.email, password).then((credentials) => {
         return this.afs.collection("users").doc(info.email).set(info);
@@ -53,7 +52,7 @@ export class UserService {
     });
   }
 
-  private loadUserInfo(user: User): void {
+  public loadUserInfo(user: User): void {
     if(this.currentSubscription) {
       this.currentSubscription.unsubscribe();
     }

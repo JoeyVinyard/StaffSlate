@@ -3,6 +3,7 @@ import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { PasswordValidator } from 'src/app/validators/password-validator';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-manager-signup',
@@ -75,8 +76,7 @@ export class ManagerSignupComponent {
     this.userService.register({
       email: this.email.value,
       firstName: this.firstName.value,
-      lastName: this.lastName.value,
-      confirmed: false
+      lastName: this.lastName.value
     }, this.password.value).then(() => {
       this.router.navigateByUrl("/confirm");
     }).catch((err) => {
@@ -84,5 +84,5 @@ export class ManagerSignupComponent {
     })
   }
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private afa: AngularFireAuth, private router: Router) { }
 }

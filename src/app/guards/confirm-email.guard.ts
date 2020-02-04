@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, UrlSegment } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { UserService } from '../services/user.service';
-import { UserInfo } from '../models/user-info';
+import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { User } from 'firebase';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfirmEmailGuard implements CanActivate {
 
-  private sub: Subscription;
-
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return new Promise<boolean | UrlTree>((res,rej) => {
-      this.sub = this.userService.getCurrentUserInfo().subscribe((userInfo: UserInfo) => {
+      this.afa.user.pipe(first()).subscribe((user: User) => {
         let outlet: any;
-        if(!userInfo) {
+        if(!user) {
           outlet = this.router.parseUrl("/login");
-        }else if(userInfo.confirmed) {
+        }else if(user.emailVerified) {
           if(next.url[0].path == "confirm") {
             outlet = this.router.parseUrl("/dashboard");
+          } else {
+            outlet = true;
           }
-          outlet = true;
         } else {
           if(next.url[0].path != "confirm") {
             outlet = this.router.parseUrl("/confirm")
@@ -32,8 +32,7 @@ export class ConfirmEmailGuard implements CanActivate {
         res(outlet);
       });
     });
-    this.sub.unsubscribe();
   }
   
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private afa: AngularFireAuth, private router: Router) {}
 }

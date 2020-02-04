@@ -1,15 +1,24 @@
 .box {
-    margin-top: 20%;
+    margin-top: 10%;
     margin-left: 20%;
     width: 60%;
 }
 p {
-    font-size: calc(16px + 1vw);
-    text-align: center;
+    font-size: calc(12px + 1vw);
+    text-align: left;
     width: 100%;
 }
 
 span {
     color: blue;
     text-decoration: underline;
+    cursor: pointer;
+}
+
+span:hover {
+    color: #63F;
+}
+
+span:active {
+    color: darkblue;
 }
