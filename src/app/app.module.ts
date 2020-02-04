@@ -56,6 +56,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ManagerSignupComponent } from './components/pages/manager-signup/manager-signup.component';
 import { EmployeeRedirectComponent } from './components/pages/employee-redirect/employee-redirect.component';
 import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-redirect/email-confirm-redirect.component';
+import { NewLocationComponent } from './components/pages/new-location/new-location.component';
+import { WelcomeModalComponent } from './components/pages/new-location/welcome-modal/welcome-modal.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,9 @@ import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-
     DeleteSheetConfirmationComponent,
     ManagerSignupComponent,
     EmployeeRedirectComponent,
-    EmailConfirmRedirectComponent
+    EmailConfirmRedirectComponent,
+    NewLocationComponent,
+    WelcomeModalComponent
   ],
   imports: [
     BrowserModule,

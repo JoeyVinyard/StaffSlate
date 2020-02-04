@@ -11,6 +11,8 @@ import { ManagerSignupComponent } from './components/pages/manager-signup/manage
 import { EmployeeRedirectComponent } from './components/pages/employee-redirect/employee-redirect.component';
 import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-redirect/email-confirm-redirect.component';
 import { ConfirmEmailGuard } from './guards/confirm-email.guard';
+import { NoLocationGuard } from './guards/no-location.guard';
+import { NewLocationComponent } from './components/pages/new-location/new-location.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['register']);
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
@@ -37,6 +39,12 @@ export const appRoutes: Routes = [
         path: "confirm",
         component: EmailConfirmRedirectComponent,
         canActivate: [AngularFireAuthGuard, ConfirmEmailGuard],
+        data: {authGuardPipe: redirectUnauthorizedToLogin}
+    },
+    {
+        path: "new-location",
+        component: NewLocationComponent,
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {

@@ -18,7 +18,7 @@ export class ConfirmEmailGuard implements CanActivate {
           outlet = this.router.parseUrl("/login");
         }else if(user.emailVerified) {
           if(next.url[0].path == "confirm") {
-            outlet = this.router.parseUrl("/dashboard");
+            outlet = this.router.parseUrl("/new-location");
           } else {
             outlet = true;
           }
