@@ -16,6 +16,7 @@ export class EmployeesComponent {
   dataSource = new MatTableDataSource<Employee>();
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'action'];
   loadedLocation: Location;
+  locations: [string, Location][];
 
   private openNewEmployeeDialog(): void {
     const dialogRef = this.dialog.open(NewEmployeeDialogComponent, {
@@ -72,6 +73,9 @@ export class EmployeesComponent {
     this.locationService.getCurrentLocation().subscribe((location) => {
       this.loadedLocation = location;
       this.loadedLocation.getEmployees().subscribe(this.parseEmployees.bind(this));
+    });
+    this.locationService.getLocationsMap().subscribe((locationMap) => {
+      this.locations = Array.from(locationMap.entries());
     });
   }
 }

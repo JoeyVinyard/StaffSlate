@@ -58,6 +58,7 @@ import { EmployeeRedirectComponent } from './components/pages/employee-redirect/
 import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-redirect/email-confirm-redirect.component';
 import { NewLocationComponent } from './components/pages/new-location/new-location.component';
 import { WelcomeModalComponent } from './components/pages/new-location/welcome-modal/welcome-modal.component';
+import { LocationSelectorComponent } from './components/core/location-selector/location-selector.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { WelcomeModalComponent } from './components/pages/new-location/welcome-m
     EmployeeRedirectComponent,
     EmailConfirmRedirectComponent,
     NewLocationComponent,
-    WelcomeModalComponent
+    WelcomeModalComponent,
+    LocationSelectorComponent
   ],
   imports: [
     BrowserModule,

@@ -11,16 +11,18 @@
 .buttons button {
   margin-top: 10px;
   height: 40px;
-  width: 10%;
+  width: 15%;
+  font-size: calc(8px + 1vh);
 }
 
 .select {
-  width: 10%;
+  display: inline-block;
+  width: 15%;
 }
 
 .search {
-  margin: 0 10%;
-  width:60%;
+  margin: 0 5%;
+  width: 60%;
 }
 
 table {

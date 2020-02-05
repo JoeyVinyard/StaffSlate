@@ -6,11 +6,13 @@ import { Identifier } from './identifier';
 
 export class Location {
     label: string = "";
+    managers: string[] = [];
     schedules: Identifier[] = [];
+    document: AngularFirestoreDocument<Location>;
+    
     private employees: ReplaySubject<Map<string, Employee>> = new ReplaySubject(1);
     private currentSchedule: ReplaySubject<Schedule> = new ReplaySubject(1);
     private cachedSchedules: Map<string, Schedule> = new Map<string, Schedule>();
-    document: AngularFirestoreDocument<Location>;
 
     public loadEmployees(): void {
         this.document.collection<Employee>("employees").valueChanges().subscribe((employees) => {
@@ -88,6 +90,7 @@ export class Location {
 
     constructor(locationData: Location, document: AngularFirestoreDocument<Location>) {
         this.label = locationData.label;
+        this.managers = locationData.managers;
         this.schedules = locationData.schedules;
         this.document = document;
         this.loadEmployees();
