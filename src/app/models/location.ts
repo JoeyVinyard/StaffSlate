@@ -4,8 +4,22 @@ import { Employee } from './employee';
 import { Schedule } from './schedule';
 import { Identifier } from './identifier';
 
+export interface NewLocation {
+    label: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    managers: string[];
+    schedules: Identifier[];
+}
+
 export class Location {
     label: string = "";
+    address: string = "";
+    city: string = "";
+    state: string = "";
+    zip: string = "";
     managers: string[] = [];
     schedules: Identifier[] = [];
     document: AngularFirestoreDocument<Location>;
@@ -92,6 +106,10 @@ export class Location {
         this.label = locationData.label;
         this.managers = locationData.managers;
         this.schedules = locationData.schedules;
+        this.address = locationData.address;
+        this.city = locationData.city;
+        this.state = locationData.state;
+        this.zip = locationData.zip;
         this.document = document;
         this.loadEmployees();
     }

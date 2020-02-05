@@ -1,3 +1,40 @@
-<mat-card>
-    
+<mat-card class="location-card">
+    <mat-card-title>New Location</mat-card-title>
+    <div class="spacing"></div>
+    <mat-card-content>
+        <form class="location-form">
+            <mat-form-field class="half-width">
+                <mat-label>Location Name</mat-label>
+                <input matInput [formControl]="name" placeholder="Location Name" name="name">
+                <mat-error *ngIf="name.invalid">{{getNameError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="address">
+                <mat-label>Address</mat-label>
+                <input matInput [formControl]="address" placeholder="Address" name="address">
+                <mat-error *ngIf="address.invalid">{{getAddressError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="city">
+                <mat-label>City</mat-label>
+                <input matInput [formControl]="city" placeholder="City" name="city">
+                <mat-error *ngIf="city.invalid">{{getCityError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="state">
+                <mat-select [formControl]="state">
+                    <mat-option *ngFor="let st of states" [value]="st">
+                        {{st}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="state.invalid">{{getStateError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="zip">
+                <mat-label>Zip Code</mat-label>
+                <input matInput [formControl]="zip" placeholder="Zip Code" name="zip">
+                <mat-error *ngIf="zip.invalid">{{getZipError()}}</mat-error>
+            </mat-form-field>
+            <mat-error *ngIf="createError">{{createError}}</mat-error>
+        </form>
+    </mat-card-content>
+    <mat-card-actions class="submit">
+        <button mat-raised-button [disabled]="name.invalid || address.invalid || city.invalid || state.invalid || zip.invalid" (click)="create()" color="primary">Create</button>
+    </mat-card-actions>
 </mat-card>

@@ -1,0 +1,44 @@
+.location-card {
+    min-width: 250px;
+    width: 40%;
+    margin: 5vh auto;
+}
+
+.location-form {
+    width: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.half-width {
+    width: 50%;
+}
+
+.address {
+    width: 50%;
+    margin-right: 1%;
+}
+
+.city {
+    width: 18%;
+    margin-right: 1%;
+}
+
+.state {
+    width: 5%;
+    margin-right: 1%;
+}
+
+.zip {
+    width: 24%;
+}
+
+.submit {
+    margin-left: 0px;
+}
+
+.spacing {
+    height: 10px;
+}

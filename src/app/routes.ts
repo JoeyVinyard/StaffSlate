@@ -19,11 +19,6 @@ const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
 
 export const appRoutes: Routes = [
     {
-        path: "",
-        redirectTo: '/dashboard',
-        pathMatch: "full"
-    },
-    {
         path: "register",
         component: ManagerSignupComponent,
         canActivate: [AngularFireAuthGuard],
@@ -88,5 +83,10 @@ export const appRoutes: Routes = [
         component: SettingsComponent,
         canActivate: [AngularFireAuthGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
+    },
+    {
+        path: "**",
+        redirectTo: '/dashboard',
+        pathMatch: "full"
     }
 ]

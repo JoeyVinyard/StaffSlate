@@ -4,7 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AngularFittextModule } from 'angular-fittext';
 
 // Angular Fire Imports
 import { AngularFireModule } from '@angular/fire';
@@ -57,8 +56,8 @@ import { ManagerSignupComponent } from './components/pages/manager-signup/manage
 import { EmployeeRedirectComponent } from './components/pages/employee-redirect/employee-redirect.component';
 import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-redirect/email-confirm-redirect.component';
 import { NewLocationComponent } from './components/pages/new-location/new-location.component';
-import { WelcomeModalComponent } from './components/pages/new-location/welcome-modal/welcome-modal.component';
 import { LocationSelectorComponent } from './components/core/location-selector/location-selector.component';
+import { WelcomeDialogComponent } from './components/pages/new-location/welcome-dialog/welcome-dialog.component';
 
 @NgModule({
   declarations: [
@@ -81,8 +80,8 @@ import { LocationSelectorComponent } from './components/core/location-selector/l
     EmployeeRedirectComponent,
     EmailConfirmRedirectComponent,
     NewLocationComponent,
-    WelcomeModalComponent,
-    LocationSelectorComponent
+    LocationSelectorComponent,
+    WelcomeDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -90,7 +89,6 @@ import { LocationSelectorComponent } from './components/core/location-selector/l
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
-    AngularFittextModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -119,7 +117,8 @@ import { LocationSelectorComponent } from './components/core/location-selector/l
     NewScheduleDialogComponent,
     NewShiftDialogComponent,
     NewSheetDialogComponent,
-    DeleteSheetConfirmationComponent
+    DeleteSheetConfirmationComponent,
+    WelcomeDialogComponent
   ],
   providers: [
     AngularFireAuthGuard,

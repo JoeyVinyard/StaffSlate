@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentChange } from '@angular/fire/firestore';
-import { Location } from '../models/location';
+import { AngularFirestore, DocumentChange, DocumentReference } from '@angular/fire/firestore';
+import { Location, NewLocation } from '../models/location';
 import { ReplaySubject, Observable } from 'rxjs';
 import { UserService } from './user.service';
 import { UserInfo } from '../models/user-info';
@@ -13,6 +13,10 @@ export class LocationService {
     private cachedLocations: Map<string, Location> = new Map<string, Location>();
     private currentLocation: ReplaySubject<Location> = new ReplaySubject(1);
     private cachedLocationsSubject: ReplaySubject<Map<string, Location>> = new ReplaySubject(1);
+
+    public createLocation(location: NewLocation): Promise<DocumentReference> {
+        return this.afs.collection("locations").add(location);
+    }
 
     public getCurrentLocation(): Observable<Location> {
         return this.currentLocation;
