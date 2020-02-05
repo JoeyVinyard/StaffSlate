@@ -84,12 +84,10 @@ export class SchedulesComponent implements OnDestroy {
 
   constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
     this.snackbar.open("Loading Schedules...", "Dismiss");
-    this.subscriptions.push(this.userService.getCurrentUserInfo().subscribe((userInfo: UserInfo) => {
-      this.subscriptions.push(this.locationService.loadLocation(userInfo.locations[0].key).subscribe((location: Location) => {
-        this.loadedLocation = location;
-        this.dataSource.data = location.schedules;
-        this.snackbar.dismiss();
-      }));
+    this.subscriptions.push(this.locationService.getCurrentLocation().subscribe((location: Location) => {
+      this.loadedLocation = location;
+      this.dataSource.data = location.schedules;
+      this.snackbar.dismiss();
     }));
   }
 }

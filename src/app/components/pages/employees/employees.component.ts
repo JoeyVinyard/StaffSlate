@@ -1,18 +1,20 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnDestroy } from '@angular/core';
 import {  Employee } from 'src/app/models/employee';
 import { MatTableDataSource, MatDialog, MatSnackBar, MatSelect } from '@angular/material';
 import { LocationService } from 'src/app/services/location.service';
 import { NewEmployeeDialogComponent } from './new-employee-dialog/new-employee-dialog.component';
 import { Location } from 'src/app/models/location';
 import { UserService } from 'src/app/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
   styleUrls: ['./employees.component.css']
 })
-export class EmployeesComponent {
+export class EmployeesComponent implements OnDestroy {
 
+  subscriptions: Subscription[] = [];
   dataSource = new MatTableDataSource<Employee>();
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'action'];
   loadedLocation: Location;
@@ -22,13 +24,13 @@ export class EmployeesComponent {
     const dialogRef = this.dialog.open(NewEmployeeDialogComponent, {
       width: '300px',
     });
-    dialogRef.afterClosed().subscribe((employee: Employee) => {
+    this.subscriptions.push(dialogRef.afterClosed().subscribe((employee: Employee) => {
       if(employee) {
         this.loadedLocation.addEmployee(employee)
         .then(() => this.addEmployeeResult(true))
         .catch(() => this.addEmployeeResult(false));
       }
-    });
+    }));
   }
 
   private addEmployeeResult(success: boolean): void {
@@ -68,14 +70,17 @@ export class EmployeesComponent {
     this.dataSource.filter = f.trim().toLowerCase();
   }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
   constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar) {
     this.snackbar.open("Loading Employees...", "Dismiss");
     this.locationService.getCurrentLocation().subscribe((location) => {
-      this.loadedLocation = location;
-      this.loadedLocation.getEmployees().subscribe(this.parseEmployees.bind(this));
-    });
-    this.locationService.getLocationsMap().subscribe((locationMap) => {
-      this.locations = Array.from(locationMap.entries());
+      if(location) {
+        this.loadedLocation = location;
+        this.subscriptions.push(this.loadedLocation.getEmployees().subscribe(this.parseEmployees.bind(this)));
+      }
     });
   }
 }

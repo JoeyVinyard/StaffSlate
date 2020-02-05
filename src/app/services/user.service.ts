@@ -38,20 +38,6 @@ export class UserService {
     return this.afAuth.auth.signOut();
   }
 
-  public userCanAccessLocation(locationId: string): Promise<boolean> {
-    return new Promise((res, rej) => {
-      this.afAuth.authState.subscribe((state) => {
-        if(state) {
-          this.currentUserInfo.subscribe((user: UserInfo) => {
-            res(!!(user.locations.find((loc) => loc.key == locationId)));
-          });
-        } else {
-          res(!!state);
-        }
-      });
-    });
-  }
-
   public loadUserInfo(user: User): void {
     if(this.currentSubscription) {
       this.currentSubscription.unsubscribe();

@@ -1,6 +1,6 @@
 .container {
-    margin: 5px auto;
-    width: 90%;
+  margin: 5px auto;
+  width: 90%;
 }
 
 .buttons {
@@ -11,16 +11,18 @@
 .buttons button {
   margin-top: 10px;
   height: 40px;
-  width: 10%;
+  width: 15%;
+  font-size: calc(12px + 0.5vh);
 }
 
 .select {
-  width: 10%;
+  display: inline-block;
+  width: 15%;
 }
 
 .search {
-  margin: 0 10%;
-  width:60%;
+  margin: 0 5%;
+  width: 60%;
 }
 
 table {
