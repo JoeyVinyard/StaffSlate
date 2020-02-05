@@ -5,7 +5,7 @@ import { TimeService } from 'src/app/services/time.service';
 import { Sheet } from 'src/app/models/sheet';
 import { Employee } from 'src/app/models/employee';
 import { Shift } from 'src/app/models/shift';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.component';
 import { Time } from '@angular/common';
 import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.component';
@@ -201,6 +201,14 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     return size > window.innerWidth*.6;
   }
   
+  private copyShareToClipboard(): void {
+    navigator.clipboard.writeText(this.getViewLink()).then(() => {
+      this.snackbar.open("Share link copied to clipboard!", "Dismiss", {duration: 2000});
+    }).catch((err) => {
+      this.snackbar.open("Failed to copy to clipboard. Please try again.");
+    });
+  }
+
   private getViewLink(): string {
     return `http://www.picostaff.com${this.router.url}/${this.currentSchedule.viewId}`;
   }
@@ -254,13 +262,11 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
               if(e) {
                 s.empId = `${s.empId = e.firstName} ${e.lastName.substr(0,1)}.`
               } else {
-                console.log(s);
                 s.empId = "";
               }
             });
           })
           this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer' }).subscribe((data) => {
-          // this.http.post("http://localhost:3000/pdf", {data: printSchedule}, {responseType: 'arraybuffer', }).subscribe((data) => {
             let file = new Blob([data], { type: 'application/pdf' });
             let fUrl = URL.createObjectURL(file);
             window.open(fUrl);
@@ -304,6 +310,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     public dialog: MatDialog,
     private aff: AngularFireFunctions,
     private cdf: ChangeDetectorRef,
+    public snackbar: MatSnackBar,
     private http: HttpClient) {
       
     }

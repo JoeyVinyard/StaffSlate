@@ -82,9 +82,10 @@
     height: 48px;
 }
 
-.addShift {
+.toolbarButton {
     cursor: pointer;
     font-weight: 500;
+    font-size: calc(10px + 0.5vh);
     margin-right: 6px;
     line-height: 36px;
 }

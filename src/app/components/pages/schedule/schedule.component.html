@@ -84,6 +84,7 @@
         </div>
     </div>
     <div class="filler"></div>
-    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="addShift right" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
-    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="addShift right" [disabled]="!curSheet" (click)="printSchedule()">Print</button>
+    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
+    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="copyShareToClipboard()">Share</button>
+    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="printSchedule()">Print</button>
 </mat-toolbar>
