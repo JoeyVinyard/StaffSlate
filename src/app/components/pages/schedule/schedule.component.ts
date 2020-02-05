@@ -226,10 +226,10 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
       this.sheetSub.unsubscribe();
     }
     this.sheetSub = this.currentSchedule.loadSheetData(sheetLabel).subscribe((sheet) => {
-      this.curSheet = sheet;
-      if(!sheet) {
+      if(!sheet || sheet == this.curSheet) {
         return;
       }
+      this.curSheet = sheet;
       this.timeColumns = this.generateTimeColumns();
       if(this.shiftSub) {
         this.shiftSub.unsubscribe();
