@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Schedule, PrintSchedule } from 'src/app/models/schedule';
 import { TimeService } from 'src/app/services/time.service';
@@ -41,6 +41,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   @ViewChild("schedule", {static: false}) scheduleEl: ElementRef<HTMLElement>;
   @ViewChild("container", {static: false}) containerEl: ElementRef<HTMLElement>;
+  @ViewChildren("sheets", {}) sheetContainerEl: QueryList<ElementRef<HTMLElement>>;
   
   private openNewSheetDeleteConfirmation(): void {
     const dialogRef = this.dialog.open(DeleteSheetConfirmationComponent, {
@@ -194,12 +195,14 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
   
   private mobile() {
-    return window.innerWidth < 360;
+    let size = this.sheetContainerEl.reduce((a,c) => {
+      return a+=c.nativeElement.clientWidth;
+    }, 0);
+    return size > window.innerWidth*.6;
   }
   
   private getViewLink(): string {
     return `http://www.picostaff.com${this.router.url}/${this.currentSchedule.viewId}`;
-    // return `http://localhost:4200/schedule/1jJcKnmmFvQTeTLIzDVf/I3ECXBQ0YpBSEcB2NIc5`;
   }
   
   private displaySheetClick(sheetLabel: string): void {
@@ -274,19 +277,21 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   ngAfterViewInit() {
     this.subscriptions.push(this.activatedRoute.paramMap.subscribe((map) => {
       this.subscriptions.push(this.locationService.loadLocation(map.get("locationId")).subscribe((location) => {
-        this.subscriptions.push(location.loadScheduleData(map.get("scheduleId")).subscribe((schedule) => {
-          this.currentSchedule = schedule;
-          if(schedule.sheets.length) {
-            if(this.preventSheetChange) {
-              this.preventSheetChange = false;
+        if(location) {
+          this.subscriptions.push(location.loadScheduleData(map.get("scheduleId")).subscribe((schedule) => {
+            this.currentSchedule = schedule;
+            if(schedule.sheets.length) {
+              if(this.preventSheetChange) {
+                this.preventSheetChange = false;
+              } else {
+                this.displaySheet(schedule.sheets[0].key)
+                this.cdf.detectChanges();
+              }
             } else {
-              this.displaySheet(schedule.sheets[0].key)
-              this.cdf.detectChanges();
+              this.curSheet = null;
             }
-          } else {
-            this.curSheet = null;
-          }
-        }));
+          }));
+        }
       }));
     }));
   }

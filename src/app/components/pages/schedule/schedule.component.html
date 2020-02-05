@@ -67,7 +67,7 @@
         <mat-icon (click)="openNewSheetDialog()">add</mat-icon>
     </div>
     <div *ngIf="currentSchedule && curSheet" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)" [ngClass]="{'mobile': mobile()}">
-        <div class="sheet"
+        <div #sheets class="sheet"
             *ngFor="let sheet of currentSchedule.sheets"
             [ngClass]="{'selectedSheet': sheet.display==curSheet.label}"
             [cdkDragDisabled]="(activatedRoute.data | async).guest"
