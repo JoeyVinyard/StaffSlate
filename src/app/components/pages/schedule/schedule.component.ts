@@ -17,6 +17,8 @@ import { DocumentReference } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Location } from 'src/app/models/location';
 import { HttpClient } from '@angular/common/http';
+import { SheetPromptDialogComponent } from './sheet-prompt-dialog/sheet-prompt-dialog.component';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-schedule',
@@ -187,7 +189,9 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
   
   private resizeSchedule() {
-    this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
+    if(this.shifts) {
+      this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
+    }
   }
   
   private getHourSpan(shift: Shift): string {
@@ -294,6 +298,11 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
                 this.cdf.detectChanges();
               }
             } else {
+              this.activatedRoute.data.pipe(first()).subscribe((data) => {
+                if(!data.guest) {
+                  this.dialog.open(SheetPromptDialogComponent, {maxWidth: "50%"});
+                }
+              });
               this.curSheet = null;
             }
           }));
