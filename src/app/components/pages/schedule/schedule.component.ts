@@ -30,7 +30,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   private preventSheetChange: boolean = false;
   private subscriptions: Subscription[] = [];
   private currentSchedule: Schedule;
-  private curSheet: Sheet;
+  private curSheet: Sheet = null;
   private shifts: Shift[];
   private createdShifts: Shift[];
   private remainingSpace: number = 0;
@@ -256,6 +256,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
 
   private printSchedule() {
+    let snackbarRef = this.snackbar.open("Print Schedule... This may take a minute.", "dismiss");
     this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
       printSchedule.timeIncrement = this.curSheet.timeIncrement;
       this.locationService.getCurrentLocation().subscribe((location: Location) => {
@@ -273,6 +274,8 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer' }).subscribe((data) => {
             let file = new Blob([data], { type: 'application/pdf' });
             let fUrl = URL.createObjectURL(file);
+            snackbarRef.dismiss();
+            this.snackbar.open("Schedule successfully generated!", "dissmiss", {duration: 2000});
             window.open(fUrl);
           });
         });
@@ -289,20 +292,24 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
       this.subscriptions.push(this.locationService.loadLocation(map.get("locationId")).subscribe((location) => {
         if(location) {
           this.subscriptions.push(location.loadScheduleData(map.get("scheduleId")).subscribe((schedule) => {
-            this.currentSchedule = schedule;
-            if(schedule.sheets.length) {
-              if(this.preventSheetChange) {
-                this.preventSheetChange = false;
+            if(schedule.document.ref.id == map.get("scheduleId")) {
+              this.currentSchedule = schedule;
+              if(schedule.sheets.length) {
+                if(this.preventSheetChange) {
+                  this.preventSheetChange = false;
+                } else {
+                  this.displaySheet(schedule.sheets[0].key)
+                  this.cdf.detectChanges();
+                }
               } else {
-                this.displaySheet(schedule.sheets[0].key)
-                this.cdf.detectChanges();
+                this.activatedRoute.data.pipe(first()).subscribe((data) => {
+                  if(!data.guest) {
+                    this.dialog.open(SheetPromptDialogComponent, {maxWidth: "50%"});
+                  }
+                });
+                this.curSheet = null;
               }
             } else {
-              this.activatedRoute.data.pipe(first()).subscribe((data) => {
-                if(!data.guest) {
-                  this.dialog.open(SheetPromptDialogComponent, {maxWidth: "50%"});
-                }
-              });
               this.curSheet = null;
             }
           }));
