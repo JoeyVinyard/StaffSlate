@@ -72,7 +72,7 @@
             [ngClass]="{'selectedSheet': sheet.display==curSheet.label}"
             [cdkDragDisabled]="(activatedRoute.data | async).guest"
             (click)="displaySheetClick(sheet.key)"
-            cdkDrag cdkDragLockAxis="x"
+            cdkDrag [cdkDragStartDelay]="mobile() ? 250 : 0" cdkDragLockAxis="x"
         >{{sheet.display}}
             <button *ngIf="sheet.display==curSheet.label && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
                 <mat-icon class="dropdown-arrow" >arrow_drop_down</mat-icon>
