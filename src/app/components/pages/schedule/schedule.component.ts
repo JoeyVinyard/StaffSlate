@@ -199,10 +199,14 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
   
   private mobile() {
-    let size = this.sheetContainerEl.reduce((a,c) => {
-      return a+=c.nativeElement.clientWidth;
-    }, 0);
-    return size > window.innerWidth*.6;
+    if(this.sheetContainerEl) {
+      let size = this.sheetContainerEl.reduce((a,c) => {
+        return a+=c.nativeElement.clientWidth;
+      }, 0);
+      return size > window.innerWidth*.6;
+    } else {
+      return false;
+    }
   }
   
   private copyShareToClipboard(): void {
@@ -256,7 +260,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
 
   private printSchedule() {
-    let snackbarRef = this.snackbar.open("Print Schedule... This may take a minute.", "dismiss");
+    let snackbarRef = this.snackbar.open("Printing Schedule... This may take a minute.", "dismiss");
     this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
       printSchedule.timeIncrement = this.curSheet.timeIncrement;
       this.locationService.getCurrentLocation().subscribe((location: Location) => {

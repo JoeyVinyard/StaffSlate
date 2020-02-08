@@ -84,7 +84,14 @@
         </div>
     </div>
     <div class="filler"></div>
-    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
-    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="copyShareToClipboard()">Share</button>
-    <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="printSchedule()">Print</button>
+    <ng-container *ngIf="!mobile()">
+        <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
+        <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="copyShareToClipboard()">Share</button>
+        <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="printSchedule()">Print</button>
+    </ng-container>
+    <ng-container *ngIf="mobile()">
+        <button *ngIf="sheet.display==curSheet.label && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
+            <mat-icon class="dropdown-arrow" >toc</mat-icon>
+        </button>
+    </ng-container>
 </mat-toolbar>

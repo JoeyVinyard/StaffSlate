@@ -27,7 +27,14 @@ export class LocationService {
     }
 
     public loadLocation(locationId: string): ReplaySubject<Location> {
-        this.currentLocation.next(this.cachedLocations.get(locationId));
+        if(!this.cachedLocations.has(locationId)) {
+            this.afs.collection("locations").doc<Location>(locationId).snapshotChanges().subscribe((location) => {
+                this.cachedLocations.set(locationId, new Location(location.payload.data(), this.afs.collection("locations").doc<Location>(location.payload.id)));
+                this.currentLocation.next(this.cachedLocations.get(locationId));
+            });
+        } else {
+            this.currentLocation.next(this.cachedLocations.get(locationId));
+        }
         return this.currentLocation;
     }
 
