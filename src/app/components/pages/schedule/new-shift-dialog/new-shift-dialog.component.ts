@@ -84,8 +84,9 @@ export class NewShiftDialogComponent implements AfterViewInit {
 
   getNames(employees: Map<string, Employee>) {
     if(employees){
+      let eName = typeof this.employee.value == "string" ? this.employee.value : this.displayFn(<Employee>this.employee.value);
       return Array.from(employees.values())
-        .filter((e) => (e.firstName + " " + e.lastName).toLowerCase().includes(this.employee.value))
+        .filter((e) => (e.firstName + " " + e.lastName).toLowerCase().includes(eName.toLowerCase()))
         .sort((a,b) => a.firstName.charCodeAt(0) - b.firstName.charCodeAt(0));
     } else {
       return [];

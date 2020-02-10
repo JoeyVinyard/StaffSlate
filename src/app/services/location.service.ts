@@ -27,7 +27,14 @@ export class LocationService {
     }
 
     public loadLocation(locationId: string): ReplaySubject<Location> {
-        this.currentLocation.next(this.cachedLocations.get(locationId));
+        if(!this.cachedLocations.has(locationId)) {
+            this.afs.collection("locations").doc<Location>(locationId).snapshotChanges().subscribe((location) => {
+                this.cachedLocations.set(locationId, new Location(location.payload.data(), this.afs.collection("locations").doc<Location>(location.payload.id)));
+                this.currentLocation.next(this.cachedLocations.get(locationId));
+            });
+        } else {
+            this.currentLocation.next(this.cachedLocations.get(locationId));
+        }
         return this.currentLocation;
     }
 
@@ -35,7 +42,11 @@ export class LocationService {
         let locationsCollection = this.afs.collection("locations").ref;
         locationsCollection.where("managers", "array-contains", email).onSnapshot((querySnapshot) => {
             querySnapshot.docChanges().forEach((changedDoc: DocumentChange<Location>) => {
-                this.cachedLocations.set(changedDoc.doc.id, new Location(changedDoc.doc.data(), this.afs.collection("locations").doc<Location>(changedDoc.doc.id)));
+                if(changedDoc.doc.exists) {
+                    this.cachedLocations.set(changedDoc.doc.id, new Location(changedDoc.doc.data(), this.afs.collection("locations").doc<Location>(changedDoc.doc.id)));
+                } else {
+                    this.cachedLocations.delete(changedDoc.doc.id);
+                }
             });
             this.cachedLocationsSubject.next(this.cachedLocations);
             this.currentLocation.next(this.cachedLocations.values().next().value);

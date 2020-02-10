@@ -51,25 +51,25 @@ export const appRoutes: Routes = [
     {
         path: "dashboard",
         component: DashboardComponent,
-        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard],
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {
         path: "employees",
         component: EmployeesComponent,
-        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard],
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {
         path: "schedules",
         component: SchedulesComponent,
-        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard],
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {
         path: "schedule/:locationId/:scheduleId",
         component: ScheduleComponent,
-        canActivate: [AngularFireAuthGuard, LocationGuard, ConfirmEmailGuard],
+        canActivate: [AngularFireAuthGuard, LocationGuard, ConfirmEmailGuard, NoLocationGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {
@@ -81,7 +81,7 @@ export const appRoutes: Routes = [
     {
         path: "settings",
         component: SettingsComponent,
-        canActivate: [AngularFireAuthGuard],
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {

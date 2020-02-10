@@ -65,6 +65,9 @@ export class Location {
     }
 
     public loadScheduleData(scheduleId: string): Observable<Schedule> {
+        if(scheduleId == null) {
+            return this.currentSchedule;
+        }
         if(this.cachedSchedules.has(scheduleId)) {
             this.currentSchedule.next(this.cachedSchedules.get(scheduleId));
         } else {

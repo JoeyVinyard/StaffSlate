@@ -28,8 +28,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
-
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { MatTooltipModule } from '@angular/material/tooltip'; 
 // Config Files
 import { appRoutes } from "./routes";
 import { environment } from '../environments/environment';
@@ -58,6 +58,7 @@ import { EmailConfirmRedirectComponent } from './components/pages/email-confirm-
 import { NewLocationComponent } from './components/pages/new-location/new-location.component';
 import { LocationSelectorComponent } from './components/core/location-selector/location-selector.component';
 import { WelcomeDialogComponent } from './components/pages/new-location/welcome-dialog/welcome-dialog.component';
+import { SheetPromptDialogComponent } from './components/pages/schedule/sheet-prompt-dialog/sheet-prompt-dialog.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import { WelcomeDialogComponent } from './components/pages/new-location/welcome-
     EmailConfirmRedirectComponent,
     NewLocationComponent,
     LocationSelectorComponent,
-    WelcomeDialogComponent
+    WelcomeDialogComponent,
+    SheetPromptDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -103,6 +105,7 @@ import { WelcomeDialogComponent } from './components/pages/new-location/welcome-
     MatDialogModule,
     MatSnackBarModule,
     MatAutocompleteModule,
+    MatTooltipModule,
     DragDropModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
@@ -118,7 +121,8 @@ import { WelcomeDialogComponent } from './components/pages/new-location/welcome-
     NewShiftDialogComponent,
     NewSheetDialogComponent,
     DeleteSheetConfirmationComponent,
-    WelcomeDialogComponent
+    WelcomeDialogComponent,
+    SheetPromptDialogComponent
   ],
   providers: [
     AngularFireAuthGuard,
