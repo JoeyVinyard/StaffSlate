@@ -66,13 +66,13 @@
     <div *ngIf="!(activatedRoute.data | async).guest" class="addSheet">
         <mat-icon matTooltip="Add Sheet" [matTooltipPosition]="'right'" (click)="openNewSheetDialog()">add</mat-icon>
     </div>
-    <div *ngIf="currentSchedule && curSheet" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)" [ngClass]="{'mobile': mobile()}">
+    <div *ngIf="currentSchedule && curSheet" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)" [ngClass]="{'mobile': mobile}">
         <div #sheets class="sheet no-select"
             *ngFor="let sheet of currentSchedule.sheets"
             [ngClass]="{'selectedSheet': sheet.display==curSheet.label}"
             [cdkDragDisabled]="(activatedRoute.data | async).guest"
             (click)="displaySheetClick(sheet.key)"
-            cdkDrag [cdkDragStartDelay]="mobile() ? 250 : 0" cdkDragLockAxis="x"
+            cdkDrag [cdkDragStartDelay]="mobile ? 250 : 0" cdkDragLockAxis="x"
         >{{sheet.display}}
             <button *ngIf="sheet.display==curSheet.label && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
                 <mat-icon class="dropdown-arrow" >arrow_drop_down</mat-icon>
@@ -84,14 +84,19 @@
         </div>
     </div>
     <div class="filler"></div>
-    <ng-container *ngIf="!mobile()">
+    <ng-container *ngIf="!mobile">
         <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
         <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="copyShareToClipboard()">Share</button>
         <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="printSchedule()">Print</button>
     </ng-container>
-    <ng-container *ngIf="mobile()">
-        <button *ngIf="sheet.display==curSheet.label && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-container">
-            <mat-icon class="dropdown-arrow" >toc</mat-icon>
+    <ng-container *ngIf="mobile">
+        <button *ngIf="!(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" [disabled]="!curSheet" class="action-menu-container">
+            <mat-icon class="action-menu">toc</mat-icon>
         </button>
+        <mat-menu xPosition="before" #menu="matMenu">
+            <button mat-menu-item [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
+            <button mat-menu-item [disabled]="!curSheet" (click)="copyShareToClipboard()">Share</button>
+            <button mat-menu-item [disabled]="!curSheet" (click)="printSchedule()">Print</button>
+        </mat-menu>
     </ng-container>
 </mat-toolbar>

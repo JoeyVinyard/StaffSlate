@@ -28,6 +28,7 @@ import { first } from 'rxjs/operators';
 export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   private preventSheetChange: boolean = false;
+  private mobile: boolean = false;
   private subscriptions: Subscription[] = [];
   private currentSchedule: Schedule;
   private curSheet: Sheet = null;
@@ -192,20 +193,21 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     if(this.shifts) {
       this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
     }
+    this.mobile = this.computeMobile();
   }
   
   private getHourSpan(shift: Shift): string {
     return `${this.formatTime(shift.startTime)} - ${this.formatTime(shift.endTime)}`
   }
   
-  private mobile() {
+  private computeMobile() {
     if(this.sheetContainerEl) {
       let size = this.sheetContainerEl.reduce((a,c) => {
         return a+=c.nativeElement.clientWidth;
       }, 0);
       return size > window.innerWidth*.6;
     } else {
-      return false;
+      return true;
     }
   }
   
@@ -250,7 +252,8 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           }
           return r;
         });
-        this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
+        this.resizeSchedule();
+        // this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
       });
     });
   }
