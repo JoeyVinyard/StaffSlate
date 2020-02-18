@@ -28,7 +28,7 @@
                     <span class="name-text">
                         {{parseName(((locationService.currentLocation | async).getEmployees() | async).get(shift.empId))}}
                     </span>
-                    <button *ngIf="hovered == shift" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-emp-container">
+                    <button *ngIf="hovered == shift && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-emp-container">
                         <mat-icon class="dropdown-arrow-emp" >arrow_drop_down</mat-icon>
                     </button>
                     <mat-menu xPosition="before" #menu="matMenu">
