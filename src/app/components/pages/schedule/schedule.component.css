@@ -199,6 +199,20 @@ td {
     width: 20px;
 }
 
+.action-menu-container {
+    margin-left: 2px;
+    color: rebeccapurple;
+    width: 40px;
+}
+
+.action-menu {
+    font-size: 40px;
+    height: 40px;
+    line-height: 40px !important;
+    vertical-align: middle;
+    width: 40px;
+}
+
 .dropdown-arrow:hover, .dropdown-arrow-emp:hover {
     background-color: #CFCFCF;
     cursor: pointer;

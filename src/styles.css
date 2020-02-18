@@ -15,3 +15,7 @@ body {
 .timepicker-overlay {
     z-index: 1001 !important;
 }
+
+.no-select {
+    user-select: none;
+}
