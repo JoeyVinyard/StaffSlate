@@ -3,7 +3,7 @@
     <div class="spacing"></div>
     <mat-card-content>
         <form class="location-form">
-            <mat-form-field class="half-width">
+            <mat-form-field class="full-width">
                 <mat-label>Location Name</mat-label>
                 <input matInput [formControl]="name" placeholder="Location Name" name="name">
                 <mat-error *ngIf="name.invalid">{{getNameError()}}</mat-error>
