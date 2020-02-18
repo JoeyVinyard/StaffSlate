@@ -15,10 +15,10 @@
         <div class="menu-item">
             <span class="menu-item-text" (click)="navigate('settings')">Settings</span>
         </div>
-
     </mat-sidenav>
     <mat-sidenav-content class="sidenav-content">
         <app-toolbar (toggled)="toggle()"></app-toolbar>
         <ng-content></ng-content>
+        <app-ad-unit class="ad"></app-ad-unit>
     </mat-sidenav-content>
 </mat-sidenav-container>

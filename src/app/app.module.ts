@@ -59,6 +59,7 @@ import { NewLocationComponent } from './components/pages/new-location/new-locati
 import { LocationSelectorComponent } from './components/core/location-selector/location-selector.component';
 import { WelcomeDialogComponent } from './components/pages/new-location/welcome-dialog/welcome-dialog.component';
 import { SheetPromptDialogComponent } from './components/pages/schedule/sheet-prompt-dialog/sheet-prompt-dialog.component';
+import { AdUnitComponent } from './components/core/ad-unit/ad-unit.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { SheetPromptDialogComponent } from './components/pages/schedule/sheet-pr
     NewLocationComponent,
     LocationSelectorComponent,
     WelcomeDialogComponent,
-    SheetPromptDialogComponent
+    SheetPromptDialogComponent,
+    AdUnitComponent
   ],
   imports: [
     BrowserModule,
