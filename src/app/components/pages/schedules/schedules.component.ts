@@ -6,7 +6,6 @@ import { MatTableDataSource, MatDialog, MatSnackBar } from '@angular/material';
 import { NewScheduleDialogComponent } from './new-schedule-dialog/new-schedule-dialog.component';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
-import { UserInfo } from 'src/app/models/user-info';
 import { Subscription } from 'rxjs';
 import { Identifier } from 'src/app/models/identifier';
 
@@ -25,7 +24,7 @@ export class SchedulesComponent implements OnDestroy {
   private openSchedule(schedule: Identifier) {
     this.router.navigate(["schedule", this.loadedLocation.document.ref.id, schedule.key]);
   }
-  
+
   private openNewScheduleDialog(schedule: Identifier = null): void {
     const dialogRef = this.dialog.open(NewScheduleDialogComponent, {
       width: '300px',
@@ -76,6 +75,10 @@ export class SchedulesComponent implements OnDestroy {
 
   private filter(f: string): void {
     this.dataSource.filter = f.trim().toLowerCase();
+  }
+
+  private buttonContent(): string {
+    return `New ${window.innerWidth > 800 ? "Schedule" : ""}`;
   }
 
   ngOnDestroy() {

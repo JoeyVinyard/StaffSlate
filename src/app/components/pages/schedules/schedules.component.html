@@ -4,7 +4,7 @@
         <mat-form-field class="search">
             <input type="search" matInput (input)="filter($event.target.value)" placeholder="Search Schedules">
         </mat-form-field>
-        <button mat-raised-button color="primary" (click)="openNewScheduleDialog()">New Schedule</button>
+        <button mat-raised-button color="primary" (click)="openNewScheduleDialog()">{{buttonContent()}}</button>
     </div>
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource">

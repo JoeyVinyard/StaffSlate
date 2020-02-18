@@ -70,6 +70,10 @@ export class EmployeesComponent implements OnDestroy {
     this.dataSource.filter = f.trim().toLowerCase();
   }
 
+  private buttonContent(): string {
+    return `New ${window.innerWidth > 800 ? "Employee" : ""}`;
+  }
+
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }

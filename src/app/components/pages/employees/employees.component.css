@@ -9,10 +9,12 @@
 }
 
 .buttons button {
+  padding: 2px;
   margin-top: 10px;
   height: 40px;
-  width: 15%;
-  font-size: calc(12px + 0.5vh);
+  width: 13%;
+  font-size: calc(12px + 0.2vw);
+  float: right;
 }
 
 .select {
@@ -22,7 +24,11 @@
 
 .search {
   margin: 0 5%;
-  width: 60%;
+  width: 50%;
+}
+
+.tableContainer {
+  overflow-x: auto;
 }
 
 table {
