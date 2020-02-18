@@ -40,7 +40,7 @@ import { LoginComponent } from './components/pages/login/login.component';
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
 import { SidenavComponent } from './components/core/sidenav/sidenav.component';
 import { ToolbarComponent } from './components/core/toolbar/toolbar.component';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
 import { EmployeesComponent } from './components/pages/employees/employees.component';
 import { SchedulesComponent } from './components/pages/schedules/schedules.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
@@ -108,6 +108,7 @@ import { SheetPromptDialogComponent } from './components/pages/schedule/sheet-pr
     MatTooltipModule,
     DragDropModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFireFunctionsModule,

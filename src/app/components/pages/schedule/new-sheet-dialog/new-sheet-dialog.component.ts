@@ -12,10 +12,10 @@ import { TimeService } from 'src/app/services/time.service';
 })
 export class NewSheetDialogComponent implements AfterViewInit {
 
-  sheet: FormControl = new FormControl('', [Validators.required]);
-  open: FormControl = new FormControl('12:00 am', [Validators.required]);
-  close: FormControl = new FormControl('11:00 pm', [Validators.required]);
-  timeIncrement: FormControl = new FormControl(30, [Validators.required]);
+  public sheet: FormControl = new FormControl('', [Validators.required]);
+  public open: FormControl = new FormControl('12:00 am', [Validators.required]);
+  public close: FormControl = new FormControl('11:00 pm', [Validators.required]);
+  public timeIncrement: FormControl = new FormControl(30, [Validators.required]);
 
   @ViewChild("openSheet", { static: true }) openField;
   @ViewChild("closeSheet", {static: true}) closeField;
@@ -26,7 +26,7 @@ export class NewSheetDialogComponent implements AfterViewInit {
     });
   }
 
-  submit(): void {
+  public submit(): void {
     this.dialogRef.close({
         label: this.sheet.value,
         openTime: this.timeService.stringToTime(this.open.value),
@@ -36,7 +36,7 @@ export class NewSheetDialogComponent implements AfterViewInit {
     );
   }
 
-  private getSheetError(): string {
+  public getSheetError(): string {
     if (this.sheet.hasError("required")) {
       return "Please name the Sheet";
     } else {
@@ -44,7 +44,7 @@ export class NewSheetDialogComponent implements AfterViewInit {
     }
   }
 
-  private getOpenError(): string {
+  public getOpenError(): string {
     if (this.open.hasError("required")) {
       return "Please select a time";
     } else {
@@ -52,7 +52,7 @@ export class NewSheetDialogComponent implements AfterViewInit {
     }
   }
 
-  private getCloseError(): string {
+  public getCloseError(): string {
     if (this.close.hasError("required")) {
       return "Please select a time";
     } else {
@@ -60,7 +60,7 @@ export class NewSheetDialogComponent implements AfterViewInit {
     }
   }
 
-  private getIncrementError(): string {
+  public getIncrementError(): string {
     if (this.timeIncrement.hasError("required")) {
       return "Please select a time increment";
     } else {

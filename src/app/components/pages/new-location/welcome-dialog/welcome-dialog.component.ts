@@ -8,7 +8,7 @@ import { MatDialogRef } from '@angular/material';
 })
 export class WelcomeDialogComponent {
 
-  private close(): void {
+  public close(): void {
     this.dialogRef.close();
   }
 

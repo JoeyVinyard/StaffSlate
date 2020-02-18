@@ -28,25 +28,25 @@ import { first } from 'rxjs/operators';
 export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   private preventSheetChange: boolean = false;
-  private mobile: boolean = false;
+  public mobile: boolean = false;
   private subscriptions: Subscription[] = [];
-  private currentSchedule: Schedule;
-  private curSheet: Sheet = null;
+  public currentSchedule: Schedule;
+  public curSheet: Sheet = null;
   private shifts: Shift[];
-  private createdShifts: Shift[];
-  private remainingSpace: number = 0;
-  private timeColumns: Time[] = [];
+  public createdShifts: Shift[];
+  public remainingSpace: number = 0;
+  public timeColumns: Time[] = [];
   private sheetSub: Subscription;
   private shiftSub: Subscription;
   
-  private times: number[] = [];
-  private hovered: Shift = null;
+  public times: number[] = [];
+  public hovered: Shift = null;
   
   @ViewChild("schedule", {static: false}) scheduleEl: ElementRef<HTMLElement>;
   @ViewChild("container", {static: false}) containerEl: ElementRef<HTMLElement>;
   @ViewChildren("sheets", {}) sheetContainerEl: QueryList<ElementRef<HTMLElement>>;
   
-  private openNewSheetDeleteConfirmation(): void {
+  public openNewSheetDeleteConfirmation(): void {
     const dialogRef = this.dialog.open(DeleteSheetConfirmationComponent, {
       width: '500px',
       data: this.curSheet.label
@@ -65,7 +65,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     });
   }
   
-  private openNewShiftDialog(shift?: Shift): void {
+  public openNewShiftDialog(shift?: Shift): void {
     const dialogRef = this.dialog.open(NewShiftDialogComponent, {
       width: '400px',
       data: {
@@ -84,7 +84,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     }));
   }
   
-  private openNewSheetDialog(edit: boolean = false): void {
+  public openNewSheetDialog(edit: boolean = false): void {
     const dialogRef = this.dialog.open(NewSheetDialogComponent, {
       width: '400px',
       data: {
@@ -114,13 +114,13 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     }));
   }
   
-  private deleteShift(shift: Shift) {
+  public deleteShift(shift: Shift) {
     shift.document.delete().catch((err) => {
       console.error(err);
     });
   }
   
-  private dropSheetLabel(dropEv: CdkDragDrop<HTMLDivElement>) {
+  public dropSheetLabel(dropEv: CdkDragDrop<HTMLDivElement>) {
     let spliced = this.currentSchedule.sheets.splice(dropEv.previousIndex,1)[0];
     this.currentSchedule.sheets.splice(dropEv.currentIndex,0,spliced);
     this.preventSheetChange = true;
@@ -133,7 +133,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     return t.hours*100 + t.minutes;
   }
   
-  private shouldShade(time: Time, shift: Shift, left: boolean): boolean {
+  public shouldShade(time: Time, shift: Shift, left: boolean): boolean {
     let convertedTime = this.convertTimeToNum(time);
     let convertedStart = this.convertTimeToNum(shift.startTime);
     let convertedEnd = this.convertTimeToNum(shift.endTime);
@@ -170,11 +170,11 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     return times;
   }
   
-  private formatTime(time: Time): string {
+  public formatTime(time: Time): string {
     return this.timeService.timeToString(time);
   }
   
-  private enter(shift: Shift) {
+  public enter(shift: Shift) {
     this.hovered = shift;
   }
   
@@ -189,14 +189,14 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     this.remainingSpace = (containerHeight - baseHeight)%rowHeight;
   }
   
-  private resizeSchedule() {
+  public resizeSchedule() {
     if(this.shifts) {
       this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
     }
     this.mobile = this.computeMobile();
   }
   
-  private getHourSpan(shift: Shift): string {
+  public getHourSpan(shift: Shift): string {
     return `${this.formatTime(shift.startTime)} - ${this.formatTime(shift.endTime)}`
   }
   
@@ -211,7 +211,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     }
   }
   
-  private copyShareToClipboard(): void {
+  public copyShareToClipboard(): void {
     navigator.clipboard.writeText(this.getViewLink()).then(() => {
       this.snackbar.open("Share link copied to clipboard!", "Dismiss", {duration: 2000});
     }).catch((err) => {
@@ -223,7 +223,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     return `http://www.picostaff.com${this.router.url}/${this.currentSchedule.viewId}`;
   }
   
-  private displaySheetClick(sheetLabel: string): void {
+  public displaySheetClick(sheetLabel: string): void {
     if(this.curSheet.label == sheetLabel) {
       return;
     } else {
@@ -253,16 +253,15 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           return r;
         });
         this.resizeSchedule();
-        // this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
       });
     });
   }
   
-  private parseName(emp: Employee) {
+  public parseName(emp: Employee) {
     return `${emp.firstName} ${emp.lastName.substring(0,1)}.`;
   }
 
-  private printSchedule() {
+  public printSchedule() {
     let snackbarRef = this.snackbar.open("Printing Schedule... This may take a minute.", "dismiss");
     this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
       printSchedule.timeIncrement = this.curSheet.timeIncrement;
@@ -326,9 +325,9 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
 
   constructor(
-    private locationService: LocationService,
+    public locationService: LocationService,
     private timeService: TimeService,
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
     private aff: AngularFireFunctions,

@@ -11,7 +11,7 @@ export class LocationSelectorComponent {
 
   locations: [string, Location][];
 
-  constructor(private locationService: LocationService) {
+  constructor(public locationService: LocationService) {
     this.locationService.getLocationsMap().subscribe((locationMap) => {
       this.locations = Array.from(locationMap.entries());
     });

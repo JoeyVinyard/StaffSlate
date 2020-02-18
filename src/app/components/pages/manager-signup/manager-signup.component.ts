@@ -12,20 +12,20 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class ManagerSignupComponent {
 
-  private registerError: string = "";
+  public registerError: string = "";
 
-  private email: FormControl = new FormControl('', [Validators.required, Validators.email]);
-  private firstName: FormControl = new FormControl('', [Validators.required]);
-  private lastName: FormControl = new FormControl('', [Validators.required]);
-  private password: FormControl = new FormControl('', [Validators.required, PasswordValidator.strong]);
-  private conf_password: FormControl = new FormControl('', [Validators.required, (control: AbstractControl) => {
+  public email: FormControl = new FormControl('', [Validators.required, Validators.email]);
+  public firstName: FormControl = new FormControl('', [Validators.required]);
+  public lastName: FormControl = new FormControl('', [Validators.required]);
+  public password: FormControl = new FormControl('', [Validators.required, PasswordValidator.strong]);
+  public conf_password: FormControl = new FormControl('', [Validators.required, (control: AbstractControl) => {
     if(this.password.value != control.value) {
       return {mismatch: true};
     }
     return null;
   }]);
 
-  private getEmailError() {
+  public getEmailError() {
     if(this.email.hasError("required")) {
       return "Email is required";
     } else if(this.email.hasError("email")) {
@@ -34,21 +34,21 @@ export class ManagerSignupComponent {
       return "";
     }
   }
-  private getFirstNameError() {
+  public getFirstNameError() {
     if(this.firstName.hasError("required")) {
       return "Please provide your name";
     } else {
       return "";
     }
   }
-  private getLastNameError() {
+  public getLastNameError() {
     if(this.lastName.hasError("required")) {
       return "Please provide your name";
     } else {
       return "";
     }
   }
-  private getPasswordError() {
+  public getPasswordError() {
     if(this.password.hasError("required")) {
       return "Please provide a password";
     } else if(this.password.hasError("tooShort")) {
@@ -63,7 +63,7 @@ export class ManagerSignupComponent {
       return "";
     }
   }
-  private getConfPasswordError() {
+  public getConfPasswordError() {
     if(this.conf_password.hasError("required")) {
       return "Please provide a password";
     } else if(this.conf_password.hasError("mismatch")) {
@@ -73,13 +73,13 @@ export class ManagerSignupComponent {
     }
   }
 
-  enter(event: KeyboardEvent) {
+  public enter(event: KeyboardEvent) {
     if(event.keyCode == 13) {
       this.register();
     }
   }
 
-  private register() {
+  public register() {
     if(this.email.invalid || this.firstName.invalid || this.lastName.invalid || this.password.invalid || this.conf_password.invalid) {
       this.registerError = "Please enter valid details.";
       return;

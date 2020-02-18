@@ -13,16 +13,16 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class NewLocationComponent implements AfterViewInit {
 
-  private name = new FormControl('', [Validators.required]);
-  private address = new FormControl('', [Validators.required]);
-  private city = new FormControl('', [Validators.required]);
-  private state = new FormControl('AK', [Validators.required]);
-  private zip = new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(5)]);
+  public name = new FormControl('', [Validators.required]);
+  public address = new FormControl('', [Validators.required]);
+  public city = new FormControl('', [Validators.required]);
+  public state = new FormControl('AK', [Validators.required]);
+  public zip = new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(5)]);
 
-  private states = ["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID", "IL","IN","KS","KY","LA","MA","MD","ME","MH","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY", "OH","OK","OR","PA","PR","PW","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"];
-  private createError = "";
+  public states = ["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID", "IL","IN","KS","KY","LA","MA","MD","ME","MH","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY", "OH","OK","OR","PA","PR","PW","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"];
+  public createError = "";
 
-  private getNameError(): string {
+  public getNameError(): string {
     if(this.name.hasError("required")) {
       return "Please enter a name"
     } else {
@@ -30,7 +30,7 @@ export class NewLocationComponent implements AfterViewInit {
     }
   }
 
-  private getAddressError(): string {
+  public getAddressError(): string {
     if(this.address.hasError("required")) {
       return "Please enter a valid address"
     } else {
@@ -38,7 +38,7 @@ export class NewLocationComponent implements AfterViewInit {
     }
   }
 
-  private getCityError(): string {
+  public getCityError(): string {
     if(this.city.hasError("required")) {
       return "Please enter a valid city"
     } else {
@@ -46,7 +46,7 @@ export class NewLocationComponent implements AfterViewInit {
     }
   }
 
-  private getStateError(): string {
+  public getStateError(): string {
     if(this.state.hasError("required")) {
       return "Please enter a valid city"
     } else {
@@ -54,7 +54,7 @@ export class NewLocationComponent implements AfterViewInit {
     }
   }
 
-  private getZipError(): string {
+  public getZipError(): string {
     if(this.zip.hasError("required") || this.zip.hasError("minlength") || this.zip.hasError("maxlength")) {
       return "Please enter a valid city"
     } else {
@@ -62,7 +62,7 @@ export class NewLocationComponent implements AfterViewInit {
     }
   }
 
-  private create(): void {
+  public create(): void {
     this.locationService.createLocation({
       label: this.name.value,
       address: this.address.value,

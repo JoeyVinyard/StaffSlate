@@ -9,9 +9,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class EmailConfirmRedirectComponent {
 
-  private confirmationMessage: string = "";
+  public confirmationMessage: string = "";
 
-  resend(): void {
+  public resend(): void {
     this.afa.auth.currentUser.sendEmailVerification().then(() => {
       this.confirmationMessage = "Confirmation email succesfully sent!";
     }).catch((err) => {
@@ -23,6 +23,6 @@ export class EmailConfirmRedirectComponent {
     });
   }
 
-  constructor(private afa: AngularFireAuth, private userService: UserService) { }
+  constructor(private afa: AngularFireAuth, public userService: UserService) { }
 
 }

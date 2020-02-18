@@ -12,7 +12,7 @@ export class ToolbarComponent {
 
   @Output() toggled = new EventEmitter();
 
-  private logout(): void {
+  public logout(): void {
     this.userService.logout().then(() => {
       this.router.navigateByUrl("login");
     }).catch((err) => {
@@ -20,6 +20,6 @@ export class ToolbarComponent {
     });
   }
 
-  constructor(public af: AngularFireAuth, private userService: UserService, private router: Router) {}
+  constructor(public af: AngularFireAuth, public userService: UserService, private router: Router) {}
 
 }

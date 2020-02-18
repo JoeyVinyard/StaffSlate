@@ -20,7 +20,7 @@ export class EmployeesComponent implements OnDestroy {
   loadedLocation: Location;
   locations: [string, Location][];
 
-  private openNewEmployeeDialog(): void {
+  public openNewEmployeeDialog(): void {
     const dialogRef = this.dialog.open(NewEmployeeDialogComponent, {
       width: '300px',
     });
@@ -45,11 +45,11 @@ export class EmployeesComponent implements OnDestroy {
     }
   }
   
-  private manage(employee: Employee): void {
+  public manage(employee: Employee): void {
     console.log(employee);
   }
 
-  private delete(employee: Employee): void {
+  public delete(employee: Employee): void {
     this.loadedLocation.deleteEmployee(employee.id).then(() => {
         this.snackbar.open("Employee succesfully deleted.", "Dismiss", {
           duration: 5000
@@ -66,11 +66,11 @@ export class EmployeesComponent implements OnDestroy {
     this.snackbar.dismiss();
   }
 
-  private filter(f: string): void {
+  public filter(f: string): void {
     this.dataSource.filter = f.trim().toLowerCase();
   }
 
-  private buttonContent(): string {
+  public buttonContent(): string {
     return `New ${window.innerWidth > 800 ? "Employee" : ""}`;
   }
 

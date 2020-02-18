@@ -21,11 +21,11 @@ export class SchedulesComponent implements OnDestroy {
   private loadedLocation: Location;
   private subscriptions: Subscription[] = [];
 
-  private openSchedule(schedule: Identifier) {
+  public openSchedule(schedule: Identifier) {
     this.router.navigate(["schedule", this.loadedLocation.document.ref.id, schedule.key]);
   }
 
-  private openNewScheduleDialog(schedule: Identifier = null): void {
+  public openNewScheduleDialog(schedule: Identifier = null): void {
     const dialogRef = this.dialog.open(NewScheduleDialogComponent, {
       width: '300px',
       data: schedule
@@ -61,7 +61,7 @@ export class SchedulesComponent implements OnDestroy {
     }
   }
 
-  private delete(schedule: Schedule): void {
+  public delete(schedule: Schedule): void {
     this.loadedLocation.deleteSchedule(schedule.label).then(() => {
       this.snackbar.open("Schedule succesfully deleted.", "Dismiss", {
         duration: 5000
@@ -73,11 +73,11 @@ export class SchedulesComponent implements OnDestroy {
     })
   }
 
-  private filter(f: string): void {
+  public filter(f: string): void {
     this.dataSource.filter = f.trim().toLowerCase();
   }
 
-  private buttonContent(): string {
+  public buttonContent(): string {
     return `New ${window.innerWidth > 800 ? "Schedule" : ""}`;
   }
 
