@@ -1,6 +1,6 @@
 <mat-card class="box">
     <p>Thank you for signing up! You should recieve an email at: <span>{{(userService.getCurrentUserInfo() | async).email}}</span>.
-        Please allow a few minutes for the email to be delivered. Once you confirm your email, click <a [routerLink]="'/new-location'">here</a> to continue on, or refresh the page!</p>
+        Please allow a few minutes for the email to be delivered. Once you confirm your email, refresh the page to continue on!</p>
     <p>Didn't get the email? <span (click)="resend()">Request Another</span>.</p>
     <p>{{confirmationMessage}}</p>
 </mat-card>
