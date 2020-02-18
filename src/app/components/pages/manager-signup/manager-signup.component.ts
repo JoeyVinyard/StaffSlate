@@ -12,6 +12,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class ManagerSignupComponent {
 
+  private registerError: string = "";
+
   private email: FormControl = new FormControl('', [Validators.required, Validators.email]);
   private firstName: FormControl = new FormControl('', [Validators.required]);
   private lastName: FormControl = new FormControl('', [Validators.required]);
@@ -70,9 +72,18 @@ export class ManagerSignupComponent {
       return "";
     }
   }
-  private getRegisterError() {}
+
+  enter(event: KeyboardEvent) {
+    if(event.keyCode == 13) {
+      this.register();
+    }
+  }
 
   private register() {
+    if(this.email.invalid || this.firstName.invalid || this.lastName.invalid || this.password.invalid || this.conf_password.invalid) {
+      this.registerError = "Please enter valid details.";
+      return;
+    }
     this.userService.register({
       email: this.email.value,
       firstName: this.firstName.value,

@@ -9,31 +9,31 @@
         <form class="signup-form">
             <mat-form-field class="full-width">
                 <mat-label>Email</mat-label>
-                <input matInput [formControl]="email" placeholder="Email" name="email">
+                <input (keydown)="enter($event)" matInput [formControl]="email" placeholder="Email" name="email">
                 <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
             </mat-form-field>
             <mat-form-field class="first-name">
                 <mat-label>First Name</mat-label>
-                <input matInput [formControl]="firstName" placeholder="First Name" name="firstName">
+                <input (keydown)="enter($event)" matInput [formControl]="firstName" placeholder="First Name" name="firstName">
                 <mat-error *ngIf="firstName.invalid">{{getFirstNameError()}}</mat-error>
             </mat-form-field>
             <mat-form-field class="last-name">
                 <mat-label>Last Name</mat-label>
-                <input matInput [formControl]="lastName" placeholder="Last Name" name="lastName">
+                <input (keydown)="enter($event)" matInput [formControl]="lastName" placeholder="Last Name" name="lastName">
                 <mat-error *ngIf="lastName.invalid">{{getLastNameError()}}</mat-error>
             </mat-form-field>
             <p class="role">I am a: <span class="instructor">Manager</span>/<a [routerLink]="['/employee-redirect']">Employee</a></p>
             <mat-form-field class="full-width">
                 <mat-label>Password</mat-label>
-                <input matInput [formControl]="password" placeholder="Password" type="password" name="password">
+                <input (keydown)="enter($event)" matInput [formControl]="password" placeholder="Password" type="password" name="password">
                 <mat-error *ngIf="password.invalid">{{getPasswordError()}}</mat-error>
             </mat-form-field>
             <mat-form-field class="full-width">
                 <mat-label>Confirm Password</mat-label>
-                <input matInput [formControl]="conf_password" placeholder="Confirm Password" type="password" name="conf_password">
+                <input (keydown)="enter($event)" matInput [formControl]="conf_password" placeholder="Confirm Password" type="password" name="conf_password">
                 <mat-error *ngIf="conf_password.invalid">{{getConfPasswordError()}}</mat-error>
             </mat-form-field>
-            <mat-error *ngIf="getRegisterError()">{{getRegisterError()}}</mat-error>
+            <mat-error *ngIf="registerError">{{registerError}}</mat-error>
         </form>
     </mat-card-content>
     <mat-card-actions class="submit">

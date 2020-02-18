@@ -33,8 +33,15 @@ export class LoginComponent {
     }
   }
 
+  enter(event: KeyboardEvent) {
+    if(event.keyCode == 13) {
+      this.login();
+    }
+  }
+
   login(): void {
     if(this.email.invalid || this.password.invalid) {
+      this.loginError = "Please enter valid login details.";
       return;
     } else {
       this.af.auth.signInWithEmailAndPassword(this.email.value, this.password.value).then(() => {

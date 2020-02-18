@@ -9,12 +9,12 @@
         <form class="login-form">
             <mat-form-field class="full-width">
                 <mat-label>Email</mat-label>
-                <input matInput [formControl]="email" placeholder="Email" name="email">
+                <input (keydown)="enter($event)" matInput [formControl]="email" placeholder="Email" name="email">
                 <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
             </mat-form-field>
             <mat-form-field class="full-width">
                 <mat-label>Password</mat-label>
-                <input matInput [formControl]="password" placeholder="Password" type="password" name="password">
+                <input (keydown)="enter($event)" matInput [formControl]="password" placeholder="Password" type="password" name="password">
                 <mat-error *ngIf="password.invalid">{{getPasswordError()}}</mat-error>
             </mat-form-field>
             <mat-error *ngIf="loginError">{{loginError}}</mat-error>
