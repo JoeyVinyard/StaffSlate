@@ -14,13 +14,15 @@ export const deleteEmployeeShifts = functions.firestore.document("locations/{loc
         const location = snapshot.ref.parent.parent;
         const empId = snapshot.id;
         if(location) {
-            location.collection("schedules").listDocuments().then((scheduleRefs) => {
+            return location.collection("schedules").listDocuments().then((scheduleRefs) => {
                 scheduleRefs.forEach((scheduleRef) => {
                     scheduleRef.collection("sheets").listDocuments().then((sheetRefs) => {
                         sheetRefs.forEach((sheetRef) => {
                             sheetRef.collection("shifts").where("empId","==",empId).get().then((shifts) => {
                                 shifts.forEach((shift) => {
-                                    shift.ref.delete().catch((err) => {
+                                    shift.ref.delete().then(() => {
+                                        console.info(`Successfully deleted ${shift.id}`);
+                                    }).catch((err) => {
                                         throw err;
                                     });
                                 });
@@ -35,5 +37,7 @@ export const deleteEmployeeShifts = functions.firestore.document("locations/{loc
             }).catch((err) => {
                 throw err;
             });
+        } else {
+            return null;
         }
     });

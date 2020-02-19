@@ -258,7 +258,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
   
   public parseName(emp: Employee) {
-    return `${emp.firstName} ${emp.lastName.substring(0,1)}.`;
+    return emp ? `${emp.firstName} ${emp.lastName.substring(0,1)}.` : "";
   }
 
   public printSchedule() {
