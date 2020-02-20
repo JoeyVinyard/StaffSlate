@@ -4,6 +4,10 @@
     flex-flow: wrap;
 }
 
+.row {
+    margin-bottom: 20px;
+}
+
 .content {
     cursor: pointer;
 }
@@ -14,13 +18,13 @@
 
 .icon {
     text-align: center;
-    font-size: 120px;
+    font-size: calc(60px + 3vw);
     width: 100%;
-    height: 120px;
+    height: calc(60px + 3vw);
 }
 
 .label {
     margin-top: 0;
     text-align: center;
-    font-size: 30px;
+    font-size: calc(12px + 1vw);
 }
