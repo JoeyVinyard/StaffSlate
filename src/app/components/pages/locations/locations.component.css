@@ -1,0 +1,41 @@
+.container {
+    margin: 5px auto;
+    width: 90%;
+  }
+  
+  .buttons {
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  .buttons button {
+    padding: 2px;
+    margin-top: 10px;
+    height: 40px;
+    width: 13%;
+    font-size: calc(12px + 0.2vw);
+    float: right;
+  }
+  
+  .select {
+    display: inline-block;
+    width: 15%;
+  }
+  
+  .search {
+    margin: 0 5%;
+    width: 50%;
+  }
+  
+  .tableContainer {
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .label {
+      width: 90%;
+      min-width: 100px;
+  }
