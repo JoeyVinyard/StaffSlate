@@ -29,7 +29,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { MatTooltipModule } from '@angular/material/tooltip'; 
+import { MatTooltipModule } from '@angular/material/tooltip';
 // Config Files
 import { appRoutes } from "./routes";
 import { environment } from '../environments/environment';
@@ -61,6 +61,7 @@ import { WelcomeDialogComponent } from './components/pages/new-location/welcome-
 import { SheetPromptDialogComponent } from './components/pages/schedule/sheet-prompt-dialog/sheet-prompt-dialog.component';
 import { AdUnitComponent } from './components/core/ad-unit/ad-unit.component';
 import { LocationsComponent } from './components/pages/locations/locations.component';
+import { LocationComponent } from './components/pages/location/location.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { LocationsComponent } from './components/pages/locations/locations.compo
     WelcomeDialogComponent,
     SheetPromptDialogComponent,
     AdUnitComponent,
-    LocationsComponent
+    LocationsComponent,
+    LocationComponent
   ],
   imports: [
     BrowserModule,

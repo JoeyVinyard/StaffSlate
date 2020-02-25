@@ -14,6 +14,7 @@ import { ConfirmEmailGuard } from './guards/confirm-email.guard';
 import { NoLocationGuard } from './guards/no-location.guard';
 import { NewLocationComponent } from './components/pages/new-location/new-location.component';
 import { LocationsComponent } from './components/pages/locations/locations.component';
+import { LocationComponent } from './components/pages/location/location.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['register']);
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
@@ -58,6 +59,12 @@ export const appRoutes: Routes = [
     {
         path: "locations",
         component: LocationsComponent,
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
+        data: {authGuardPipe: redirectUnauthorizedToLogin}
+    },
+    {
+        path: "location",
+        component: LocationComponent,
         canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },

@@ -1,0 +1,12 @@
+.container{
+    margin: 40px 0;
+}
+
+.locationName {
+    font-size: calc(28px + 1.5vw);
+}
+
+.inlinePage {
+    height: 300px;
+    overflow-y: auto;
+}
