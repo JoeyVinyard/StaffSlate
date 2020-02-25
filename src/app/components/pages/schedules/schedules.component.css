@@ -20,10 +20,11 @@
 .select {
   display: inline-block;
   width: 15%;
+  margin-right: 5%;
 }
 
 .search {
-  margin: 0 5%;
+  margin: 0;
   width: 50%;
 }
 

@@ -1,6 +1,6 @@
-<div class="container">
+<div [ngClass]="{'container': !inline}">
     <div class="buttons">
-        <app-location-selector class="select"></app-location-selector>
+        <app-location-selector *ngIf="!inline" class="select"></app-location-selector>
         <mat-form-field class="search">
             <input type="search" matInput (input)="filter($event.target.value)" placeholder="Search Schedules">
         </mat-form-field>
@@ -29,5 +29,7 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
+
+        <mat-paginator [pageSizeOptions]="inline ? [5] : [10,25,50]" showFirstLastButtons></mat-paginator>
     </div>
 </div>

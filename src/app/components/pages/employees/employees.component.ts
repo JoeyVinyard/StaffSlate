@@ -1,6 +1,6 @@
-import { Component, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ViewChild, OnDestroy, Input, OnInit } from '@angular/core';
 import {  Employee } from 'src/app/models/employee';
-import { MatTableDataSource, MatDialog, MatSnackBar, MatSelect } from '@angular/material';
+import { MatTableDataSource, MatDialog, MatSnackBar, MatSelect, MatPaginator } from '@angular/material';
 import { LocationService } from 'src/app/services/location.service';
 import { NewEmployeeDialogComponent } from './new-employee-dialog/new-employee-dialog.component';
 import { Location } from 'src/app/models/location';
@@ -12,13 +12,17 @@ import { Subscription } from 'rxjs';
   templateUrl: './employees.component.html',
   styleUrls: ['./employees.component.css']
 })
-export class EmployeesComponent implements OnDestroy {
+export class EmployeesComponent implements OnDestroy, OnInit {
+
+  @Input() inline: boolean = false;
 
   subscriptions: Subscription[] = [];
   dataSource = new MatTableDataSource<Employee>();
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'action'];
   loadedLocation: Location;
   locations: [string, Location][];
+
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   public openNewEmployeeDialog(): void {
     const dialogRef = this.dialog.open(NewEmployeeDialogComponent, {
@@ -71,11 +75,15 @@ export class EmployeesComponent implements OnDestroy {
   }
 
   public buttonContent(): string {
-    return `New ${window.innerWidth > 800 ? "Employee" : ""}`;
+    return `New ${window.innerWidth > 800 && !this.inline ? "Employee" : ""}`;
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  ngOnInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar) {
