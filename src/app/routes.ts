@@ -63,7 +63,7 @@ export const appRoutes: Routes = [
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },
     {
-        path: "location",
+        path: "location/:locationId",
         component: LocationComponent,
         canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}

@@ -1,0 +1,50 @@
+.container {
+    background: #FAFAFA;
+    border: 1px solid #AAA;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.header {
+    background: #EEE;
+    border-bottom: 1px solid #AAA;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    height: 40px;
+}
+
+.title {
+    font-size: calc(14px + 0.8vw);
+    line-height: 40px;
+    padding-left: 5px;
+    vertical-align: middle;
+}
+
+.body {
+    margin-bottom: 4px;
+}
+
+.row {
+    height: 40px;
+    display: flex;
+}
+
+.row span {
+    line-height: 40px;
+    vertical-align: middle;
+    padding-left: 5px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.remove {
+    width: 25px;
+    height: 25px;
+    font-size: 25px;
+}
+
+.even {
+    background-color: #F2F2F2
+}

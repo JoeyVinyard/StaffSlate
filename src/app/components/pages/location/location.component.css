@@ -6,7 +6,6 @@
     font-size: calc(28px + 1.5vw);
 }
 
-.inlinePage {
-    height: 300px;
-    overflow-y: auto;
+.managerList {
+    width: 100%;
 }

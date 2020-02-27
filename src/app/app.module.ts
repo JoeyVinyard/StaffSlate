@@ -62,6 +62,7 @@ import { SheetPromptDialogComponent } from './components/pages/schedule/sheet-pr
 import { AdUnitComponent } from './components/core/ad-unit/ad-unit.component';
 import { LocationsComponent } from './components/pages/locations/locations.component';
 import { LocationComponent } from './components/pages/location/location.component';
+import { ManagerListComponent } from './components/pages/location/manager-list/manager-list.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { LocationComponent } from './components/pages/location/location.componen
     SheetPromptDialogComponent,
     AdUnitComponent,
     LocationsComponent,
-    LocationComponent
+    LocationComponent,
+    ManagerListComponent
   ],
   imports: [
     BrowserModule,

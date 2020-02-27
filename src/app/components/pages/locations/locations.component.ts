@@ -3,21 +3,22 @@ import { Subscription } from 'rxjs';
 import { MatTableDataSource, MatDialog, MatSnackBar } from '@angular/material';
 import { Location } from 'src/app/models/location';
 import { LocationService } from 'src/app/services/location.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-locations',
   templateUrl: './locations.component.html',
   styleUrls: ['./locations.component.css']
 })
+
 export class LocationsComponent implements OnDestroy {
 
   subscriptions: Subscription[] = [];
-  dataSource = new MatTableDataSource<Location>();
+  dataSource = new MatTableDataSource<DisplayedLocation>();
   displayedColumns: string[] = ['label'];
-  loadedLocation: Location;
   locations: [string, Location][];
 
-  public openNewScheduleDialog(): void {
+  public openNewLocationDialog(): void {
     // const dialogRef = this.dialog.open(NewEmployeeDialogComponent, {
     //   width: '300px',
     // });
@@ -43,12 +44,14 @@ export class LocationsComponent implements OnDestroy {
   }
 
   private parseLocations(locations: Map<string, Location>): void {
-    this.dataSource.data = Array.from(locations.values());
+    this.dataSource.data = Array.from(locations.entries()).map((kvPair: [string,Location]) => {
+      return {id: kvPair[0], data: kvPair[1]} as DisplayedLocation;
+    });
     this.snackbar.dismiss();
   }
 
-  public open(location: Location): void {
-    console.log(location);
+  public open(locationId: string): void {
+    this.router.navigate(["location", locationId]);
   }
 
   public filter(f: string): void {
@@ -63,11 +66,16 @@ export class LocationsComponent implements OnDestroy {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  constructor(private locationService: LocationService, public dialog: MatDialog, public snackbar: MatSnackBar) {
+  constructor(private locationService: LocationService, private router: Router, public dialog: MatDialog, public snackbar: MatSnackBar) {
     this.snackbar.open("Loading Employees...", "Dismiss");
     this.subscriptions.push(this.locationService.getLocationsMap().subscribe((locations: Map<string,Location>) => {
       this.parseLocations(locations);
     }));
   }
 
+}
+
+interface DisplayedLocation {
+  id: string,
+  data: Location
 }
