@@ -9,6 +9,7 @@ admin.initializeApp({
     databaseURL: "https://emsys-39a0f.firebaseio.com"
 });
 const db = admin.firestore();
+const auth = admin.auth();
 
 const noreplyEmail: string = functions.config().noreply.email;
 const noreplyClientId: string = functions.config().noreply.client_id;
@@ -37,29 +38,66 @@ export const createViewId = functions.firestore.document("locations/{locationId}
         return snapshot.ref.set({"viewId": uniqid()}, {merge: true});
     });
 
+export const removeManager = functions.https
+    .onCall((data) => {
+        return db.doc(`locations/${data.locationId}`).update({managers: admin.firestore.FieldValue.arrayRemove(data.email)});
+    })
+
 export const inviteManager = functions.https
     .onCall((data) => {
-        console.log(data.email, data.locationId);
-
-        db.doc(`locations/${data.locationId}`).get().then((doc: any) => {
-            console.log(doc.data());
-        }).catch((err: any) => {
-            console.error(err);
+        return new Promise((res,rej) => {
+            db.doc(`locations/${data.locationId}`).get().then((doc: any) => {
+                addUser(data.email,data.locationId);
+                auth.getUserByEmail(data.email).then(() => {
+                    res(buildEmail(data.email, doc.data().label, false));
+                }).catch((err: any) => {
+                    if(err.code === `auth/user-not-found`) {
+                        res(buildEmail(data.email, doc.data().label, true));
+                    } else {
+                        rej(err);
+                    }
+                })
+            }).catch((err: any) => {
+                rej(err);
+            })
         })
-
-        // sendEmail(data.email);
     });
 
-// const sendEmail = (email: string, locationName: string) => {
-//     const mailOptions = {
-//         from: noreplyEmail,
-//         to: email,
-//         subject: `Invitation to manage ${locationName} on PicoStaff!`,
-//         text: "This is a test message"
-//     }
+const addUser = (email: string, locationId: string) => {
+    db.doc(`locations/${locationId}`).update({
+        managers: admin.firestore.FieldValue.arrayUnion(email)
+    });
+}
 
-//     return transporter.sendMail(mailOptions);
-// }
+const buildEmail = (email: string, locationName: string, newUser: boolean) => {
+    if(newUser) {
+        return sendEmail(email, locationName);
+    } else {
+        return new Promise((res,rej) => {
+            db.doc(`users/${email}`).get().then((user: any) => {
+                res(sendEmail(email,locationName,user));
+            }).catch((err:any) => {
+                rej(err);
+            });
+        });
+    }
+}
+
+const sendEmail = (email: string, locationName: string, user: any = null) => {
+    const mailOptions = {
+        from: noreplyEmail,
+        to: email,
+        subject: `You've been invited to manage ${locationName} on PicoStaff!`,
+        text: `Hello ${user && user.firstName ? user.firstName : email}\n\nYou have been invited to help manage ${locationName} on PicoStaff!`
+            + "\n\n"
+            + (user ? "You can log in at http://www.picostaff.com/login" :
+                     `You can sign up for an account at: http://www.picostaff.com/register/${encodeURI(email)}`)
+            + `\nOnce you log into your account, you will be able to access the location`
+            + "\n\nHave a great day,\nPicoStaff Team\nhttp://www.picostaff.com/"
+    }
+
+    return transporter.sendMail(mailOptions);
+}
 
 export const deleteEmployeeShifts = functions.firestore.document("locations/{locationId}/employees/{employeeId}")
     .onDelete((snapshot, context) => {

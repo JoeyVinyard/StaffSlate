@@ -64,6 +64,7 @@ import { LocationsComponent } from './components/pages/locations/locations.compo
 import { LocationComponent } from './components/pages/location/location.component';
 import { ManagerListComponent } from './components/pages/location/manager-list/manager-list.component';
 import { NewManagerDialogComponent } from './components/pages/location/manager-list/new-manager-dialog/new-manager-dialog.component';
+import { DeleteManagerDialogComponent } from './components/pages/location/manager-list/delete-manager-dialog/delete-manager-dialog.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { NewManagerDialogComponent } from './components/pages/location/manager-l
     LocationsComponent,
     LocationComponent,
     ManagerListComponent,
-    NewManagerDialogComponent
+    NewManagerDialogComponent,
+    DeleteManagerDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -134,7 +136,8 @@ import { NewManagerDialogComponent } from './components/pages/location/manager-l
     DeleteSheetConfirmationComponent,
     WelcomeDialogComponent,
     SheetPromptDialogComponent,
-    NewManagerDialogComponent
+    NewManagerDialogComponent,
+    DeleteManagerDialogComponent
   ],
   providers: [
     AngularFireAuthGuard,

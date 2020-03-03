@@ -27,6 +27,12 @@ export const appRoutes: Routes = [
         data: {authGuardPipe: redirectLoggedInToDashboard}
     },
     {
+        path: "register/:email",
+        component: ManagerSignupComponent,
+        canActivate: [AngularFireAuthGuard],
+        data: {authGuardPipe: redirectLoggedInToDashboard}
+    },
+    {
         path: "login",
         component: LoginComponent,
         canActivate: [AngularFireAuthGuard],

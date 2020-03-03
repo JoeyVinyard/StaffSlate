@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { PasswordValidator } from 'src/app/validators/password-validator';
 import { UserService } from 'src/app/services/user.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
@@ -95,5 +95,11 @@ export class ManagerSignupComponent {
     })
   }
 
-  constructor(private userService: UserService, private afa: AngularFireAuth, private router: Router) { }
+  constructor(private userService: UserService, private afa: AngularFireAuth, private router: Router, private route: ActivatedRoute) {
+    route.paramMap.subscribe((params) => {
+      if(params.has("email")) {
+        this.email.setValue(params.get("email"));
+      }
+    });
+  }
 }
