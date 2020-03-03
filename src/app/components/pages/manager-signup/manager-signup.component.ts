@@ -99,6 +99,7 @@ export class ManagerSignupComponent {
     route.paramMap.subscribe((params) => {
       if(params.has("email")) {
         this.email.setValue(params.get("email"));
+        this.email.disable();
       }
     });
   }
