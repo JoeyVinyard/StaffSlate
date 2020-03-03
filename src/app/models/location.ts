@@ -10,6 +10,7 @@ export interface NewLocation {
     city: string;
     state: string;
     zip: string;
+    owner: string;
     managers: string[];
     schedules: Identifier[];
 }
@@ -20,6 +21,7 @@ export class Location {
     city: string = "";
     state: string = "";
     zip: string = "";
+    owner: string;
     managers: string[] = [];
     schedules: Identifier[] = [];
     document: AngularFirestoreDocument<Location>;
@@ -108,6 +110,7 @@ export class Location {
     constructor(locationData: Location, document: AngularFirestoreDocument<Location>) {
         this.label = locationData.label;
         this.managers = locationData.managers;
+        this.owner = locationData.owner;
         this.schedules = locationData.schedules;
         this.address = locationData.address;
         this.city = locationData.city;

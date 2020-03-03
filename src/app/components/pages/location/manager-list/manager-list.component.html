@@ -2,13 +2,13 @@
     <div class="header">
         <span class="title">Managers</span>
         <div class="spacer"></div>
-        <button mat-raised-button color="primary" (click)="openNewManagerDialog()">Add</button>
+        <button mat-raised-button color="primary" [disabled]="(afa.user | async).email != curLocation.owner" (click)="openNewManagerDialog()">Add</button>
     </div>
     <div class="body">
         <div *ngFor="let manager of managers; let i = index" class="row" [ngClass]="{'even': i%2==1}">
             <span>{{parseName(manager)}}</span>
             <div class="spacer"></div>
-            <button mat-icon-button [disableRipple]="true">
+            <button *ngIf="(afa.user | async).email == curLocation.owner" mat-icon-button [disableRipple]="true">
                 <mat-icon class="remove">delete</mat-icon>
             </button>
         </div>

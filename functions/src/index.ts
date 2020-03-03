@@ -3,7 +3,12 @@ import * as uniqid from 'uniqid';
 
 const nodemailer = require('nodemailer');
 const admin = require('firebase-admin');
-admin.initializeApp();
+const serviceAccount = require('../key/serviceAccount.json');
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://emsys-39a0f.firebaseio.com"
+});
+const db = admin.firestore();
 
 const noreplyEmail: string = functions.config().noreply.email;
 const noreplyClientId: string = functions.config().noreply.client_id;
@@ -35,15 +40,26 @@ export const createViewId = functions.firestore.document("locations/{locationId}
 export const inviteManager = functions.https
     .onCall((data) => {
         console.log(data.email, data.locationId);
-        const mailOptions = {
-            from: noreplyEmail,
-            to: data.email,
-            subject: "Test Message",
-            text: "This is a test message"
-        }
 
-        return transporter.sendMail(mailOptions);
+        db.doc(`locations/${data.locationId}`).get().then((doc: any) => {
+            console.log(doc.data());
+        }).catch((err: any) => {
+            console.error(err);
+        })
+
+        // sendEmail(data.email);
     });
+
+// const sendEmail = (email: string, locationName: string) => {
+//     const mailOptions = {
+//         from: noreplyEmail,
+//         to: email,
+//         subject: `Invitation to manage ${locationName} on PicoStaff!`,
+//         text: "This is a test message"
+//     }
+
+//     return transporter.sendMail(mailOptions);
+// }
 
 export const deleteEmployeeShifts = functions.firestore.document("locations/{locationId}/employees/{employeeId}")
     .onDelete((snapshot, context) => {

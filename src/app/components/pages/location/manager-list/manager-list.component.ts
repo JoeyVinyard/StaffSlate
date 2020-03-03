@@ -7,6 +7,7 @@ import { Location } from 'src/app/models/location';
 import { MatDialog } from '@angular/material';
 import { NewManagerDialogComponent } from './new-manager-dialog/new-manager-dialog.component';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-manager-list',
@@ -22,14 +23,16 @@ export class ManagerListComponent implements OnDestroy {
   
   public openNewManagerDialog() {
     this.dialog.open(NewManagerDialogComponent, {width: "350px"}).afterClosed().subscribe((email: string) => {
-      this.aff.functions.httpsCallable("inviteManager")({
-        email: email,
-        locationId: this.curLocation.document.ref.id
-      }).then((result) => {
-        console.log(result);
-      }).catch((err) => {
-        console.error(err);
-      });
+      if(email) {
+        this.aff.functions.httpsCallable("inviteManager")({
+          email: email,
+          locationId: this.curLocation.document.ref.id
+        }).then((result) => {
+          console.log(result);
+        }).catch((err) => {
+          console.error(err);
+        });
+      }
     });
   }
 
@@ -41,7 +44,7 @@ export class ManagerListComponent implements OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  constructor(public locationService: LocationService, public userService: UserService, public dialog: MatDialog, private aff: AngularFireFunctions) {
+  constructor(private aff: AngularFireFunctions, public afa: AngularFireAuth, public locationService: LocationService, public userService: UserService, public dialog: MatDialog) {
     this.locationSub = locationService.getCurrentLocation().subscribe((location: Location) => {
       this.curLocation = location;
       this.subscriptions.forEach(s => s.unsubscribe());

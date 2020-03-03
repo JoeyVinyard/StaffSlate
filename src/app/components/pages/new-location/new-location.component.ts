@@ -69,6 +69,7 @@ export class NewLocationComponent implements AfterViewInit {
       city: this.city.value,
       state: this.state.value,
       zip: this.zip.value,
+      owner: this.afa.auth.currentUser.email,
       managers: [this.afa.auth.currentUser.email],
       schedules: []
     }).then(() => {
