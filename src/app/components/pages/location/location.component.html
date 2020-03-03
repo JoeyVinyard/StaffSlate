@@ -5,6 +5,6 @@
     fxFlexOffset="5%"
     class="container"
 >
-    <span class="locationName">Flatbreads</span>
+    <span class="locationName">{{(locationService.getCurrentLocation() | async).label}}</span>
     <app-manager-list class="managerList"></app-manager-list>
 </div>

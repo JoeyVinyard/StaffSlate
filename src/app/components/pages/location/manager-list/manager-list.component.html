@@ -1,6 +1,8 @@
 <div class="container">
     <div class="header">
         <span class="title">Managers</span>
+        <div class="spacer"></div>
+        <button mat-raised-button color="primary" (click)="openNewManagerDialog()">Add</button>
     </div>
     <div class="body">
         <div *ngFor="let manager of managers; let i = index" class="row" [ngClass]="{'even': i%2==1}">

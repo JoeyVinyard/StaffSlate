@@ -63,6 +63,7 @@ import { AdUnitComponent } from './components/core/ad-unit/ad-unit.component';
 import { LocationsComponent } from './components/pages/locations/locations.component';
 import { LocationComponent } from './components/pages/location/location.component';
 import { ManagerListComponent } from './components/pages/location/manager-list/manager-list.component';
+import { NewManagerDialogComponent } from './components/pages/location/manager-list/new-manager-dialog/new-manager-dialog.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { ManagerListComponent } from './components/pages/location/manager-list/m
     AdUnitComponent,
     LocationsComponent,
     LocationComponent,
-    ManagerListComponent
+    ManagerListComponent,
+    NewManagerDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -131,7 +133,8 @@ import { ManagerListComponent } from './components/pages/location/manager-list/m
     NewSheetDialogComponent,
     DeleteSheetConfirmationComponent,
     WelcomeDialogComponent,
-    SheetPromptDialogComponent
+    SheetPromptDialogComponent,
+    NewManagerDialogComponent
   ],
   providers: [
     AngularFireAuthGuard,

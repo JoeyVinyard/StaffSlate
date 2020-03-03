@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>New Manager</h1>
+<div class="content" mat-dialog-content>
+  <mat-form-field>
+    <input matInput [formControl]="email" placeholder="Email">
+    <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" [disabled]="email.invalid" (click)="submit()">Add Manager</button>
+</div>
