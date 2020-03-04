@@ -73,22 +73,25 @@ export class ManagerListComponent implements OnDestroy {
   }
 
   constructor(
-    private aff: AngularFireFunctions,
     public afa: AngularFireAuth,
     public locationService: LocationService,
     public userService: UserService,
+    private aff: AngularFireFunctions,
     private dialog: MatDialog,
     private snackbar: MatSnackBar
   ) {
     this.locationSub = locationService.getCurrentLocation().subscribe((location: Location) => {
+      let update = !(this.curLocation && JSON.stringify(this.curLocation.managers) == JSON.stringify(location.managers));
       this.curLocation = location;
-      this.subscriptions.forEach(s => s.unsubscribe());
-      this.managers = [];
-      location.managers.map((manager:string) => {
-        this.subscriptions.push(this.userService.loadUserInfoFromEmail(manager).subscribe((mInfo) => {
-          this.managers.push(mInfo || {email: manager, firstName: null, lastName: null});
-        }));
-      });
+      if(update) {
+        this.subscriptions.forEach(s => s.unsubscribe());
+        this.managers = [];
+        location.managers.map((manager:string) => {
+          this.userService.loadUserInfoFromEmail(manager).subscribe((mInfo) => {
+            this.managers.push(mInfo || {email: manager, firstName: null, lastName: null});
+          });
+        });
+      }
     });
   }
 

@@ -59,7 +59,7 @@ export class ManagerSignupComponent implements OnDestroy {
     } else if(this.password.hasError("needsUpper")) {
       return "Password must have at least one uppercase letter!"
     } else if(this.password.hasError("needsLower")) {
-      return "Password must have at least one number!"
+      return "Password must have at least one lowercase letter!"
     } else {
       return "";
     }

@@ -11,8 +11,10 @@
         <form class="options">
             <span class="option">Locaton Name:</span>
             <div class="optionRow">
-                <span class="value">{{curLocation.label}}</span>
-                <mat-icon class="edit">edit</mat-icon>
+                <span *ngIf="!editingLabel" class="value">{{curLocation.label}}</span>
+                <mat-icon *ngIf="!editingLabel" class="edit" (click)="editingLabel = true">edit</mat-icon>
+                <input *ngIf="editingLabel" class="input" [formControl]="label">
+                <button *ngIf="editingLabel" class="save" button mat-raised-button (click)="saveLabel()">Save</button>
             </div>
             <span class="option">Address:</span>
             <div class="optionRow">
