@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -52,6 +53,8 @@ export class LoginComponent {
     }
   }
 
-  constructor(private af: AngularFireAuth, private router: Router){}
+  constructor(private af: AngularFireAuth, private router: Router, private title: Title){
+    this.title.setTitle("PicoStaff | Login");
+  }
 
 }

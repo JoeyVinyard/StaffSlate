@@ -4,6 +4,7 @@ import { PasswordValidator } from 'src/app/validators/password-validator';
 import { UserService } from 'src/app/services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-manager-signup',
@@ -95,7 +96,8 @@ export class ManagerSignupComponent {
     })
   }
 
-  constructor(private userService: UserService, private afa: AngularFireAuth, private router: Router, private route: ActivatedRoute) {
+  constructor(private userService: UserService, private afa: AngularFireAuth, private router: Router, private route: ActivatedRoute, private title: Title) {
+    this.title.setTitle("PicoStaff | Business Management Made Easy");
     route.paramMap.subscribe((params) => {
       if(params.has("email")) {
         this.email.setValue(params.get("email"));
