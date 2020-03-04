@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { PasswordValidator } from 'src/app/validators/password-validator';
 import { UserService } from 'src/app/services/user.service';
@@ -11,7 +11,7 @@ import { Title } from '@angular/platform-browser';
   templateUrl: './manager-signup.component.html',
   styleUrls: ['./manager-signup.component.css']
 })
-export class ManagerSignupComponent {
+export class ManagerSignupComponent implements OnDestroy {
 
   public registerError: string = "";
 
@@ -94,6 +94,10 @@ export class ManagerSignupComponent {
     }).catch((err) => {
       console.error(err);
     })
+  }
+
+  ngOnDestroy() {
+    this.title.setTitle("PicoStaff");
   }
 
   constructor(private userService: UserService, private afa: AngularFireAuth, private router: Router, private route: ActivatedRoute, private title: Title) {

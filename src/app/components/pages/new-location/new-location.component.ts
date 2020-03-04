@@ -70,8 +70,7 @@ export class NewLocationComponent implements AfterViewInit {
       state: this.state.value,
       zip: this.zip.value,
       owner: this.afa.auth.currentUser.email,
-      managers: [this.afa.auth.currentUser.email],
-      schedules: []
+      managers: [this.afa.auth.currentUser.email]
     }).then(() => {
       this.createError = "";
       this.router.navigateByUrl("/dashboard");

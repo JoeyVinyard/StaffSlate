@@ -12,7 +12,6 @@ export interface NewLocation {
     zip: string;
     owner: string;
     managers: string[];
-    schedules: Identifier[];
 }
 
 export class Location {
@@ -23,9 +22,9 @@ export class Location {
     zip: string = "";
     owner: string;
     managers: string[] = [];
-    schedules: Identifier[] = [];
     document: AngularFirestoreDocument<Location>;
     
+    private schedules: ReplaySubject<Map<string, Schedule>> = new ReplaySubject(1);
     private employees: ReplaySubject<Map<string, Employee>> = new ReplaySubject(1);
     private currentSchedule: ReplaySubject<Schedule> = new ReplaySubject(1);
     private cachedSchedules: Map<string, Schedule> = new Map<string, Schedule>();
@@ -63,7 +62,21 @@ export class Location {
             }).catch((err) => {
                 rej(err);
             });
-        })
+        });
+    }
+
+    public getSchedules(): Observable<Map<string, Schedule>> {
+        return this.schedules;
+    }
+
+    public loadSchedules(): void {
+        this.document.collection<Schedule>("schedules").snapshotChanges().subscribe((schedules) => {
+            let m = new Map<string, Schedule>();
+            schedules.forEach((schedule) => {
+                m.set(schedule.payload.doc.id, schedule.payload.doc.data());
+            });
+            this.schedules.next(m);
+        });
     }
 
     public loadScheduleData(scheduleId: string): Observable<Schedule> {
@@ -82,19 +95,8 @@ export class Location {
         return this.currentSchedule;
     }
 
-    public addSchedule(schedule: Schedule): Promise<void> {
-        return new Promise((res, rej) => {
-            this.document.collection("schedules").add(schedule).then((ref) => {
-                this.schedules.push({key: ref.id, display: schedule.label});
-                this.document.update({schedules: this.schedules}).then(() => {
-                    res();
-                }).catch((err) => {
-                    rej(err);
-                });
-            }).catch((err) => {
-                rej(err);
-            });
-        });
+    public addSchedule(schedule: Schedule): Promise<DocumentReference> {
+        return this.document.collection("schedules").add(schedule)
     }
 
     public deleteSchedule(scheduleId: string): Promise<void> {
@@ -111,12 +113,12 @@ export class Location {
         this.label = locationData.label;
         this.managers = locationData.managers;
         this.owner = locationData.owner;
-        this.schedules = locationData.schedules;
         this.address = locationData.address;
         this.city = locationData.city;
         this.state = locationData.state;
         this.zip = locationData.zip;
         this.document = document;
         this.loadEmployees();
+        this.loadSchedules();
     }
 }

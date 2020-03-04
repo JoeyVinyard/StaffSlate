@@ -34,12 +34,10 @@ export class SchedulesComponent implements OnInit, OnDestroy {
       width: '300px',
       data: schedule
     });
-    this.subscriptions.push(dialogRef.afterClosed().subscribe((newSchedule: Schedule) => {
+    dialogRef.afterClosed().subscribe((newSchedule: Schedule) => {
       if (newSchedule) {
         if(schedule) {
-          let i = this.loadedLocation.schedules.findIndex(s => s.key == schedule.key);
-          this.loadedLocation.schedules[i].display = newSchedule.label;
-          this.loadedLocation.document.update({schedules: this.loadedLocation.schedules});
+          this.loadedLocation.document.collection("schedules").doc(schedule.key).update(newSchedule);
         } else {
           newSchedule.sheets = []
           this.loadedLocation.addSchedule(newSchedule)
@@ -50,7 +48,7 @@ export class SchedulesComponent implements OnInit, OnDestroy {
             });
         }
       }
-    }));
+    });
   }
 
   private addScheduleResult(success: boolean): void {
@@ -65,12 +63,12 @@ export class SchedulesComponent implements OnInit, OnDestroy {
     }
   }
 
-  public delete(schedule: Schedule): void {
-    this.loadedLocation.deleteSchedule(schedule.label).then(() => {
+  public delete(schedule: string): void {
+    this.loadedLocation.deleteSchedule(schedule).then(() => {
       this.snackbar.open("Schedule succesfully deleted.", "Dismiss", {
         duration: 5000
       });
-    }).catch(() => {
+    }).catch((err) => {
       this.snackbar.open("Error deleting schedule, please try again later.", "Dismiss", {
         duration: 5000
       });
@@ -95,9 +93,17 @@ export class SchedulesComponent implements OnInit, OnDestroy {
 
   constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
     this.snackbar.open("Loading Schedules...", "Dismiss");
+    let schedulesSub: Subscription;
     this.subscriptions.push(this.locationService.getCurrentLocation().subscribe((location: Location) => {
+      if(schedulesSub) {
+        schedulesSub.unsubscribe();
+      }
+      schedulesSub = location.getSchedules().subscribe((schedules) => {
+        this.dataSource.data = Array.from(schedules.entries()).map((s: [string, Schedule]) => {
+          return {key: s[0], display: s[1].label} as Identifier;
+        });
+      })
       this.loadedLocation = location;
-      this.dataSource.data = location.schedules;
       this.snackbar.dismiss();
     }));
   }
