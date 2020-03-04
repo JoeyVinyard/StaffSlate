@@ -5,6 +5,22 @@
     fxFlexOffset="5%"
     class="container"
 >
-    <span class="locationName">{{(locationService.getCurrentLocation() | async).label}}</span>
-    <app-manager-list class="managerList"></app-manager-list>
+    <mat-card *ngIf="curLocation" class="card"> 
+        <span class="locationName">{{curLocation.label}}</span>
+        <div class="break"></div>
+        <form class="options">
+            <span class="option">Locaton Name:</span>
+            <div class="optionRow">
+                <span class="value">{{curLocation.label}}</span>
+                <mat-icon class="edit">edit</mat-icon>
+            </div>
+            <span class="option">Address:</span>
+            <div class="optionRow">
+                <span class="value">{{formatAddress()}}</span>
+                <mat-icon class="edit">edit</mat-icon>
+            </div>
+        </form>
+        <div class="break"></div>
+        <app-manager-list class="managerList"></app-manager-list>
+    </mat-card>
 </div>
