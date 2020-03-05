@@ -14,17 +14,11 @@ import { MatSnackBar } from '@angular/material';
 export class LocationComponent implements OnDestroy {
 
   public editingLabel: boolean = false;
+  public editingAddress: boolean = false;
   public curLocation: Location;
   private sub: Subscription;
 
   public label = new FormControl('', [Validators.required]);
-
-  public formatAddress(): string {
-    if(this.curLocation) {
-      return `${this.curLocation.address}, ${this.curLocation.city} ${this.curLocation.state}, ${this.curLocation.zip}`;
-    }
-    return "";
-  }
 
   public saveLabel(): void {
     this.editingLabel = false;

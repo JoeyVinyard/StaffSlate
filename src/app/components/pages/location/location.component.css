@@ -41,6 +41,18 @@
     border-bottom: 1px solid black;
     font-size: 20px;
     font-weight: 500;
+    width: 75%;
+}
+
+.addressContainer {
+    width: 75%;
+}
+
+.state {
+    width: 30%;
+}
+
+.zip {
     width: 60%;
 }
 
@@ -51,6 +63,7 @@
     height: 24px;
     line-height: 24px;
     margin-left: 3px;
+    width: 10%;
 }
 
 .filler {
