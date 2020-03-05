@@ -99,6 +99,22 @@ const sendEmail = (email: string, locationName: string, user: any = null) => {
     return transporter.sendMail(mailOptions);
 }
 
+export const onDeleteSheet = functions.firestore.document("locations/{locationId}/schedules/{scheduleId}/sheets/{sheetId}")
+    .onDelete((snapshot, context) => {
+        const sheetRef = snapshot.ref;
+        return deleteSheet(sheetRef);
+    });
+
+const deleteSheet = (sheetRef: any) => {
+    const promises: Promise<any>[] = [];
+    sheetRef.collection("shifts").get().then((shifts: any) => {
+        shifts.forEach((shift: any) => {
+            promises.push(shift.ref.delete());
+        });
+    });
+    return Promise.all(promises);
+}
+
 export const deleteEmployeeShifts = functions.firestore.document("locations/{locationId}/employees/{employeeId}")
     .onDelete((snapshot, context) => {
         const location = snapshot.ref.parent.parent;
