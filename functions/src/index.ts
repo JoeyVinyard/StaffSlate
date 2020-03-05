@@ -99,20 +99,47 @@ const sendEmail = (email: string, locationName: string, user: any = null) => {
     return transporter.sendMail(mailOptions);
 }
 
+export const onDeleteSchedule = functions.firestore.document("locations/{locationId}/schedules/{scheduleId}")
+    .onDelete((snapshot, context) => {
+        const scheduleRef = snapshot.ref;
+        const promises: Promise<any>[] = [];
+        scheduleRef.collection("sheets").get().then((sheets: any) => {
+            sheets.forEach((sheet: any) => {
+                promises.push(deleteSheet(sheet.ref,true));
+            });
+        }).catch((err: any) => {
+            return err;
+        });
+        return Promise.all(promises);
+    });
+
+
 export const onDeleteSheet = functions.firestore.document("locations/{locationId}/schedules/{scheduleId}/sheets/{sheetId}")
     .onDelete((snapshot, context) => {
         const sheetRef = snapshot.ref;
-        return deleteSheet(sheetRef);
+        return deleteSheet(sheetRef,false);
     });
 
-const deleteSheet = (sheetRef: any) => {
+const deleteSheet = (sheetRef: any, deleteDoc: boolean) => {
     const promises: Promise<any>[] = [];
     sheetRef.collection("shifts").get().then((shifts: any) => {
         shifts.forEach((shift: any) => {
             promises.push(shift.ref.delete());
         });
-    });
-    return Promise.all(promises);
+    }).catch((err: any) => {
+        return err;
+    })
+    if(deleteDoc) {
+        return new Promise((res,rej) => {
+            Promise.all(promises).then(() => {
+                res(sheetRef.delete());
+            }).catch((err: any) => {
+                rej(err);
+            });
+        });
+    } else {
+        return Promise.all(promises);
+    }
 }
 
 export const deleteEmployeeShifts = functions.firestore.document("locations/{locationId}/employees/{employeeId}")
