@@ -7,15 +7,16 @@
             <th class="time rightBorder" colspan="2" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
         </tr>
         <ng-container *ngFor="let shift of createdShifts; let i = index">
-            <tr class="vbuffer" [ngClass]="{'shift': i%2==0}">
-                <td class="rightBorder"></td>
+            <!-- Spacer -->
+            <tr class="vbuffer" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}">
+                <td class="rightBorder sticky" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}"></td>
                 <td class="hoursColumn rightBorder"></td>
                 <td class="hbuffer"></td>
                 <td class="rightBorder" colspan="2" *ngFor="let t of timeColumns"></td>
             </tr>
             <!-- Dummy shift rows to make table appear filled out -->
-            <tr *ngIf="!shift" [ngClass]="{'shift': i%2==0}">
-                <td class="name rightBorder"></td>
+            <tr *ngIf="!shift" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}">
+                <td class="name rightBorder sticky" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}"></td>
                 <td class="hoursColumn rightBorder"></td>
                 <td class="hbuffer"></td>
                 <ng-container *ngFor="let t of timeColumns">
@@ -23,8 +24,8 @@
                 </ng-container>
             </tr>
             <!-- Actual Shift data -->
-            <tr *ngIf="shift" [ngClass]="{'shift': i%2==0}">
-                <td class="name rightBorder" (mouseenter)="enter(shift)">
+            <tr *ngIf="shift" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}">
+                <td class="name rightBorder sticky" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}" (mouseenter)="enter(shift)">
                     <span class="name-text">
                         {{parseName(((locationService.getCurrentLocation() | async).getEmployees() | async).get(shift.empId))}}
                     </span>
@@ -45,8 +46,9 @@
                     <td class="rightBorder" [ngClass]="{'shaded': shouldShade(t, shift, false)}"></td>
                 </ng-container>
             </tr>
-            <tr class="vbuffer" [ngClass]="{'shift': i%2==0}">
-                <td class="rightBorder"></td>
+            <!-- Spacer -->
+            <tr class="vbuffer" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}">
+                <td class="rightBorder sticky" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}"></td>
                 <td class="hoursColumn rightBorder"></td>
                 <td class="hbuffer"></td>
                 <td class="rightBorder" colspan="2" *ngFor="let t of timeColumns"></td>
