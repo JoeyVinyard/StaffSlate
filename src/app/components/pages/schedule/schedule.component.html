@@ -27,7 +27,7 @@
             <tr *ngIf="shift" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}">
                 <td class="name rightBorder sticky" [ngClass]="{'offshift': i%2==0, 'onshift': i%2==1}" (mouseenter)="enter(shift)">
                     <span class="name-text">
-                        {{parseName(((locationService.getCurrentLocation() | async).getEmployees() | async).get(shift.empId))}}
+                        {{(parseName(shift.empId) | async)}}
                     </span>
                     <button *ngIf="hovered == shift && !(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" class="dropdown-arrow-emp-container">
                         <mat-icon class="dropdown-arrow-emp" >arrow_drop_down</mat-icon>

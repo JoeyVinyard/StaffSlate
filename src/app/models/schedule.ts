@@ -84,6 +84,10 @@ export class Schedule {
         });
     }
 
+    public hasSheets(): boolean {
+        return !!this.sheets.length;
+    }
+
     constructor(scheduleData: Schedule, public document: AngularFirestoreDocument<Schedule>) {
         this.label = scheduleData.label;
         this.sheets = scheduleData.sheets;

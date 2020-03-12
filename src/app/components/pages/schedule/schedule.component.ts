@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Schedule, PrintSchedule } from 'src/app/models/schedule';
 import { TimeService } from 'src/app/services/time.service';
 import { Sheet } from 'src/app/models/sheet';
@@ -12,13 +12,13 @@ import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.com
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DeleteSheetConfirmationComponent } from './delete-sheet-confirmation/delete-sheet-confirmation.component';
 import { LocationService } from 'src/app/services/location.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { DocumentReference } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Location } from 'src/app/models/location';
 import { HttpClient } from '@angular/common/http';
 import { SheetPromptDialogComponent } from './sheet-prompt-dialog/sheet-prompt-dialog.component';
-import { first } from 'rxjs/operators';
+import { first, switchMap, mergeMap, filter, last, map, takeLast, pluck, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-schedule',
@@ -31,11 +31,14 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   public mobile: boolean = false;
   private subscriptions: Subscription[] = [];
   public currentSchedule: Schedule;
+  public curLocation: Location = null;
   public curSheet: Sheet = null;
   private shifts: Shift[];
   public createdShifts: Shift[];
   public remainingSpace: number = 0;
   public timeColumns: Time[] = [];
+  private routeParams: Params;
+  private employees: Map<string, Employee> = null;
   private sheetSub: Subscription;
   private shiftSub: Subscription;
   
@@ -257,8 +260,11 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     });
   }
   
-  public parseName(emp: Employee) {
-    return emp ? `${emp.firstName} ${emp.lastName.substring(0,1)}.` : "";
+  public parseName(emp: string): Observable<string> {
+    return this.curLocation.getEmployees().pipe(take(1), map((m) => {
+      const employee = m.get(emp);
+      return `${employee.firstName} ${employee.lastName.substring(0,1)}.`;
+    }));
   }
 
   public printSchedule() {
@@ -294,33 +300,39 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
 
   ngAfterViewInit() {
-    this.subscriptions.push(this.activatedRoute.paramMap.subscribe((map) => {
-      this.subscriptions.push(this.locationService.loadLocation(map.get("locationId")).subscribe((location) => {
-        if(location) {
-          this.subscriptions.push(location.loadScheduleData(map.get("scheduleId")).subscribe((schedule) => {
-            if(schedule.document.ref.id == map.get("scheduleId")) {
-              this.currentSchedule = schedule;
-              if(schedule.sheets.length) {
-                if(this.preventSheetChange) {
-                  this.preventSheetChange = false;
-                } else {
-                  this.displaySheet(schedule.sheets[0].key)
-                  this.cdf.detectChanges();
-                }
-              } else {
-                this.activatedRoute.data.pipe(first()).subscribe((data) => {
-                  if(!data.guest) {
-                    this.dialog.open(SheetPromptDialogComponent, {maxWidth: "50%"});
-                  }
-                });
-                this.curSheet = null;
-              }
-            } else {
-              this.curSheet = null;
-            }
-          }));
+    this.subscriptions.push(this.activatedRoute.paramMap.pipe(
+      switchMap((params) => {
+        this.routeParams = params;
+        return this.locationService.loadLocation(params.get("locationId"));
+      }),
+      filter((location) => !!(location)),
+      switchMap((location) => {
+        this.curLocation = location;
+        return location.loadScheduleData(this.routeParams.get("scheduleId"))
+      })
+    ).subscribe((schedule) => {
+      // Protect against last schedule in memory from being displayed
+      if(schedule.document.ref.id == this.routeParams.get("scheduleId")) {
+        this.currentSchedule = schedule;
+        if(this.currentSchedule.hasSheets()) {
+          // Don't change sheets if the schedule was updating from a firestore change
+          if(this.preventSheetChange) {
+            this.preventSheetChange = false;
+          } else {
+            this.displaySheet(this.currentSchedule.sheets[0].key);
+            this.cdf.detectChanges();
+          }
+        } else {
+          // If they aren't a guest, prompt them to make a sheet
+          if(!this.activatedRoute.snapshot.data.guest) {
+            this.dialog.open(SheetPromptDialogComponent, {maxWidth: "50%"});
+          }
+          this.curSheet = null;
         }
-      }));
+      } else {
+        // If the schedule doesn't match the route, don't display it
+        this.curSheet = null;
+      }
     }));
   }
 
