@@ -2,9 +2,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { LocationService } from 'src/app/services/location.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from 'src/app/models/location';
-import { Subscription } from 'rxjs';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
+import { switchMap, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-location',
@@ -16,7 +16,7 @@ export class LocationComponent implements OnDestroy {
   public editingLabel: boolean = false;
   public editingAddress: boolean = false;
   public curLocation: Location;
-  private sub: Subscription;
+  private alive: boolean = true;
 
   public label = new FormControl('', [Validators.required]);
 
@@ -30,17 +30,17 @@ export class LocationComponent implements OnDestroy {
   }
 
   constructor(private route: ActivatedRoute, public locationService: LocationService, private snackbar: MatSnackBar) {
-    route.params.subscribe((params) => {
-      const locationId = params.locationId;
-      this.sub = locationService.loadLocation(locationId).subscribe((location) => {
-        this.curLocation = location;
-        this.label.setValue(location.label);
-      });
+    route.params.pipe(
+      switchMap((params) => locationService.loadLocation(params.locationId)),
+      takeWhile(() => this.alive)
+    ).subscribe((location) => {
+      this.curLocation = location;
+      this.label.setValue(location.label);
     });
   }
 
   ngOnDestroy() {
-    this.sub && this.sub.unsubscribe();
+    this.alive = false;
   }
 
 }

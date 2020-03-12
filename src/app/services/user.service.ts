@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreDocument, DocumentSnapshot } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreDocument, DocumentSnapshot, DocumentChangeAction, Action } from '@angular/fire/firestore';
 import { User } from 'firebase';
 import { UserInfo } from '../models/user-info';
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subscription, combineLatest } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +49,14 @@ export class UserService {
 
   public loadUserInfoFromEmail(email: string): Observable<UserInfo> {
     return this.afs.collection("users").doc<UserInfo>(email).valueChanges();
+  }
+
+  public loadUserInfosFromEmails(emails: string[]): Observable<Action<DocumentSnapshot<UserInfo>>[]> {
+    let observables: Observable<Action<DocumentSnapshot<UserInfo>>>[] = [];
+    emails.forEach((email) => {
+      observables.push(this.afs.collection("users").doc<UserInfo>(email).snapshotChanges());
+    });
+    return combineLatest(observables);
   }
 
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {

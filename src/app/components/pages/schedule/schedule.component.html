@@ -55,8 +55,8 @@
             </tr>
         </ng-container>
         <ng-container>
-            <tr [ngStyle]="{'height':remainingSpace+'px'}">
-                <td class="rightBorder"></td>
+            <tr [ngStyle]="{'height':remainingSpace+'px'}" class="onshift">
+                <td class="rightBorder sticky onshift"></td>
                 <td class="hoursColumn rightBorder"></td>
                 <td class="hbuffer"></td>
                 <td class="rightBorder" colspan="2" *ngFor="let t of timeColumns"></td>

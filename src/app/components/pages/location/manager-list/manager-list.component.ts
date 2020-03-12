@@ -9,6 +9,7 @@ import { NewManagerDialogComponent } from './new-manager-dialog/new-manager-dial
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { DeleteManagerDialogComponent } from './delete-manager-dialog/delete-manager-dialog.component';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-manager-list',
@@ -80,19 +81,16 @@ export class ManagerListComponent implements OnDestroy {
     private dialog: MatDialog,
     private snackbar: MatSnackBar
   ) {
-    this.locationSub = locationService.getCurrentLocation().subscribe((location: Location) => {
-      let update = !(this.curLocation && JSON.stringify(this.curLocation.managers) == JSON.stringify(location.managers));
-      this.curLocation = location;
-      if(update) {
-        this.subscriptions.forEach(s => s.unsubscribe());
-        this.managers = [];
-        location.managers.map((manager:string) => {
-          this.userService.loadUserInfoFromEmail(manager).subscribe((mInfo) => {
-            this.managers.push(mInfo || {email: manager, firstName: null, lastName: null});
-          });
-        });
-      }
-    });
+    locationService.getCurrentLocation().pipe(
+      switchMap((location: Location) => {
+        this.curLocation = location;
+        return this.userService.loadUserInfosFromEmails(location.managers);
+      })
+    ).subscribe((managerInfos) => {
+      this.managers = managerInfos.map((info) => {
+        return info.payload.data() || {email: info.payload.id, firstName: "", lastName: ""}
+      });
+    })
   }
 
 }
