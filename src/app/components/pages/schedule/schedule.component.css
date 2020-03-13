@@ -119,6 +119,8 @@
 
 .label {
     width: 100px;
+    left: 0;
+    z-index: 10;
 }
 
 .name {
@@ -165,7 +167,7 @@ th {
     position: sticky;
     top:0;
     background-color: #fafafa;
-    z-index:10;
+    z-index:9;
 }
 
 td {
