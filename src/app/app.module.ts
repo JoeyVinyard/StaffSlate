@@ -65,6 +65,7 @@ import { LocationComponent } from './components/pages/location/location.componen
 import { ManagerListComponent } from './components/pages/location/manager-list/manager-list.component';
 import { NewManagerDialogComponent } from './components/pages/location/manager-list/new-manager-dialog/new-manager-dialog.component';
 import { DeleteManagerDialogComponent } from './components/pages/location/manager-list/delete-manager-dialog/delete-manager-dialog.component';
+import { CoverageDialogComponent } from './components/pages/schedule/coverage-dialog/coverage-dialog.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { DeleteManagerDialogComponent } from './components/pages/location/manage
     LocationComponent,
     ManagerListComponent,
     NewManagerDialogComponent,
-    DeleteManagerDialogComponent
+    DeleteManagerDialogComponent,
+    CoverageDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -137,7 +139,8 @@ import { DeleteManagerDialogComponent } from './components/pages/location/manage
     WelcomeDialogComponent,
     SheetPromptDialogComponent,
     NewManagerDialogComponent,
-    DeleteManagerDialogComponent
+    DeleteManagerDialogComponent,
+    CoverageDialogComponent
   ],
   providers: [
     AngularFireAuthGuard,

@@ -71,7 +71,8 @@ export class NewSheetDialogComponent implements AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<NewShiftDialogComponent>,
     public timeService: TimeService,
-    @Inject(MAT_DIALOG_DATA) public data: {sheet:Sheet}) {
+    @Inject(MAT_DIALOG_DATA) public data: {sheet:Sheet})
+  {
     if(data.sheet) {
       this.sheet.setValue(data.sheet.label);
       this.open.setValue(timeService.timeToString(data.sheet.openTime));

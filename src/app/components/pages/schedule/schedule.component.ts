@@ -19,6 +19,7 @@ import { Location } from 'src/app/models/location';
 import { HttpClient } from '@angular/common/http';
 import { SheetPromptDialogComponent } from './sheet-prompt-dialog/sheet-prompt-dialog.component';
 import { first, switchMap, mergeMap, filter, last, map, takeLast, pluck, take } from 'rxjs/operators';
+import { CoverageDialogComponent } from './coverage-dialog/coverage-dialog.component';
 
 @Component({
   selector: 'app-schedule',
@@ -49,6 +50,13 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   @ViewChild("container", {static: false}) containerEl: ElementRef<HTMLElement>;
   @ViewChildren("sheets", {}) sheetContainerEl: QueryList<ElementRef<HTMLElement>>;
   
+  public openDefineCoverageDialog(): void {
+    const dialogRef = this.dialog.open(CoverageDialogComponent, {
+      width: '500px',
+      data: this.curSheet
+    });
+  }
+
   public openNewSheetDeleteConfirmation(): void {
     const dialogRef = this.dialog.open(DeleteSheetConfirmationComponent, {
       width: '500px',
@@ -132,14 +140,10 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     });
   }
   
-  private convertTimeToNum(t: Time): number {
-    return t.hours*100 + t.minutes;
-  }
-  
   public shouldShade(time: Time, shift: Shift, left: boolean): boolean {
-    let convertedTime = this.convertTimeToNum(time);
-    let convertedStart = this.convertTimeToNum(shift.startTime);
-    let convertedEnd = this.convertTimeToNum(shift.endTime);
+    let convertedTime = this.timeService.timeToNum(time);
+    let convertedStart = this.timeService.timeToNum(shift.startTime);
+    let convertedEnd = this.timeService.timeToNum(shift.endTime);
     return this.isInShift(convertedTime, convertedStart, convertedEnd)
     && (!left || (left && convertedTime != convertedStart))
     && (left || (!left && convertedTime != convertedEnd));
@@ -148,33 +152,6 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   private isInShift(time: number, start: number, end: number) {
     return time >= start && time <= end;
-  }
-  
-  private generateTimeColumns(): Time[] {
-    let s = this.curSheet.openTime.hours + this.curSheet.openTime.minutes/60;
-    let e = this.curSheet.closeTime.hours + this.curSheet.closeTime.minutes/60;
-    let numColumns = Math.floor(e-s+1)*(60/this.curSheet.timeIncrement);
-    let times: Time[] = [];
-    let h = this.curSheet.openTime.hours;
-    let m = this.curSheet.openTime.minutes;
-    times.push(this.curSheet.openTime);
-    for(let i = 0; i < numColumns-1; i++) {
-      m+= this.curSheet.timeIncrement;
-      if(m % 60 == 0) {
-        m = 0;
-        h++;
-      }
-      let t = {
-        hours: h,
-        minutes: m
-      } as Time
-      times.push(t);
-    }
-    return times;
-  }
-  
-  public formatTime(time: Time): string {
-    return this.timeService.timeToString(time);
   }
   
   public enter(shift: Shift) {
@@ -200,7 +177,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
   
   public getHourSpan(shift: Shift): string {
-    return `${this.formatTime(shift.startTime)} - ${this.formatTime(shift.endTime)}`
+    return `${this.timeService.timeToString(shift.startTime)} - ${this.timeService.timeToString(shift.endTime)}`
   }
   
   private computeMobile() {
@@ -243,15 +220,15 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         return;
       }
       this.curSheet = sheet;
-      this.timeColumns = this.generateTimeColumns();
+      this.timeColumns = this.timeService.generateTimeColumns(this.curSheet.openTime, this.curSheet.closeTime, this.curSheet.timeIncrement);
       if(this.shiftSub) {
         this.shiftSub.unsubscribe();
       }
       this.shiftSub = this.curSheet.loadShifts().subscribe((shifts) => {
         this.shifts = shifts.sort((a, b) => {
-          let r = this.convertTimeToNum(a.startTime) - this.convertTimeToNum(b.startTime);
+          let r = this.timeService.timeToNum(a.startTime) - this.timeService.timeToNum(b.startTime);
           if(r == 0) {
-            return this.convertTimeToNum(a.endTime) - this.convertTimeToNum(b.endTime);
+            return this.timeService.timeToNum(a.endTime) - this.timeService.timeToNum(b.endTime);
           }
           return r;
         });

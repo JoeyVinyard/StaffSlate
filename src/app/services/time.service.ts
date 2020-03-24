@@ -11,6 +11,28 @@ export class TimeService {
   public timeTo24HrString(time: Time): string {
     return `${time.hours}:${time.minutes < 10 ? "0" + time.minutes : time.minutes}`
   }
+  public timeToNum(time: Time): number {
+    return time.hours*100 + time.minutes;
+  }
+  public generateTimeColumns(start: Time, end: Time, increment: number): Time[] {
+    let times: Time[] = []
+    let t = this.makeTime(start.hours, start.minutes);
+    while(this.timeToNum(t) <= this.timeToNum(end)) {
+      times.push(t);
+      if(t.minutes + increment == 60) {
+        t = this.makeTime(t.hours + 1, 0);
+      } else {
+        t = this.makeTime(t.hours, t.minutes + increment);
+      }
+    }
+    return times;
+  }
+  public makeTime(hours: number, minutes: number): Time {
+    return {
+      hours: hours,
+      minutes: minutes
+    }
+  }
   //hh:mm am/pm to object
   public stringToTime(time: string): Time {
     let timeArray = time.split(" ");

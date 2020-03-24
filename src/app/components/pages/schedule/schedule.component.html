@@ -4,7 +4,7 @@
             <th class="label rightBorder">{{curSheet.label}}</th>
             <th class="hoursColumn rightBorder"></th>
             <th class="hbuffer"></th>
-            <th class="time rightBorder" colspan="2" *ngFor="let t of timeColumns">{{formatTime(t)}}</th>
+            <th class="time rightBorder" colspan="2" *ngFor="let t of timeColumns">{{timeService.timeToString(t)}}</th>
         </tr>
         <ng-container *ngFor="let shift of createdShifts; let i = index">
             <!-- Spacer -->
@@ -86,13 +86,23 @@
         </div>
     </div>
     <div class="filler"></div>
-    <ng-container *ngIf="!mobile">
-        <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
-        <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="copyShareToClipboard()">Share</button>
-        <button *ngIf="!(activatedRoute.data | async).guest" mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="printSchedule()">Print</button>
+    <ng-container *ngIf="!mobile && !(activatedRoute.data | async).guest">
+        <button mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
+        <button mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="copyShareToClipboard()">Share</button>
+        <button mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="printSchedule()">Print</button>
+        <button mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="extrasMenu" [disabled]="!curSheet" class="action-menu-container">
+            <mat-icon class="action-menu">toc</mat-icon>
+        </button>
+        <mat-menu xPosition="before" #extrasMenu="matMenu">
+            <button mat-menu-item [matMenuTriggerFor]="coverageSubMenu" [disabled]="!curSheet" (click)="openNewShiftDialog()">Coverage</button>
+        </mat-menu>
+        <mat-menu xPosition="before" #coverageSubMenu="matMenu">
+            <button mat-menu-item [disabled]="!curSheet" (click)="openDefineCoverageDialog()">Define Coverage</button>
+            <button mat-menu-item [disabled]="!curSheet" (click)="copyShareToClipboard()">View Coverage</button>
+        </mat-menu>
     </ng-container>
-    <ng-container *ngIf="mobile">
-        <button *ngIf="!(activatedRoute.data | async).guest" mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" [disabled]="!curSheet" class="action-menu-container">
+    <ng-container *ngIf="mobile && !(activatedRoute.data | async).guest">
+        <button mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="menu" [disabled]="!curSheet" class="action-menu-container">
             <mat-icon class="action-menu">toc</mat-icon>
         </button>
         <mat-menu xPosition="before" #menu="matMenu">
