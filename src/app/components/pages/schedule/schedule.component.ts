@@ -52,7 +52,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   public openDefineCoverageDialog(): void {
     const dialogRef = this.dialog.open(CoverageDialogComponent, {
-      width: '500px',
+      width: '350px',
       data: this.curSheet
     });
   }

@@ -13,7 +13,7 @@ export class CoverageDialogComponent {
 
   times: Time[];
   sheet: Sheet;
-  blocks: number = 10;
+  blocks: number[] = [...Array(10).keys()];
   coverage: number[];
 
   constructor(

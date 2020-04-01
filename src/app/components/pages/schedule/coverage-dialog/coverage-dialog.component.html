@@ -1,9 +1,12 @@
 <h1 mat-dialog-title>Define Shift Coverage</h1>
 <div class="content" mat-dialog-content>
     <div class="container">
-        <div class="row">
-            <span class=""
-        </div>
+        <table class="coverageTable">
+            <tr *ngFor="let time of times">
+                <td class="time">{{timeService.timeToString(time,false)}}</td>
+                <td *ngFor="let block of blocks" class="block"></td>
+            </tr>
+        </table>
     </div>
 </div>
 <div mat-dialog-actions>

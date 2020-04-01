@@ -1,0 +1,31 @@
+.container {
+    height: 300px;
+    overflow: auto;
+}
+
+.coverageTable {
+    border-spacing: 3px;
+}
+
+.time {
+    height: 20px;
+    line-height: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    padding-right: 10px;
+    vertical-align: middle;
+}
+
+.block {
+    background-color: #cef;
+    height: 20px;
+    min-width: 20px;
+}
+
+.block:hover {
+    background-color: #ade;
+}
+
+.block:active {
+    background-color: #8be;
+}

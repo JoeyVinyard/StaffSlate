@@ -94,7 +94,7 @@
             <mat-icon class="action-menu">toc</mat-icon>
         </button>
         <mat-menu xPosition="before" #extrasMenu="matMenu">
-            <button mat-menu-item [matMenuTriggerFor]="coverageSubMenu" [disabled]="!curSheet" (click)="openNewShiftDialog()">Coverage</button>
+            <button mat-menu-item [matMenuTriggerFor]="coverageSubMenu" [disabled]="!curSheet">Coverage</button>
         </mat-menu>
         <mat-menu xPosition="before" #coverageSubMenu="matMenu">
             <button mat-menu-item [disabled]="!curSheet" (click)="openDefineCoverageDialog()">Define Coverage</button>
