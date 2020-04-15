@@ -1,10 +1,11 @@
 .container {
     height: 300px;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .coverageTable {
-    border-spacing: 3px;
+    border-spacing: 1px;
 }
 
 .time {
@@ -13,13 +14,18 @@
     font-size: 16px;
     font-weight: 500;
     padding-right: 10px;
+    margin-bottom: 2px;
     vertical-align: middle;
+}
+
+.blockContainer {
+    height: 22px;
 }
 
 .block {
     background-color: #cef;
+    margin-top: 1px;
     height: 20px;
-    min-width: 20px;
 }
 
 .block:hover {
@@ -28,4 +34,12 @@
 
 .block:active {
     background-color: #8be;
+}
+
+.active {
+    background-color: #8bf;
+}
+
+.active:hover {
+    background-color: #9cf;
 }

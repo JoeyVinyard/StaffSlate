@@ -1,10 +1,18 @@
 <h1 mat-dialog-title>Define Shift Coverage</h1>
 <div class="content" mat-dialog-content>
-    <div class="container">
+    <div #container class="container">
         <table class="coverageTable">
-            <tr *ngFor="let time of times">
-                <td class="time">{{timeService.timeToString(time,false)}}</td>
-                <td *ngFor="let block of blocks" class="block"></td>
+            <tr *ngFor="let t of times; let timeIndex = index">
+                <td #time class="time">{{timeService.timeToString(t,false)}}</td>
+                <td *ngFor="let block of blocks" [ngStyle]="{'min-width': blockWidth+'px'}" class="blockContainer">
+                    <div
+                        class="block"
+                        matTooltip="{{block}}"
+                        [matTooltipPosition]="'above'"
+                        [ngClass]="{'active': coverage[timeIndex] >= block }"
+                        (click)="select(timeIndex, block)"
+                    ></div>
+                </td>
             </tr>
         </table>
     </div>
