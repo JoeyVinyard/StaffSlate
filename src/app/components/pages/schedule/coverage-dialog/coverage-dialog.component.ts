@@ -24,6 +24,10 @@ export class CoverageDialogComponent implements AfterViewInit{
     this.dialogRef.close(this.coverage);
   }
 
+  cancel(): void {
+    this.dialogRef.close();
+  }
+
   defineBlockWidths() {
     let greatestWidthTime = this.timeCells
                               .map((tc: ElementRef<HTMLTableDataCellElement>) => tc.nativeElement.clientWidth)
