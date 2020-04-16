@@ -1,1 +1,36 @@
-<p>view-coverage-dialog works!</p>
+<h1 mat-dialog-title>Shift Coverage</h1>
+<div class="content" mat-dialog-content>
+    <div #container class="container">
+        <table class="coverageTable">
+            <tr *ngFor="let t of times; let timeIndex = index">
+                <td #time class="time">{{timeService.timeToString(t,false)}}</td>
+                <td *ngFor="let c of [].constructor(covered[timeIndex])" class="blockContainer">
+                    <div class="block filled no-select"></div>
+                </td>
+                <td *ngFor="let e of [].constructor(empty[timeIndex])" class="blockContainer">
+                    <div class="block empty no-select"></div>
+                </td>
+                <td *ngFor="let o of [].constructor(over[timeIndex])" class="blockContainer">
+                    <div class="block over no-select"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="key">
+        <div fxFlexOffset="5%" fxFlex="30%" fxLayoutAlign="space-around center" class="item">
+            <div class="block example filled no-select"></div>
+            <span fxFlex="grow" fxFlexOffset="5%" class="description">Covered</span>
+        </div>
+        <div fxFlex="30%" fxLayoutAlign="space-around center" class="item">
+            <div class="block example empty no-select"></div>
+            <span fxFlex="grow" fxFlexOffset="5%" class="description">Short</span>
+        </div>
+        <div fxFlex="30%" fxLayoutAlign="space-around center" class="item">
+            <div class="block example over no-select"></div>
+            <span fxFlex="grow" fxFlexOffset="5%" class="description">Over</span>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="secondary" (click)="close()">Close</button>
+</div>

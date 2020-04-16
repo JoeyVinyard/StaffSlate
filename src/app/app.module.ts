@@ -142,7 +142,8 @@ import { ViewCoverageDialogComponent } from './components/pages/schedule/view-co
     SheetPromptDialogComponent,
     NewManagerDialogComponent,
     DeleteManagerDialogComponent,
-    CoverageDialogComponent
+    CoverageDialogComponent,
+    ViewCoverageDialogComponent
   ],
   providers: [
     AngularFireAuthGuard,

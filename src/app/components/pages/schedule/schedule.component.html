@@ -98,7 +98,7 @@
         </mat-menu>
         <mat-menu xPosition="before" #coverageSubMenu="matMenu">
             <button mat-menu-item [disabled]="!curSheet" (click)="openDefineCoverageDialog()">Define Coverage</button>
-            <button mat-menu-item [disabled]="!curSheet" (click)="copyShareToClipboard()">View Coverage</button>
+            <button mat-menu-item [disabled]="!curSheet" (click)="openViewCoverageDialog()">View Coverage</button>
         </mat-menu>
     </ng-container>
     <ng-container *ngIf="mobile && !(activatedRoute.data | async).guest">

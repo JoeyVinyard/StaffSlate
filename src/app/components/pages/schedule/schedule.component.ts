@@ -20,6 +20,7 @@ import { HttpClient } from '@angular/common/http';
 import { SheetPromptDialogComponent } from './sheet-prompt-dialog/sheet-prompt-dialog.component';
 import { first, switchMap, mergeMap, filter, last, map, takeLast, pluck, take } from 'rxjs/operators';
 import { CoverageDialogComponent } from './coverage-dialog/coverage-dialog.component';
+import { ViewCoverageDialogComponent } from './view-coverage-dialog/view-coverage-dialog.component';
 
 @Component({
   selector: 'app-schedule',
@@ -64,6 +65,16 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         });
       }
     })
+  }
+
+  public openViewCoverageDialog(): void {
+    const dialogRef = this.dialog.open(ViewCoverageDialogComponent, {
+      width: '500px',
+      data: this.curSheet
+    });
+    // dialogRef.afterClosed().subscribe((coverage: number[]) => {
+      
+    // })
   }
 
   public openNewSheetDeleteConfirmation(): void {

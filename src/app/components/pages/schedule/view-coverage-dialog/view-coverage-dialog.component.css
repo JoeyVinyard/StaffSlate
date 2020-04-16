@@ -1,0 +1,62 @@
+.container {
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    height: 55vh;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.coverageTable {
+    border-spacing: 1px;
+}
+
+.time {
+    height: 20px;
+    line-height: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    padding-right: 10px;
+    margin-bottom: 2px;
+    vertical-align: middle;
+}
+
+.blockContainer {
+    height: 22px;
+    min-width: 40px;
+}
+
+.block {
+    border-radius: 1px;
+    font-size: 15px;
+    height: 20px;
+    line-height: 20px;
+    margin-top: 1px;
+}
+
+.filled {
+    border: 1px solid #3e8a30;
+    background-color: #5ceb42;
+}
+
+.empty {
+    border: 1px solid #9c2c2a;
+    background-color: #f5221d;
+}
+
+.over {
+    border: 1px solid #64288a;
+    background-color: #bf59ff;
+}
+
+.key {
+    margin-top: 0.5vh;
+}
+
+.example {
+    width: 40px;
+}
+
+.description {
+    line-height: 22px;
+    vertical-align: middle;
+}

@@ -58,7 +58,7 @@ export class CoverageDialogComponent implements AfterViewInit{
     @Inject(MAT_DIALOG_DATA) public data: Sheet
   ) {
     this.sheet = data;
-    this.times = timeService.generateTimeColumns(this.sheet.openTime, this.sheet.closeTime, this.sheet.timeIncrement);
+    this.times = timeService.generateTimeColumns(this.sheet.openTime, this.sheet.closeTime, this.sheet.timeIncrement, true);
     this.coverage = this.sheet.coverage || new Array(this.times.length).fill(0);
   }
 }

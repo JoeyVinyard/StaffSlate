@@ -5,6 +5,9 @@ import { Time } from '@angular/common';
   providedIn: 'root'
 })
 export class TimeService {
+  public getTimeIndex(time: Time, start: Time, increment: number): number {
+    return (time.hours - start.hours)*(60/increment)+(time.minutes-start.minutes)/increment;
+  }
   public timeToString(time: Time, space: boolean = true): string {
     return `${time.hours == 12 || time.hours == 0 ? "12" : time.hours%12}:${time.minutes < 10 ? "0" + time.minutes : time.minutes}${space ? " " : ""}${time.hours>=12 ? "PM" : "AM"}`;
   }
@@ -14,10 +17,10 @@ export class TimeService {
   public timeToNum(time: Time): number {
     return time.hours*100 + time.minutes;
   }
-  public generateTimeColumns(start: Time, end: Time, increment: number): Time[] {
+  public generateTimeColumns(start: Time, end: Time, increment: number, excludeEnd: boolean = false): Time[] {
     let times: Time[] = []
     let t = this.makeTime(start.hours, start.minutes);
-    while(this.timeToNum(t) <= this.timeToNum(end)) {
+    while(this.timeToNum(t) < this.timeToNum(end) || (!excludeEnd && this.timeToNum(t) <= this.timeToNum(end))) {
       times.push(t);
       if(t.minutes + increment == 60) {
         t = this.makeTime(t.hours + 1, 0);
