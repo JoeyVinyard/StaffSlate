@@ -164,7 +164,6 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     return this.isInShift(convertedTime, convertedStart, convertedEnd)
     && (!left || (left && convertedTime != convertedStart))
     && (left || (!left && convertedTime != convertedEnd));
-    
   }
   
   private isInShift(time: number, start: number, end: number) {

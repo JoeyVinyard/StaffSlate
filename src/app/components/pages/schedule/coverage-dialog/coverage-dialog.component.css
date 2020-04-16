@@ -1,4 +1,6 @@
 .container {
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
     height: 55vh;
     overflow-x: auto;
     overflow-y: auto;
@@ -23,6 +25,7 @@
 }
 
 .block {
+    border: 1px solid #206c80;
     background-color: #cef;
     border-radius: 2px;
     font-size: 15px;
