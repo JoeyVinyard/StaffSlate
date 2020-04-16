@@ -12,13 +12,13 @@ import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.com
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { DeleteSheetConfirmationComponent } from './delete-sheet-confirmation/delete-sheet-confirmation.component';
 import { LocationService } from 'src/app/services/location.service';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, Subject } from 'rxjs';
 import { DocumentReference } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Location } from 'src/app/models/location';
 import { HttpClient } from '@angular/common/http';
 import { SheetPromptDialogComponent } from './sheet-prompt-dialog/sheet-prompt-dialog.component';
-import { first, switchMap, mergeMap, filter, last, map, takeLast, pluck, take } from 'rxjs/operators';
+import { first, switchMap, mergeMap, filter, last, map, takeLast, pluck, take, takeUntil } from 'rxjs/operators';
 import { CoverageDialogComponent } from './coverage-dialog/coverage-dialog.component';
 import { ViewCoverageDialogComponent } from './view-coverage-dialog/view-coverage-dialog.component';
 
@@ -31,7 +31,6 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   private preventSheetChange: boolean = false;
   public mobile: boolean = false;
-  private subscriptions: Subscription[] = [];
   public currentSchedule: Schedule;
   public curLocation: Location = null;
   public curSheet: Sheet = null;
@@ -46,6 +45,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   public times: number[] = [];
   public hovered: Shift = null;
+  private alive: Subject<boolean> = new Subject();
   
   @ViewChild("schedule", {static: false}) scheduleEl: ElementRef<HTMLElement>;
   @ViewChild("container", {static: false}) containerEl: ElementRef<HTMLElement>;
@@ -53,7 +53,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   public openDefineCoverageDialog(): void {
     const dialogRef = this.dialog.open(CoverageDialogComponent, {
-      width: '350px',
+      width: '500px',
       data: this.curSheet
     });
     dialogRef.afterClosed().subscribe((coverage: number[]) => {
@@ -72,9 +72,6 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
       width: '500px',
       data: this.curSheet
     });
-    // dialogRef.afterClosed().subscribe((coverage: number[]) => {
-      
-    // })
   }
 
   public openNewSheetDeleteConfirmation(): void {
@@ -182,7 +179,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     let baseHeight = 22; //Header row
     let rowHeight = 34; //26px row height, 8 px buffer
     let dummyShifts = Math.floor(((containerHeight - baseHeight) - (numRows*rowHeight))/rowHeight);
-    this.createdShifts = Array.from(this.shifts);
+    this.createdShifts = Array.from(this.shifts || []);
     for(let i = 0; i < dummyShifts; i++){
       this.createdShifts.push(null);
     }
@@ -293,11 +290,13 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((s) => s.unsubscribe());
+    this.alive.next(true);
   }
 
   ngAfterViewInit() {
-    this.subscriptions.push(this.activatedRoute.paramMap.pipe(
+    this.makeDummyRows(this.containerEl.nativeElement.clientHeight, 0);
+    this.activatedRoute.paramMap.pipe(
+      takeUntil(this.alive),
       switchMap((params) => {
         this.routeParams = params;
         return this.locationService.loadLocation(params.get("locationId"));
@@ -330,7 +329,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         // If the schedule doesn't match the route, don't display it
         this.curSheet = null;
       }
-    }));
+    });
   }
 
   constructor(
