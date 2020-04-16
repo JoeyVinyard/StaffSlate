@@ -6,12 +6,10 @@
                 <td #time class="time">{{timeService.timeToString(t,false)}}</td>
                 <td *ngFor="let block of blocks" [ngStyle]="{'min-width': blockWidth+'px'}" class="blockContainer">
                     <div
-                        class="block"
-                        matTooltip="{{block}}"
-                        [matTooltipPosition]="'above'"
+                        class="block no-select"
                         [ngClass]="{'active': coverage[timeIndex] >= block }"
                         (click)="select(timeIndex, block)"
-                    ></div>
+                    >{{coverage[timeIndex]==block ? block : ''}}</div>
                 </td>
             </tr>
         </table>

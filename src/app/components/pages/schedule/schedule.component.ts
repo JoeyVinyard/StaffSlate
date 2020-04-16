@@ -55,6 +55,15 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
       width: '350px',
       data: this.curSheet
     });
+    dialogRef.afterClosed().subscribe((coverage: number[]) => {
+      if(coverage) {
+        this.curSheet.document.update({coverage: coverage}).then(() => {
+          this.snackbar.open("Coverage successfully updated!", "Dismiss", {duration: 2000});
+        }).catch((err) => {
+          console.error(err);
+        });
+      }
+    })
   }
 
   public openNewSheetDeleteConfirmation(): void {
@@ -84,7 +93,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         shift: shift
       }
     });
-    this.subscriptions.push(dialogRef.afterClosed().subscribe((newShift: Shift) => {
+    dialogRef.afterClosed().subscribe((newShift: Shift) => {
       if(newShift) {
         if(shift) {
           shift.document.update(newShift);
@@ -92,7 +101,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           this.curSheet.document.collection("shifts").add(newShift);
         }
       }
-    }));
+    });
   }
   
   public openNewSheetDialog(edit: boolean = false): void {
@@ -102,7 +111,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         sheet: edit ? this.curSheet : null
       }
     });
-    this.subscriptions.push(dialogRef.afterClosed().subscribe((newSheet: Sheet) => {
+    dialogRef.afterClosed().subscribe((newSheet: Sheet) => {
       if(newSheet) {
         if(edit) {
           this.curSheet.document.update(newSheet);
@@ -122,7 +131,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           })
         }
       }
-    }));
+    });
   }
   
   public deleteShift(shift: Shift) {

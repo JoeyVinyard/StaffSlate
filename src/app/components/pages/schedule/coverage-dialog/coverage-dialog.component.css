@@ -1,6 +1,6 @@
 .container {
     height: 300px;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
 }
 
@@ -24,8 +24,12 @@
 
 .block {
     background-color: #cef;
-    margin-top: 1px;
+    border-radius: 2px;
+    font-size: 15px;
     height: 20px;
+    line-height: 20px;
+    margin-top: 1px;
+    text-align: center;
 }
 
 .block:hover {

@@ -8,6 +8,7 @@ export class Sheet {
     timeIncrement: number;
     openTime: Time;
     closeTime: Time;
+    coverage: number[]
     private shifts: ReplaySubject<Shift[]> = new ReplaySubject(1);
     private cachedShifts: Shift[];
 
@@ -28,6 +29,7 @@ export class Sheet {
         this.timeIncrement = sheetData.timeIncrement;
         this.openTime = sheetData.openTime;
         this.closeTime = sheetData.closeTime;
+        this.coverage = sheetData.coverage || [];
     }
 }
 
