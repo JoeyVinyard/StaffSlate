@@ -295,7 +295,6 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   ngAfterViewInit() {
     this.makeDummyRows(this.containerEl.nativeElement.clientHeight, 0);
     this.activatedRoute.paramMap.pipe(
-      takeUntil(this.alive),
       switchMap((params) => {
         this.routeParams = params;
         return this.locationService.loadLocation(params.get("locationId"));
@@ -304,7 +303,8 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
       switchMap((location) => {
         this.curLocation = location;
         return location.loadScheduleData(this.routeParams.get("scheduleId"))
-      })
+      }),
+      takeUntil(this.alive)
     ).subscribe((schedule) => {
       // Protect against last schedule in memory from being displayed
       if(schedule.document.ref.id == this.routeParams.get("scheduleId")) {
@@ -315,6 +315,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
             this.preventSheetChange = false;
           } else {
             this.displaySheet(this.currentSchedule.sheets[0].key);
+            console.log(schedule.sheets[0])
             this.cdf.detectChanges();
           }
         } else {
