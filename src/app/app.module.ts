@@ -30,6 +30,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs'; 
+
 // Config Files
 import { appRoutes } from "./routes";
 import { environment } from '../environments/environment';
@@ -122,6 +124,7 @@ import { ViewCoverageDialogComponent } from './components/pages/schedule/view-co
     MatSnackBarModule,
     MatAutocompleteModule,
     MatTooltipModule,
+    MatTabsModule,
     DragDropModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,

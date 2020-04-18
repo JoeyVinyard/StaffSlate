@@ -1,5 +1,8 @@
+.title {
+    margin-bottom: 0;
+}
+
 .container {
-    border-top: 1px solid gray;
     border-bottom: 1px solid gray;
     height: 55vh;
     overflow-x: auto;
@@ -17,6 +20,13 @@
     font-weight: 500;
     padding-right: 10px;
     margin-bottom: 2px;
+    vertical-align: middle;
+}
+
+.shiftTime {
+    height: 20px;
+    line-height: 20px;
+    font-size: 16px;
     vertical-align: middle;
 }
 

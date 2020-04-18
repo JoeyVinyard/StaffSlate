@@ -17,10 +17,12 @@ export class ViewCoverageDialogComponent implements OnDestroy {
   
   alive: Subject<boolean> = new Subject();
   times: Time[];
+  shiftTimes: Time[];
   sheet: Sheet;
   covered: number[];
   empty: number[];
   over: number[];
+  openShifts: {start: Time, end: Time}[]
 
   close(): void {
     this.dialogRef.close();
@@ -39,6 +41,32 @@ export class ViewCoverageDialogComponent implements OnDestroy {
     this.over = this.covered.map((c: number, i: number) => c > this.sheet.coverage[i] ? c - this.sheet.coverage[i] : 0);
     this.empty = this.covered.map((c: number, i: number) => c < this.sheet.coverage[i] ? this.sheet.coverage[i] - c : 0);
     this.covered = this.covered.map((c: number, i: number) => c > this.sheet.coverage[i] ? this.sheet.coverage[i] : c);
+    this.computeOpenShifts();
+  }
+
+  computeOpenShifts() {
+    this.openShifts = [];
+    let startIndex = 0;
+    let emptyCopy = this.empty.slice();
+    while(startIndex < emptyCopy.length-1) {
+      //If there is no spot open, continue on
+      if(!emptyCopy[startIndex]) {
+        startIndex++;
+      } else {
+        let index = startIndex;
+        //While there is a slot open, increment the index and decrement the slot
+        while(emptyCopy[index] && index < emptyCopy.length-1) {
+          emptyCopy[index]--;
+          index++;
+        }
+        this.openShifts.push({start: this.shiftTimes[startIndex], end: this.shiftTimes[index]});
+      }
+    }
+    console.log(this.openShifts);
+  }
+
+  parseShift(shift: {start: Time, end: Time}): string {
+    return `${this.timeService.timeToString(shift.start)} - ${this.timeService.timeToString(shift.end)}`
   }
 
   ngOnDestroy() {
@@ -53,6 +81,7 @@ export class ViewCoverageDialogComponent implements OnDestroy {
   ) {
     this.sheet = data;
     this.times = timeService.generateTimeColumns(this.sheet.openTime, this.sheet.closeTime, this.sheet.timeIncrement, true);
+    this.shiftTimes = timeService.generateTimeColumns(this.sheet.openTime, this.sheet.closeTime, this.sheet.timeIncrement, false);
     this.sheet.loadShifts().pipe(takeUntil(this.alive)).subscribe((shifts: Shift[]) => {
       this.computeCoverage(shifts);
     });
