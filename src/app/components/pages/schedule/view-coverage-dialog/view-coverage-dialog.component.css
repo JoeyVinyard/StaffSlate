@@ -4,9 +4,16 @@
 
 .container {
     border-bottom: 1px solid gray;
-    height: 55vh;
     overflow-x: auto;
     overflow-y: auto;
+}
+
+.tabs {
+    max-height: 65vh;
+}
+
+.flexContainer {
+    max-height: calc(65vh - 50px);
 }
 
 .coverageTable {
@@ -32,7 +39,6 @@
 
 .blockContainer {
     height: 22px;
-    min-width: 40px;
 }
 
 .block {

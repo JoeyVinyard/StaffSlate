@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, Inject, ChangeDetectorRef, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Sheet } from 'src/app/models/sheet';
 import { CoverageDialogComponent } from '../coverage-dialog/coverage-dialog.component';
@@ -13,9 +13,10 @@ import { Subject } from 'rxjs';
   templateUrl: './view-coverage-dialog.component.html',
   styleUrls: ['./view-coverage-dialog.component.css']
 })
-export class ViewCoverageDialogComponent implements OnDestroy {
+export class ViewCoverageDialogComponent implements OnDestroy, AfterViewInit {
   
   alive: Subject<boolean> = new Subject();
+  blockWidth: number = 10;
   times: Time[];
   shiftTimes: Time[];
   sheet: Sheet;
@@ -23,6 +24,8 @@ export class ViewCoverageDialogComponent implements OnDestroy {
   empty: number[];
   over: number[];
   openShifts: {start: Time, end: Time}[]
+
+  @ViewChild("container", {static: true}) containerEl: ElementRef<HTMLDivElement>;
 
   close(): void {
     this.dialogRef.close();
@@ -66,6 +69,13 @@ export class ViewCoverageDialogComponent implements OnDestroy {
 
   parseShift(shift: {start: Time, end: Time}): string {
     return `${this.timeService.timeToString(shift.start)} - ${this.timeService.timeToString(shift.end)}`
+  }
+
+  ngAfterViewInit() {
+    let longest = Math.max(...this.covered.map((v, i) => v+this.empty[i]+this.over[i]));
+    let containerWidth = this.containerEl.nativeElement.clientWidth;
+    this.blockWidth = ((containerWidth-90)/longest)-4//account for padding and time column
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy() {
