@@ -333,7 +333,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
 
   constructor(
     public locationService: LocationService,
-    private timeService: TimeService,
+    public timeService: TimeService,
     public activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,

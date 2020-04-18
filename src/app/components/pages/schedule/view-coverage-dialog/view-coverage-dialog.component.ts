@@ -74,7 +74,7 @@ export class ViewCoverageDialogComponent implements OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     let longest = Math.max(...this.covered.map((v, i) => v+this.empty[i]+this.over[i]));
     let containerWidth = this.containerEl.nativeElement.clientWidth;
-    this.blockWidth = ((containerWidth-90)/longest)-4//account for padding and time column
+    this.blockWidth = Math.max(15,((containerWidth-90)/longest)-4)//account for padding and time column
     this.cdr.detectChanges();
   }
 
