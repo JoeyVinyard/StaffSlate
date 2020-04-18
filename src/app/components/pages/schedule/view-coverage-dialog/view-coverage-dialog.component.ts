@@ -62,7 +62,6 @@ export class ViewCoverageDialogComponent implements OnDestroy {
         this.openShifts.push({start: this.shiftTimes[startIndex], end: this.shiftTimes[index]});
       }
     }
-    console.log(this.openShifts);
   }
 
   parseShift(shift: {start: Time, end: Time}): string {

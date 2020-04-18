@@ -315,7 +315,6 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
             this.preventSheetChange = false;
           } else {
             this.displaySheet(this.currentSchedule.sheets[0].key);
-            console.log(schedule.sheets[0])
             this.cdf.detectChanges();
           }
         } else {
