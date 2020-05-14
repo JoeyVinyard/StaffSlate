@@ -18,7 +18,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { Location } from 'src/app/models/location';
 import { HttpClient } from '@angular/common/http';
 import { SheetPromptDialogComponent } from './sheet-prompt-dialog/sheet-prompt-dialog.component';
-import { first, switchMap, mergeMap, filter, last, map, takeLast, pluck, take, takeUntil } from 'rxjs/operators';
+import { switchMap, filter, map, take, takeUntil } from 'rxjs/operators';
 import { CoverageDialogComponent } from './coverage-dialog/coverage-dialog.component';
 import { ViewCoverageDialogComponent } from './view-coverage-dialog/view-coverage-dialog.component';
 import { Coverage } from 'src/app/models/coverage';
