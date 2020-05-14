@@ -133,6 +133,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
             this.currentSchedule.document.update({
               sheets: this.currentSchedule.sheets
             });
+            this.snackbar.open("Sheet successfully updated.", "Dismiss", {duration: 3000});
           }
         } else {
           this.currentSchedule.document.collection("sheets").add(newSheet).then((ref: DocumentReference) => {
@@ -140,7 +141,8 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
             this.currentSchedule.document.update({
               sheets: this.currentSchedule.sheets
             });
-          })
+            this.snackbar.open("Sheet successfully added.", "Dismiss", {duration: 3000});
+          });
         }
       }
     });

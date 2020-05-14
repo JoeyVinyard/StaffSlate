@@ -78,6 +78,7 @@ export class NewSheetDialogComponent implements AfterViewInit {
       this.open.setValue(timeService.timeToString(data.sheet.openTime));
       this.close.setValue(timeService.timeToString(data.sheet.closeTime));
       this.timeIncrement.setValue(data.sheet.timeIncrement);
+      this.timeIncrement.disable();
     }
   }
 
