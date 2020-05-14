@@ -7,13 +7,13 @@
                     <table class="coverageTable">
                         <tr *ngFor="let t of times; let timeIndex = index">
                             <td #time class="time">{{timeService.timeToString(t,false)}}</td>
-                            <td *ngFor="let c of [].constructor(covered[timeIndex])" class="blockContainer">
+                            <td *ngFor="let c of [].constructor(coverage.covered[timeIndex])" class="blockContainer">
                                 <div [ngStyle]="{'min-width': blockWidth+'px'}" class="block filled no-select"></div>
                             </td>
-                            <td *ngFor="let e of [].constructor(empty[timeIndex])" class="blockContainer">
+                            <td *ngFor="let e of [].constructor(coverage.empty[timeIndex])" class="blockContainer">
                                 <div [ngStyle]="{'min-width': blockWidth+'px'}" class="block empty no-select"></div>
                             </td>
-                            <td *ngFor="let o of [].constructor(over[timeIndex])" class="blockContainer">
+                            <td *ngFor="let o of [].constructor(coverage.over[timeIndex])" class="blockContainer">
                                 <div [ngStyle]="{'min-width': blockWidth+'px'}" class="block over no-select"></div>
                             </td>
                         </tr>

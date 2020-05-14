@@ -21,6 +21,7 @@ import { SheetPromptDialogComponent } from './sheet-prompt-dialog/sheet-prompt-d
 import { first, switchMap, mergeMap, filter, last, map, takeLast, pluck, take, takeUntil } from 'rxjs/operators';
 import { CoverageDialogComponent } from './coverage-dialog/coverage-dialog.component';
 import { ViewCoverageDialogComponent } from './view-coverage-dialog/view-coverage-dialog.component';
+import { Coverage } from 'src/app/models/coverage';
 
 @Component({
   selector: 'app-schedule',
@@ -42,6 +43,9 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   private employees: Map<string, Employee> = null;
   private sheetSub: Subscription;
   private shiftSub: Subscription;
+
+  public coverage: Coverage;
+  public openShifts: {start: Time, end: Time}[];
   
   public times: number[] = [];
   public hovered: Shift = null;
@@ -70,7 +74,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   public openViewCoverageDialog(): void {
     const dialogRef = this.dialog.open(ViewCoverageDialogComponent, {
       width: '500px',
-      data: this.curSheet
+      data: {sheet: this.curSheet, coverage: this.coverage, openShifts: this.openShifts}
     });
   }
 
@@ -241,6 +245,8 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         this.shiftSub.unsubscribe();
       }
       this.shiftSub = this.curSheet.loadShifts().subscribe((shifts) => {
+        this.coverage = this.timeService.computeCoverage(this.curSheet, shifts);
+        this.openShifts = this.timeService.computeOpenShifts(this.coverage, this.timeColumns);
         this.shifts = shifts.sort((a, b) => {
           let r = this.timeService.timeToNum(a.startTime) - this.timeService.timeToNum(b.startTime);
           if(r == 0) {

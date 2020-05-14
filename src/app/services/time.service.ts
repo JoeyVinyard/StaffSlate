@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Time } from '@angular/common';
+import { Coverage } from '../models/coverage';
+import { Sheet } from '../models/sheet';
+import { Shift } from '../models/shift';
 
 @Injectable({
   providedIn: 'root'
@@ -55,5 +58,42 @@ export class TimeService {
   }
   public blankTime(): Time {
     return {hours: 0, minutes: 0} as Time;
+  }
+  public computeCoverage(sheet: Sheet, shifts: Shift[]): Coverage {
+    let coverage = {covered: null, empty: null, over: null} as Coverage;
+    coverage.covered = new Array(sheet.coverage.length).fill(0);
+    coverage.empty = new Array(sheet.coverage.length).fill(0);
+    coverage.over = new Array(sheet.coverage.length).fill(0);
+    shifts.forEach((shift: Shift) => {
+      this.generateTimeColumns(shift.startTime, shift.endTime, sheet.timeIncrement, true).forEach((time: Time) => {
+        let timeIndex = this.getTimeIndex(time, sheet.openTime, sheet.timeIncrement);
+        coverage.covered[timeIndex]++;
+      });
+    });
+    coverage.over = coverage.covered.map((c: number, i: number) => c > sheet.coverage[i] ? c - sheet.coverage[i] : 0);
+    coverage.empty = coverage.covered.map((c: number, i: number) => c < sheet.coverage[i] ? sheet.coverage[i] - c : 0);
+    coverage.covered = coverage.covered.map((c: number, i: number) => c > sheet.coverage[i] ? sheet.coverage[i] : c);
+    return coverage;
+    // this.computeOpenShifts();
+  }
+  computeOpenShifts(coverage: Coverage, shiftTimes: Time[]): {start: Time, end: Time}[] {
+    let openShifts = [];
+    let startIndex = 0;
+    let emptyCopy = coverage.empty.slice();
+    while(startIndex < emptyCopy.length-1) {
+      //If there is no spot open, continue on
+      if(!emptyCopy[startIndex]) {
+        startIndex++;
+      } else {
+        let index = startIndex;
+        //While there is a slot open, increment the index and decrement the slot
+        while(emptyCopy[index] && index < emptyCopy.length-1) {
+          emptyCopy[index]--;
+          index++;
+        }
+        openShifts.push({start: shiftTimes[startIndex], end: shiftTimes[index]});
+      }
+    }
+    return openShifts;
   }
 }

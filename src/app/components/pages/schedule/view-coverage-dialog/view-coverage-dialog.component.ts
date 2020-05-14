@@ -7,6 +7,7 @@ import { Time } from '@angular/common';
 import { Shift } from 'src/app/models/shift';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Coverage } from 'src/app/models/coverage';
 
 @Component({
   selector: 'app-view-coverage-dialog',
@@ -20,9 +21,7 @@ export class ViewCoverageDialogComponent implements OnDestroy, AfterViewInit {
   times: Time[];
   shiftTimes: Time[];
   sheet: Sheet;
-  covered: number[];
-  empty: number[];
-  over: number[];
+  coverage: Coverage;
   openShifts: {start: Time, end: Time}[]
 
   @ViewChild("container", {static: true}) containerEl: ElementRef<HTMLDivElement>;
@@ -31,48 +30,48 @@ export class ViewCoverageDialogComponent implements OnDestroy, AfterViewInit {
     this.dialogRef.close();
   }
 
-  computeCoverage(shifts: Shift[]) {
-    this.covered = new Array(this.sheet.coverage.length).fill(0);
-    this.empty = new Array(this.sheet.coverage.length).fill(0);
-    this.over = new Array(this.sheet.coverage.length).fill(0);
-    shifts.forEach((shift: Shift) => {
-      this.timeService.generateTimeColumns(shift.startTime, shift.endTime, this.sheet.timeIncrement, true).forEach((time: Time) => {
-        let timeIndex = this.timeService.getTimeIndex(time, this.sheet.openTime, this.sheet.timeIncrement);
-        this.covered[timeIndex]++;
-      });
-    });
-    this.over = this.covered.map((c: number, i: number) => c > this.sheet.coverage[i] ? c - this.sheet.coverage[i] : 0);
-    this.empty = this.covered.map((c: number, i: number) => c < this.sheet.coverage[i] ? this.sheet.coverage[i] - c : 0);
-    this.covered = this.covered.map((c: number, i: number) => c > this.sheet.coverage[i] ? this.sheet.coverage[i] : c);
-    this.computeOpenShifts();
-  }
+  // computeCoverage(shifts: Shift[]) {
+  //   this.covered = new Array(this.sheet.coverage.length).fill(0);
+  //   this.empty = new Array(this.sheet.coverage.length).fill(0);
+  //   this.over = new Array(this.sheet.coverage.length).fill(0);
+  //   shifts.forEach((shift: Shift) => {
+  //     this.timeService.generateTimeColumns(shift.startTime, shift.endTime, this.sheet.timeIncrement, true).forEach((time: Time) => {
+  //       let timeIndex = this.timeService.getTimeIndex(time, this.sheet.openTime, this.sheet.timeIncrement);
+  //       this.covered[timeIndex]++;
+  //     });
+  //   });
+  //   this.over = this.covered.map((c: number, i: number) => c > this.sheet.coverage[i] ? c - this.sheet.coverage[i] : 0);
+  //   this.empty = this.covered.map((c: number, i: number) => c < this.sheet.coverage[i] ? this.sheet.coverage[i] - c : 0);
+  //   this.covered = this.covered.map((c: number, i: number) => c > this.sheet.coverage[i] ? this.sheet.coverage[i] : c);
+  //   this.computeOpenShifts();
+  // }
 
-  computeOpenShifts() {
-    this.openShifts = [];
-    let startIndex = 0;
-    let emptyCopy = this.empty.slice();
-    while(startIndex < emptyCopy.length-1) {
-      //If there is no spot open, continue on
-      if(!emptyCopy[startIndex]) {
-        startIndex++;
-      } else {
-        let index = startIndex;
-        //While there is a slot open, increment the index and decrement the slot
-        while(emptyCopy[index] && index < emptyCopy.length-1) {
-          emptyCopy[index]--;
-          index++;
-        }
-        this.openShifts.push({start: this.shiftTimes[startIndex], end: this.shiftTimes[index]});
-      }
-    }
-  }
+  // computeOpenShifts() {
+  //   this.openShifts = [];
+  //   let startIndex = 0;
+  //   let emptyCopy = this.empty.slice();
+  //   while(startIndex < emptyCopy.length-1) {
+  //     //If there is no spot open, continue on
+  //     if(!emptyCopy[startIndex]) {
+  //       startIndex++;
+  //     } else {
+  //       let index = startIndex;
+  //       //While there is a slot open, increment the index and decrement the slot
+  //       while(emptyCopy[index] && index < emptyCopy.length-1) {
+  //         emptyCopy[index]--;
+  //         index++;
+  //       }
+  //       this.openShifts.push({start: this.shiftTimes[startIndex], end: this.shiftTimes[index]});
+  //     }
+  //   }
+  // }
 
   parseShift(shift: {start: Time, end: Time}): string {
     return `${this.timeService.timeToString(shift.start)} - ${this.timeService.timeToString(shift.end)}`
   }
 
   ngAfterViewInit() {
-    let longest = Math.max(...this.covered.map((v, i) => v+this.empty[i]+this.over[i]));
+    let longest = Math.max(...this.coverage.covered.map((v, i) => v+this.coverage.empty[i]+this.coverage.over[i]));
     let containerWidth = this.containerEl.nativeElement.clientWidth;
     this.blockWidth = Math.max(15,((containerWidth-90)/longest)-4)//account for padding and time column
     this.cdr.detectChanges();
@@ -86,13 +85,12 @@ export class ViewCoverageDialogComponent implements OnDestroy, AfterViewInit {
     public dialogRef: MatDialogRef<CoverageDialogComponent>,
     public timeService: TimeService,
     public cdr: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: Sheet
+    @Inject(MAT_DIALOG_DATA) public data : {sheet: Sheet, coverage: Coverage, openShifts: {start: Time, end: Time}[]}
   ) {
-    this.sheet = data;
+    this.sheet = data.sheet;
+    this.coverage = data.coverage;
+    this.openShifts = data.openShifts;
     this.times = timeService.generateTimeColumns(this.sheet.openTime, this.sheet.closeTime, this.sheet.timeIncrement, true);
     this.shiftTimes = timeService.generateTimeColumns(this.sheet.openTime, this.sheet.closeTime, this.sheet.timeIncrement, false);
-    this.sheet.loadShifts().pipe(takeUntil(this.alive)).subscribe((shifts: Shift[]) => {
-      this.computeCoverage(shifts);
-    });
   }
 }
