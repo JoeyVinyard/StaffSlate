@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
   templateUrl: './delete-sheet-confirmation.component.html',
   styleUrls: ['./delete-sheet-confirmation.component.css']
 })
-export class DeleteSheetConfirmationComponent implements OnInit {
+export class DeleteSheetConfirmationComponent {
 
   submit(): void {
     this.dialogRef.close(true);
@@ -17,8 +17,4 @@ export class DeleteSheetConfirmationComponent implements OnInit {
   }
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: string, public dialogRef: MatDialogRef<DeleteSheetConfirmationComponent>) { }
-
-  ngOnInit() {
-  }
-
 }

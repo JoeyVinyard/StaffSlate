@@ -6,6 +6,7 @@ import { NewEmployeeDialogComponent } from './new-employee-dialog/new-employee-d
 import { Location } from 'src/app/models/location';
 import { UserService } from 'src/app/services/user.service';
 import { Subscription } from 'rxjs';
+import { DeleteEmployeeConfirmationComponent } from './delete-employee-confirmation/delete-employee-confirmation.component';
 
 @Component({
   selector: 'app-employees',
@@ -45,10 +46,18 @@ export class EmployeesComponent implements OnDestroy, OnInit {
     });
   }
 
-  public delete(id: string): void { 
-    this.loadedLocation.deleteEmployee(id)
-    .then(() => this.snackbar.open("Employee succesfully deleted.", "Dismiss", {duration: 5000}))
-    .catch(() => this.snackbar.open("Error deleting employee, please try again later.", "Dismiss", {duration: 5000}))
+  public delete(employee: [string, Employee]): void {
+    const dialogRef = this.dialog.open(DeleteEmployeeConfirmationComponent, {
+      width: '300px',
+      data: employee[1]
+    });
+    dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if(confirm) {
+        this.loadedLocation.deleteEmployee(employee[0])
+        .then(() => this.snackbar.open("Employee succesfully deleted.", "Dismiss", {duration: 5000}))
+        .catch(() => this.snackbar.open("Error deleting employee, please try again later.", "Dismiss", {duration: 5000}))
+      }
+    });
   }
 
   private parseEmployees(employees: Map<string, Employee>): void {

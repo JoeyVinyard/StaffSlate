@@ -69,6 +69,7 @@ import { NewManagerDialogComponent } from './components/pages/location/manager-l
 import { DeleteManagerDialogComponent } from './components/pages/location/manager-list/delete-manager-dialog/delete-manager-dialog.component';
 import { CoverageDialogComponent } from './components/pages/schedule/coverage-dialog/coverage-dialog.component';
 import { ViewCoverageDialogComponent } from './components/pages/schedule/view-coverage-dialog/view-coverage-dialog.component';
+import { DeleteEmployeeConfirmationComponent } from './components/pages/employees/delete-employee-confirmation/delete-employee-confirmation.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { ViewCoverageDialogComponent } from './components/pages/schedule/view-co
     NewManagerDialogComponent,
     DeleteManagerDialogComponent,
     CoverageDialogComponent,
-    ViewCoverageDialogComponent
+    ViewCoverageDialogComponent,
+    DeleteEmployeeConfirmationComponent
   ],
   imports: [
     BrowserModule,
@@ -146,7 +148,8 @@ import { ViewCoverageDialogComponent } from './components/pages/schedule/view-co
     NewManagerDialogComponent,
     DeleteManagerDialogComponent,
     CoverageDialogComponent,
-    ViewCoverageDialogComponent
+    ViewCoverageDialogComponent,
+    DeleteEmployeeConfirmationComponent
   ],
   providers: [
     AngularFireAuthGuard,
