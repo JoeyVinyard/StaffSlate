@@ -14,5 +14,5 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="primary" [disabled]="firstName.invalid || lastName.invalid || email.invalid" (click)="submit()">Add Employee</button>
+  <button mat-raised-button color="primary" [disabled]="firstName.invalid || lastName.invalid || email.invalid" (click)="submit()">{{data.employee ? "Save Changes" : "Add Employee"}}</button>
 </div>

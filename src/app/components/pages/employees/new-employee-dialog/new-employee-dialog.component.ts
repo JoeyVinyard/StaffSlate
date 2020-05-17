@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Employee } from 'src/app/models/employee';
 import { Validators, FormControl } from '@angular/forms';
 
@@ -48,6 +48,16 @@ export class NewEmployeeDialogComponent {
     } as Employee);
   }
 
-  constructor(public dialogRef: MatDialogRef<NewEmployeeDialogComponent>) { }
+  constructor(
+    public dialogRef: MatDialogRef<NewEmployeeDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {employee: Employee}
+  ) {
+    if(data.employee) {
+      this.email.setValue(data.employee.email);
+      this.firstName.setValue(data.employee.firstName);
+      this.lastName.setValue(data.employee.lastName);
+      this.email.setValue(data.employee.email);
+    }
+  }
 
 }

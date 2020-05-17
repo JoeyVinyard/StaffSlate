@@ -30,10 +30,10 @@ export class Location {
     private cachedSchedules: Map<string, Schedule> = new Map<string, Schedule>();
 
     public loadEmployees(): void {
-        this.document.collection<Employee>("employees").valueChanges().subscribe((employees) => {
+        this.document.collection<Employee>("employees").snapshotChanges().subscribe((employeeSnapshots) => {
             let m = new Map<string, Employee>();
-            employees.forEach((emp) => {
-                m.set(emp.id, emp);
+            employeeSnapshots.forEach((emp) => {
+                m.set(emp.payload.doc.id, emp.payload.doc.data());
             });
             this.employees.next(m);
         })
@@ -43,26 +43,16 @@ export class Location {
         return this.employees;
     }
     
-    public addEmployee(employee: Employee): Promise<void> {
-        return new Promise((res, rej) => {
-            this.document.collection("employees").add(employee).then((ref: DocumentReference) => {
-                this.document.collection("employees").doc(ref.id).update({ id: ref.id }).then(() => {
-                    res();
-                }).catch((err) => {
-                    rej(err);
-                });
-            });
-        });
+    public updateEmployee(employeeId: string, employeeData: Employee): Promise<void> {
+        return this.document.collection("employees").doc(employeeId).update(employeeData);
+    }
+
+    public addEmployee(employee: Employee): Promise<DocumentReference> {
+        return this.document.collection("employees").add(employee);
     }
 
     public deleteEmployee(employeeId: string): Promise<void> {
-        return new Promise((res, rej) => {
-            this.document.collection("employees").doc(employeeId).delete().then(() => {
-                res();
-            }).catch((err) => {
-                rej(err);
-            });
-        });
+        return this.document.collection("employees").doc(employeeId).delete();
     }
 
     public getSchedules(): Observable<Map<string, Schedule>> {

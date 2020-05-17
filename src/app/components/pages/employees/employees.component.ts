@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnDestroy, Input, OnInit } from '@angular/core';
 import {  Employee } from 'src/app/models/employee';
-import { MatTableDataSource, MatDialog, MatSnackBar, MatSelect, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatDialog, MatSnackBar, MatPaginator } from '@angular/material';
 import { LocationService } from 'src/app/services/location.service';
 import { NewEmployeeDialogComponent } from './new-employee-dialog/new-employee-dialog.component';
 import { Location } from 'src/app/models/location';
@@ -17,56 +17,42 @@ export class EmployeesComponent implements OnDestroy, OnInit {
   @Input() inline: boolean = false;
 
   subscriptions: Subscription[] = [];
-  dataSource = new MatTableDataSource<Employee>();
+  dataSource = new MatTableDataSource<[string, Employee]>();
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'action'];
   loadedLocation: Location;
   locations: [string, Location][];
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-  public openNewEmployeeDialog(): void {
+  public openNewEmployeeDialog(employee?: [string, Employee]): void {
     const dialogRef = this.dialog.open(NewEmployeeDialogComponent, {
       width: '300px',
+      data: employee ? {employee: employee[1]} : {}
     });
-    this.subscriptions.push(dialogRef.afterClosed().subscribe((employee: Employee) => {
-      if(employee) {
-        this.loadedLocation.addEmployee(employee)
-        .then(() => this.addEmployeeResult(true))
-        .catch(() => this.addEmployeeResult(false));
+    dialogRef.afterClosed().subscribe((newEmployee: Employee) => {
+      if(newEmployee) {
+        if(employee) {
+          console.log(employee)
+          this.loadedLocation.updateEmployee(employee[0], newEmployee)
+          .then(() => this.snackbar.open("Employee succesfully updated.", "Dismiss", {duration: 3000}))
+          .catch(() => this.snackbar.open("Failed to update Employee. Please try again later.", "Dismiss", {duration: 3000}));
+        } else {
+          this.loadedLocation.addEmployee(newEmployee)
+          .then(() => this.snackbar.open("Employee succesfully added.", "Dismiss", {duration: 3000}))
+          .catch(() => this.snackbar.open("Failed to add Employee. Please try again later.", "Dismiss", {duration: 3000}));
+        }
       }
-    }));
+    });
   }
 
-  private addEmployeeResult(success: boolean): void {
-    if (success) {
-      this.snackbar.open("Employee succesfully added.", "Dismiss", {
-        duration: 5000
-      });
-    } else {
-      this.snackbar.open("Error adding employee, please try again later.", "Dismiss", {
-        duration: 5000
-      });
-    }
-  }
-  
-  public manage(employee: Employee): void {
-    console.log(employee);
-  }
-
-  public delete(employee: Employee): void {
-    this.loadedLocation.deleteEmployee(employee.id).then(() => {
-        this.snackbar.open("Employee succesfully deleted.", "Dismiss", {
-          duration: 5000
-        });
-    }).catch(() => {
-      this.snackbar.open("Error deleting employee, please try again later.", "Dismiss", {
-        duration: 5000
-      });
-    })
+  public delete(id: string): void { 
+    this.loadedLocation.deleteEmployee(id)
+    .then(() => this.snackbar.open("Employee succesfully deleted.", "Dismiss", {duration: 5000}))
+    .catch(() => this.snackbar.open("Error deleting employee, please try again later.", "Dismiss", {duration: 5000}))
   }
 
   private parseEmployees(employees: Map<string, Employee>): void {
-    this.dataSource.data = Array.from(employees.values());
+    this.dataSource.data = Array.from(employees.entries());
     this.snackbar.dismiss();
   }
 
