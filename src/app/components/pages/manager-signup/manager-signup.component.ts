@@ -88,7 +88,8 @@ export class ManagerSignupComponent implements OnDestroy {
     this.userService.register({
       email: this.email.value,
       firstName: this.firstName.value,
-      lastName: this.lastName.value
+      lastName: this.lastName.value,
+      lastAccessed: ""
     }, this.password.value).then(() => {
       this.router.navigateByUrl("/confirm");
     }).catch((err) => {

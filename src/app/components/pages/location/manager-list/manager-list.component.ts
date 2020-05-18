@@ -88,7 +88,7 @@ export class ManagerListComponent implements OnDestroy {
       })
     ).subscribe((managerInfos) => {
       this.managers = managerInfos.map((info) => {
-        return info.payload.data() || {email: info.payload.id, firstName: "", lastName: ""}
+        return info.payload.data() || {email: info.payload.id, firstName: "", lastName: "", lastAccessed: ""}
       });
     })
   }
