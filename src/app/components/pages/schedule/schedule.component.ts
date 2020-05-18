@@ -30,6 +30,7 @@ import { Coverage } from 'src/app/models/coverage';
 })
 export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
+  private noSheetDialogOpen = false;
   private preventSheetChange: boolean = false;
   public mobile: boolean = false;
   public currentSchedule: Schedule;
@@ -329,8 +330,10 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           }
         } else {
           // If they aren't a guest, prompt them to make a sheet
-          if(!this.activatedRoute.snapshot.data.guest) {
-            this.dialog.open(SheetPromptDialogComponent, {width: "500px"});
+          if(!this.activatedRoute.snapshot.data.guest && !this.noSheetDialogOpen) {
+            let dialogRef = this.dialog.open(SheetPromptDialogComponent, {width: "500px"});
+            dialogRef.afterClosed().subscribe(() => this.noSheetDialogOpen = false);
+            this.noSheetDialogOpen = true;;
           }
           this.curSheet = null;
           this.curSheetId = null;
