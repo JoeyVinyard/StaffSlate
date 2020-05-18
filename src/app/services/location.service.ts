@@ -10,6 +10,8 @@ import { UserInfo } from '../models/user-info';
 })
 export class LocationService {
     
+    private lastUser: string;
+    private accessedLocationsSub;
     private cachedLocations: Map<string, Location> = new Map<string, Location>();
     private currentLocation: ReplaySubject<Location> = new ReplaySubject(1);
     private cachedLocationsSubject: ReplaySubject<Map<string, Location>> = new ReplaySubject(1);
@@ -39,8 +41,10 @@ export class LocationService {
     }
 
     private loadAccessibleLocations(email: string) {
-        let locationsCollection = this.afs.collection("locations").ref;
-        locationsCollection.where("managers", "array-contains", email).onSnapshot((querySnapshot) => {
+        if(this.accessedLocationsSub) {
+            this.accessedLocationsSub();
+        }
+        this.accessedLocationsSub = this.afs.collection("locations").ref.where("managers", "array-contains", email).onSnapshot((querySnapshot) => {
             querySnapshot.docChanges().forEach((changedDoc: DocumentChange<Location>) => {
                 if(changedDoc.doc.exists) {
                     this.cachedLocations.set(changedDoc.doc.id, new Location(changedDoc.doc.data(), this.afs.collection("locations").doc<Location>(changedDoc.doc.id)));
@@ -56,7 +60,10 @@ export class LocationService {
     constructor(private afs: AngularFirestore, private userService: UserService) {
         this.userService.getCurrentUserInfo().subscribe((userInfo: UserInfo) => {
             if(userInfo) {
-                this.loadAccessibleLocations(userInfo.email);
+                if(userInfo.email != this.lastUser) {
+                    this.loadAccessibleLocations(userInfo.email);
+                    this.lastUser = userInfo.email;
+                }
             }
         })
     }
