@@ -20,13 +20,16 @@ export class NewSheetDialogComponent implements AfterViewInit {
   @ViewChild("openSheet", { static: true }) openField;
   @ViewChild("closeSheet", {static: true}) closeField;
 
-  ngAfterViewInit() {
-    this.open.valueChanges.subscribe(() => {
-      this.close.updateValueAndValidity();
-    });
+  public enter(event: KeyboardEvent) {
+    if(event.keyCode == 13) {
+      this.submit();
+    }
   }
 
   public submit(): void {
+    if(this.sheet.invalid || this.open.invalid || this.close.invalid || this.timeIncrement.invalid) {
+      return;
+    }
     this.dialogRef.close({
         label: this.sheet.value,
         openTime: this.timeService.stringToTime(this.open.value),
@@ -66,6 +69,12 @@ export class NewSheetDialogComponent implements AfterViewInit {
     } else {
       return "";
     }
+  }
+
+  ngAfterViewInit() {
+    this.open.valueChanges.subscribe(() => {
+      this.close.updateValueAndValidity();
+    });
   }
 
   constructor(

@@ -2,7 +2,6 @@ import { AngularFirestoreDocument, DocumentChangeAction } from '@angular/fire/fi
 import { Observable, ReplaySubject } from 'rxjs';
 import { Sheet, PrintSheet } from './sheet';
 import { Identifier } from './identifier';
-import { Time } from '@angular/common';
 import { Shift, PrintShift } from './shift';
 import { Employee } from './employee';
 
@@ -18,9 +17,13 @@ export class Schedule {
             this.currentSheet.next(this.cachedSheets.get(sheetId));
         } else {
             this.document.collection<Sheet>("sheets").doc(sheetId).valueChanges().subscribe((sheet: Sheet) => {
-                let s = new Sheet(sheet, this.document.collection<Sheet>("sheets").doc(sheetId));
-                this.currentSheet.next(s);
-                this.cachedSheets.set(sheetId, s);
+                if(sheet) {
+                    let s = new Sheet(sheet, this.document.collection<Sheet>("sheets").doc(sheetId));
+                    this.currentSheet.next(s);
+                    this.cachedSheets.set(sheetId, s);
+                } else {
+                    this.cachedSheets.delete(sheetId);
+                }
             });
         }
         return this.currentSheet;

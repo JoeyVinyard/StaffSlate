@@ -20,26 +20,21 @@ export class NewShiftDialogComponent implements AfterViewInit {
   employee: FormControl = new FormControl('', [Validators.required]);
   shiftStart: FormControl = new FormControl('', [Validators.required]);
   shiftEnd = new FormControl('', [Validators.required]);
+  location: Location;
 
   @ViewChild("start", { static: true }) shiftStartField: NgxMaterialTimepickerComponent;
   @ViewChild("end", {static: true}) shiftEndField: NgxMaterialTimepickerComponent;
-
-  ngAfterViewInit() {
-    this.shiftStart.valueChanges.subscribe((val) => {
-      this.shiftEnd.updateValueAndValidity();
-    });
-  }
 
   private compareTimesGTE(t1: Time, t2: Time): boolean {
     //Returns true if t1 is greater than or equal to t2
     return (t1.hours > t2.hours || (t1.hours==t2.hours && t1.minutes>=t2.minutes));
   }
-
+  
   private compareTimesGT(t1: Time, t2: Time): boolean {
     //Returns true if t1 is greater than t2
     return (t1.hours > t2.hours || (t1.hours==t2.hours && t1.minutes>t2.minutes));
   }
-
+  
   getEmployeeError(): string {
     if (this.employee.hasError("required")) {
       return "Please select an Employee";
@@ -47,7 +42,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
       return "";
     }
   }
-
+  
   getShiftStartError(): string {
     if (this.shiftStart.hasError("required")) {
       return "Please select a time";
@@ -55,7 +50,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
       return "";
     }
   }
-
+  
   getShiftEndError(): string {
     if (this.shiftEnd.hasError("required")) {
       return "Please select a time";
@@ -63,9 +58,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
       return "";
     }
   }
-
-  location: Location;
-
+    
   submit(): void {
     this.dialogRef.close({
       empId: this.employee.value.id,
@@ -73,7 +66,7 @@ export class NewShiftDialogComponent implements AfterViewInit {
       endTime: this.timeService.stringToTime(this.shiftEnd.value)
     } as Shift);
   }
-
+  
   displayFn(emp: Employee): string {
     if(emp) {
       return emp.firstName + " " + emp.lastName;
@@ -81,16 +74,22 @@ export class NewShiftDialogComponent implements AfterViewInit {
       return "";
     }
   }
-
+  
   getNames(employees: Map<string, Employee>) {
     if(employees){
       let eName = typeof this.employee.value == "string" ? this.employee.value : this.displayFn(<Employee>this.employee.value);
       return Array.from(employees.values())
-        .filter((e) => (e.firstName + " " + e.lastName).toLowerCase().includes(eName.toLowerCase()))
-        .sort((a,b) => a.firstName.charCodeAt(0) - b.firstName.charCodeAt(0));
+      .filter((e) => (e.firstName + " " + e.lastName).toLowerCase().includes(eName.toLowerCase()))
+      .sort((a,b) => a.firstName.charCodeAt(0) - b.firstName.charCodeAt(0));
     } else {
       return [];
     }
+  }
+  
+  ngAfterViewInit() {
+    this.shiftStart.valueChanges.subscribe((val) => {
+      this.shiftEnd.updateValueAndValidity();
+    });
   }
 
   constructor(

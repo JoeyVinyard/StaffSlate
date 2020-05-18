@@ -1,15 +1,15 @@
 <h1 mat-dialog-title>New Employee</h1>
 <div class="content" mat-dialog-content>
   <mat-form-field>
-    <input matInput [formControl]="firstName" placeholder="First Name">
+    <input matInput (keypress)="enter($event)" [formControl]="firstName" placeholder="First Name">
     <mat-error *ngIf="firstName.invalid">{{getFirstNameError()}}</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput [formControl]="lastName" placeholder="Last Name">
+    <input matInput (keypress)="enter($event)" [formControl]="lastName" placeholder="Last Name">
     <mat-error *ngIf="lastName.invalid">{{getLastNameError()}}</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput [formControl]="email" placeholder="Email">
+    <input matInput (keypress)="enter($event)" [formControl]="email" placeholder="Email">
     <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
   </mat-form-field>
 </div>

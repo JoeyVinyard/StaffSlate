@@ -1,5 +1,5 @@
 <mat-toolbar class="toolbar" color="primary">
-    <mat-icon *ngIf="af.user | async as user" (click)="toggled.emit()" class="icon">dehaze</mat-icon>
+    <mat-icon *ngIf="af.user | async as user" (click)="toggled.emit()" class="icon no-select">dehaze</mat-icon>
     <div class="spacer"></div>
     <span *ngIf="af.user | async as user" class="greeter">Hello, {{(userService.getCurrentUserInfo() | async)?.firstName}} | <span class="logout" (click)="logout()">Logout</span></span>
 </mat-toolbar>

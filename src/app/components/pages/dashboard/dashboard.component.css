@@ -9,10 +9,12 @@
 }
 
 .content {
+    transition: background-color .2s linear;
     cursor: pointer;
 }
 
 .content:hover {
+    transition: background-color .2s linear;
     background-color: #EEE;
 }
 

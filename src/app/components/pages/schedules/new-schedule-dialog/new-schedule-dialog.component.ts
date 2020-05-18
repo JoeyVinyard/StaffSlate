@@ -13,6 +13,12 @@ export class NewScheduleDialogComponent {
 
   label = new FormControl('', [Validators.required]);
 
+  enter(event: KeyboardEvent) {
+    if(event.keyCode == 13) {
+      this.submit();
+    }
+  }
+
   getLabelError(): string {
     if (this.label.hasError("required")) {
       return "Label is required";
@@ -22,6 +28,9 @@ export class NewScheduleDialogComponent {
   }
 
   submit(): void {
+    if(this.label.invalid) {
+      return;
+    }
     this.dialogRef.close({
       label: this.label.value
     } as Schedule);

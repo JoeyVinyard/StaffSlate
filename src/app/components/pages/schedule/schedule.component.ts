@@ -30,11 +30,13 @@ import { Coverage } from 'src/app/models/coverage';
 })
 export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
+  private noSheetDialogOpen = false;
   private preventSheetChange: boolean = false;
   public mobile: boolean = false;
   public currentSchedule: Schedule;
   public curLocation: Location = null;
   public curSheet: Sheet = null;
+  private curSheetId: string = null;
   private shifts: Shift[];
   public createdShifts: Shift[];
   public remainingSpace: number = 0;
@@ -89,6 +91,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         this.currentSchedule.sheets.splice(i,1)[0];
         this.curSheet.document.delete().then(() => {
           this.sheetSub.unsubscribe();
+          this.shiftSub.unsubscribe();
           this.currentSchedule.document.update({
             sheets: this.currentSchedule.sheets
           });
@@ -225,23 +228,24 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     return `http://www.picostaff.com${this.router.url}/${this.currentSchedule.viewId}`;
   }
   
-  public displaySheetClick(sheetLabel: string): void {
-    if(this.curSheet.label == sheetLabel) {
+  public displaySheetClick(sheetId: string): void {
+    if(this.curSheetId == sheetId) {
       return;
     } else {
-      this.displaySheet(sheetLabel);
+      this.displaySheet(sheetId);
     }
   }
 
-  private displaySheet(sheetLabel: string): void {
+  private displaySheet(sheetId: string): void {
     if(this.sheetSub) {
       this.sheetSub.unsubscribe();
     }
-    this.sheetSub = this.currentSchedule.loadSheetData(sheetLabel).subscribe((sheet) => {
+    this.sheetSub = this.currentSchedule.loadSheetData(sheetId).subscribe((sheet) => {
       if(!sheet || sheet == this.curSheet) {
         return;
       }
       this.curSheet = sheet;
+      this.curSheetId = sheetId;
       this.timeColumns = this.timeService.generateTimeColumns(this.curSheet.openTime, this.curSheet.closeTime, this.curSheet.timeIncrement);
       if(this.shiftSub) {
         this.shiftSub.unsubscribe();
@@ -269,28 +273,33 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
 
   public printSchedule() {
-    let snackbarRef = this.snackbar.open("Printing Schedule... This may take a minute.", "dismiss");
+    let printSubject = new Subject();
+    let compileSnackbarRef = this.snackbar.open("Compiling Schedule Data...", "dismiss");
     this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
       printSchedule.timeIncrement = this.curSheet.timeIncrement;
-      this.locationService.getCurrentLocation().subscribe((location: Location) => {
-        location.getEmployees().subscribe((employees: Map<string, Employee>) => {
-          printSchedule.sheets.forEach((sheet) => {
-            sheet.shifts.forEach(s => {
-              let e: Employee = employees.get(s.empId);
-              if(e) {
-                s.empId = `${s.empId = e.firstName} ${e.lastName.substr(0,1)}.`
-              } else {
-                s.empId = "";
-              }
-            });
-          })
-          this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer' }).subscribe((data) => {
-            let file = new Blob([data], { type: 'application/pdf' });
-            let fUrl = URL.createObjectURL(file);
-            snackbarRef.dismiss();
-            this.snackbar.open("Schedule successfully generated!", "dissmiss", {duration: 2000});
-            window.open(fUrl);
+      this.locationService.getCurrentLocation().pipe (
+          takeUntil(printSubject),
+          switchMap((location: Location) => location.getEmployees()))
+        .subscribe((employees: Map<string, Employee>) => {
+        printSchedule.sheets.forEach((sheet) => {
+          sheet.shifts.forEach(s => {
+            let e: Employee = employees.get(s.empId);
+            if(e) {
+              s.empId = `${s.empId = e.firstName} ${e.lastName.substr(0,1)}.`
+            } else {
+              s.empId = "";
+            }
           });
+        })
+        compileSnackbarRef.dismiss();
+        let printSnackbar = this.snackbar.open("Printing Schedule...", "dismiss");
+        this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer' }).subscribe((data) => {
+          let file = new Blob([data], { type: 'application/pdf' });
+          let fUrl = URL.createObjectURL(file);
+          printSnackbar.dismiss();
+          this.snackbar.open("Schedule successfully generated!", "dismiss", {duration: 2000});
+          window.open(fUrl);
+          printSubject.next();
         });
       });
     });
@@ -327,14 +336,18 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
           }
         } else {
           // If they aren't a guest, prompt them to make a sheet
-          if(!this.activatedRoute.snapshot.data.guest) {
-            this.dialog.open(SheetPromptDialogComponent, {maxWidth: "50%"});
+          if(!this.activatedRoute.snapshot.data.guest && !this.noSheetDialogOpen) {
+            let dialogRef = this.dialog.open(SheetPromptDialogComponent, {width: "500px"});
+            dialogRef.afterClosed().subscribe(() => this.noSheetDialogOpen = false);
+            this.noSheetDialogOpen = true;;
           }
           this.curSheet = null;
+          this.curSheetId = null;
         }
       } else {
         // If the schedule doesn't match the route, don't display it
         this.curSheet = null;
+        this.curSheetId = null;
       }
     });
   }

@@ -14,6 +14,12 @@ export class NewEmployeeDialogComponent {
   firstName = new FormControl('', [Validators.required]);
   lastName = new FormControl('', [Validators.required]);
 
+  enter(event: KeyboardEvent) {
+    if(event.keyCode == 13) {
+      this.submit();
+    }
+  }
+
   getEmailError(): string {
     if(this.email.hasError("required")) {
       return "Email is required";
@@ -41,6 +47,9 @@ export class NewEmployeeDialogComponent {
   }
   
   submit(): void {
+    if(this.firstName.invalid || this.lastName.invalid || this.email.invalid) {
+      return;
+    }
     this.dialogRef.close({
       firstName: this.firstName.value,
       lastName: this.lastName.value,

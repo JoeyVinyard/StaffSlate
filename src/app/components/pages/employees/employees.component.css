@@ -50,3 +50,12 @@ table {
   width: 65%;
   min-width: 100px;
 }
+
+.row {
+  transition: .2s linear;
+}
+
+.row:hover {
+  background-color:whitesmoke;
+  transition: .2s linear;
+}
