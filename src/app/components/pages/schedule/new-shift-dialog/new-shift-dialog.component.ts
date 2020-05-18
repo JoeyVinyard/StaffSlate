@@ -31,6 +31,10 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
   @ViewChild("start", { static: true }) shiftStartField: NgxMaterialTimepickerComponent;
   @ViewChild("end", {static: true}) shiftEndField: NgxMaterialTimepickerComponent;
 
+  private timeEqual(t1: Time, t2: Time): boolean {
+    return t1.hours == t2.hours && t1.minutes == t2.minutes;
+  }
+
   private timeGreaterThanEqual(t1: Time, t2: Time): boolean {
     //Returns true if t1 is greater than t2
     return (t1.hours > t2.hours || (t1.hours==t2.hours && t1.minutes>=t2.minutes));
@@ -41,11 +45,19 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
     return (t1.hours < t2.hours || (t1.hours==t2.hours && t1.minutes<=t2.minutes));
   }
 
+  private shiftIsOriginal(shift: Shift): boolean {
+    return this.timeEqual(shift.startTime, this.data.shift.startTime) && this.timeEqual(shift.endTime, this.data.shift.endTime);
+  } 
+
   private shiftsOverlap(): boolean {
     return !this.employeeShifts.every((shift: Shift) => {
       let newShiftStart = this.timeService.stringToTime(this.shiftStart.value);
       let newShiftEnd = this.timeService.stringToTime(this.shiftEnd.value);
-      return (this.timeLessThanEqual(newShiftEnd, shift.startTime) || this.timeGreaterThanEqual(newShiftStart, shift.endTime));
+      if(this.data.shift) {
+        return (this.timeLessThanEqual(newShiftEnd, shift.startTime) || this.timeGreaterThanEqual(newShiftStart, shift.endTime)) || this.shiftIsOriginal(shift);
+      } else {
+        return (this.timeLessThanEqual(newShiftEnd, shift.startTime) || this.timeGreaterThanEqual(newShiftStart, shift.endTime));
+      }
     });
   }
   
@@ -90,7 +102,7 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
   public filterIds(): string[] {
     return this.employeeIds.filter((id) => {
       let employee = this.employees.get(id);
-      return `${employee.firstName.toLowerCase()} ${employee.lastName.toLowerCase()}`.includes(this.employee.value);
+      return `${employee.firstName.toLowerCase()} ${employee.lastName.toLowerCase()}`.includes(this.employee.value.toLowerCase());
     });
   }
 
@@ -102,28 +114,20 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
     } as Shift);
   }
   
+  private loadEmployeeShifts(empId: string): void {
+    if(this.employees.has(empId)) {
+      this.employeeShifts = this.shifts.filter((shift: Shift) => shift.empId == empId);
+      console.log(this.employeeShifts);
+    }
+  }
+  
   private loadShiftData(): void {
     this.data.sheet.loadShifts().pipe(takeUntil(this.alive)).subscribe((shifts: Shift[]) => {
       this.shifts = shifts;
+      if(this.employee.value) {
+        this.loadEmployeeShifts(this.employee.value);
+      }
     });
-  }
-  
-  ngAfterViewInit() {
-    this.shiftStart.valueChanges.subscribe((val) => {
-      this.shiftEnd.updateValueAndValidity();
-    });
-  }
-
-  ngOnDestroy() {
-    this.alive.next(true);
-  }
-
-  private loadEmployeeShifts(empId: string): void {
-    console.log(empId);
-    if(this.employees.has(empId)) {
-      this.employeeShifts = this.shifts.filter((shift: Shift) => shift.empId == empId);
-      console.log(this.employeeShifts)
-    }
   }
 
   private loadEmployeeData(): void {
@@ -142,6 +146,16 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
         this.shiftEnd.setValue(this.timeService.timeToString(this.data.sheet.closeTime));
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.shiftStart.valueChanges.subscribe((val) => {
+      this.shiftEnd.updateValueAndValidity();
+    });
+  }
+
+  ngOnDestroy() {
+    this.alive.next(true);
   }
 
   constructor(
