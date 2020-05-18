@@ -330,7 +330,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         } else {
           // If they aren't a guest, prompt them to make a sheet
           if(!this.activatedRoute.snapshot.data.guest) {
-            this.dialog.open(SheetPromptDialogComponent, {maxWidth: "50%"});
+            this.dialog.open(SheetPromptDialogComponent, {width: "500px"});
           }
           this.curSheet = null;
           this.curSheetId = null;
