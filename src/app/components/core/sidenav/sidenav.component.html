@@ -1,19 +1,19 @@
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav class="sidenav" #sidenav mode="over">
         <div class="logo">
-            <h1 fittext>PicoStaff</h1>
+            <h1 (click)="navigate('')" fittext class="no-select">PicoStaff</h1>
         </div>
         <div class="menu-item">
-            <span class="menu-item-text" (click)="navigate('')">Dashboard</span>
+            <span class="menu-item-text no-select" (click)="navigate('')">Dashboard</span>
         </div>
         <div class="menu-item">
-            <span class="menu-item-text" (click)="navigate('employees')">Employees</span>
+            <span class="menu-item-text no-select" (click)="navigate('employees')">Employees</span>
         </div>
         <div class="menu-item">
-            <span class="menu-item-text" (click)="navigate('schedules')">Schedules</span>
+            <span class="menu-item-text no-select" (click)="navigate('schedules')">Schedules</span>
         </div>
         <div class="menu-item">
-            <span class="menu-item-text" (click)="navigate('settings')">Settings</span>
+            <span class="menu-item-text no-select" (click)="navigate('settings')">Settings</span>
         </div>
     </mat-sidenav>
     <mat-sidenav-content class="sidenav-content">
