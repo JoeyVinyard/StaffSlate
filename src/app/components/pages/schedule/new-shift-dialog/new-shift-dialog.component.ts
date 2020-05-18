@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, Inject } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, Inject, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Employee } from 'src/app/models/employee';
@@ -9,18 +9,22 @@ import { Shift } from 'src/app/models/shift';
 import { Time } from '@angular/common';
 import { TimeService } from 'src/app/services/time.service';
 import { NgxMaterialTimepickerComponent } from 'ngx-material-timepicker';
+import { Subject } from 'rxjs';
+import { takeUntil, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-shift-dialog',
   templateUrl: './new-shift-dialog.component.html',
   styleUrls: ['./new-shift-dialog.component.css']
 })
-export class NewShiftDialogComponent implements AfterViewInit {
+export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
 
+  alive: Subject<boolean> = new Subject<boolean>();
+  employees: Map<string,Employee>;
+  employeeIds: string[];
   employee: FormControl = new FormControl('', [Validators.required]);
   shiftStart: FormControl = new FormControl('', [Validators.required]);
   shiftEnd = new FormControl('', [Validators.required]);
-  location: Location;
 
   @ViewChild("start", { static: true }) shiftStartField: NgxMaterialTimepickerComponent;
   @ViewChild("end", {static: true}) shiftEndField: NgxMaterialTimepickerComponent;
@@ -59,37 +63,42 @@ export class NewShiftDialogComponent implements AfterViewInit {
     }
   }
     
-  submit(): void {
-    this.dialogRef.close({
-      empId: this.employee.value.id,
-      startTime: this.timeService.stringToTime(this.shiftStart.value),
-      endTime: this.timeService.stringToTime(this.shiftEnd.value)
-    } as Shift);
-  }
-  
-  displayFn(emp: Employee): string {
+  displayFn(empId: string): string {
+    if(!this.employees) {
+      return "";
+    }
+    let emp = this.employees.get(empId);
     if(emp) {
       return emp.firstName + " " + emp.lastName;
     } else {
       return "";
     }
   }
-  
-  getNames(employees: Map<string, Employee>) {
-    if(employees){
-      let eName = typeof this.employee.value == "string" ? this.employee.value : this.displayFn(<Employee>this.employee.value);
-      return Array.from(employees.values())
-      .filter((e) => (e.firstName + " " + e.lastName).toLowerCase().includes(eName.toLowerCase()))
-      .sort((a,b) => a.firstName.charCodeAt(0) - b.firstName.charCodeAt(0));
-    } else {
-      return [];
-    }
+
+  filterIds(): string[] {
+    return this.employeeIds.filter((id) => {
+      let employee = this.employees.get(id);
+      return `${employee.firstName.toLowerCase()} ${employee.lastName.toLowerCase().includes(this.employee.value)}`;
+    });
   }
+
+  submit(): void {
+    this.dialogRef.close({
+      empId: this.employee.value,
+      startTime: this.timeService.stringToTime(this.shiftStart.value),
+      endTime: this.timeService.stringToTime(this.shiftEnd.value)
+    } as Shift);
+  }
+  
   
   ngAfterViewInit() {
     this.shiftStart.valueChanges.subscribe((val) => {
       this.shiftEnd.updateValueAndValidity();
     });
+  }
+
+  ngOnDestroy() {
+    this.alive.next(true);
   }
 
   constructor(
@@ -98,18 +107,20 @@ export class NewShiftDialogComponent implements AfterViewInit {
     public timeService: TimeService,
     @Inject(MAT_DIALOG_DATA) public data: {sheet: Sheet, shift: Shift}
     ) {
-      locationService.getCurrentLocation().subscribe((location) => {
-        this.location = location;
-      });
-      if(data.shift) {
-        this.location.getEmployees().subscribe((emps: Map<string, Employee>) => {
-          this.employee.setValue(emps.get(data.shift.empId));
+      locationService.getCurrentLocation().pipe(
+        switchMap((location:Location) => location.getEmployees()),
+        takeUntil(this.alive))
+      .subscribe((employees) => {
+        this.employees = employees;
+        this.employeeIds = Array.from(employees.keys());
+        if(data.shift) {
+          this.employee.setValue(employees.get(data.shift.empId));
           this.shiftStart.setValue(this.timeService.timeToString(data.shift.startTime));
           this.shiftEnd.setValue(this.timeService.timeToString(data.shift.endTime));
-        }).unsubscribe();
-      } else {
-        this.shiftStart.setValue(this.timeService.timeToString(this.data.sheet.openTime));
-        this.shiftEnd.setValue(this.timeService.timeToString(this.data.sheet.closeTime));
-      }
+        } else {
+          this.shiftStart.setValue(this.timeService.timeToString(this.data.sheet.openTime));
+          this.shiftEnd.setValue(this.timeService.timeToString(this.data.sheet.closeTime));
+        }
+      });
     }
 }
