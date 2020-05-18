@@ -272,28 +272,33 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   }
 
   public printSchedule() {
-    let snackbarRef = this.snackbar.open("Printing Schedule... This may take a minute.", "dismiss");
+    let printSubject = new Subject();
+    let compileSnackbarRef = this.snackbar.open("Compiling Schedule Data...", "dismiss");
     this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
       printSchedule.timeIncrement = this.curSheet.timeIncrement;
-      this.locationService.getCurrentLocation().subscribe((location: Location) => {
-        location.getEmployees().subscribe((employees: Map<string, Employee>) => {
-          printSchedule.sheets.forEach((sheet) => {
-            sheet.shifts.forEach(s => {
-              let e: Employee = employees.get(s.empId);
-              if(e) {
-                s.empId = `${s.empId = e.firstName} ${e.lastName.substr(0,1)}.`
-              } else {
-                s.empId = "";
-              }
-            });
-          })
-          this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer' }).subscribe((data) => {
-            let file = new Blob([data], { type: 'application/pdf' });
-            let fUrl = URL.createObjectURL(file);
-            snackbarRef.dismiss();
-            this.snackbar.open("Schedule successfully generated!", "dissmiss", {duration: 2000});
-            window.open(fUrl);
+      this.locationService.getCurrentLocation().pipe(
+          takeUntil(printSubject),
+          switchMap((location: Location) => location.getEmployees()))
+        .subscribe((employees: Map<string, Employee>) => {
+        printSchedule.sheets.forEach((sheet) => {
+          sheet.shifts.forEach(s => {
+            let e: Employee = employees.get(s.empId);
+            if(e) {
+              s.empId = `${s.empId = e.firstName} ${e.lastName.substr(0,1)}.`
+            } else {
+              s.empId = "";
+            }
           });
+        })
+        compileSnackbarRef.dismiss();
+        let printSnackbar = this.snackbar.open("Printing Schedule...", "dismiss");
+        this.http.post("https://ps-pdf-server.herokuapp.com/pdf", {data: printSchedule}, {responseType: 'arraybuffer' }).subscribe((data) => {
+          let file = new Blob([data], { type: 'application/pdf' });
+          let fUrl = URL.createObjectURL(file);
+          printSnackbar.dismiss();
+          this.snackbar.open("Schedule successfully generated!", "dismiss", {duration: 2000});
+          window.open(fUrl);
+          printSubject.next();
         });
       });
     });
