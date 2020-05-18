@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreDocument, DocumentSnapshot, DocumentChangeAction, Action } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentSnapshot, Action } from '@angular/fire/firestore';
 import { User } from 'firebase';
 import { UserInfo } from '../models/user-info';
 import { Observable, ReplaySubject, Subscription, combineLatest } from 'rxjs';
+import { takeLast, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,11 @@ import { Observable, ReplaySubject, Subscription, combineLatest } from 'rxjs';
 export class UserService {
 
   private currentSubscription: Subscription;
-  private currentUserInfo: ReplaySubject<UserInfo> = new ReplaySubject(1);
+  private currentUserInfoSubject: ReplaySubject<UserInfo> = new ReplaySubject(1);
+  private currentUser: UserInfo;
 
   public getCurrentUserInfo(): Observable<UserInfo> {
-    return this.currentUserInfo;
+    return this.currentUserInfoSubject;
   }
 
   public register(info: UserInfo, password: string): Promise<void> {
@@ -31,6 +33,12 @@ export class UserService {
     });
   }
 
+  public setLastAccessedLocation(locationId: string): void {
+    if(this.currentUser.lastAccessed != locationId) {
+      this.afs.collection("users").doc(this.currentUser.email).update({lastAccessed: locationId}).catch((err) => console.error(err));
+    }
+  }
+
   public logout(): Promise<void> {
     if(this.currentSubscription) {
       this.currentSubscription.unsubscribe();
@@ -43,7 +51,8 @@ export class UserService {
       this.currentSubscription.unsubscribe();
     }
     this.currentSubscription = this.afs.collection("users").doc<UserInfo>(user.email).valueChanges().subscribe((userInfo) => {
-      this.currentUserInfo.next(userInfo);
+      this.currentUser = userInfo;
+      this.currentUserInfoSubject.next(userInfo);
     });
   }
 
@@ -64,7 +73,7 @@ export class UserService {
       if(user){
         this.loadUserInfo(user);
       } else {
-        this.currentUserInfo.next(null);
+        this.currentUserInfoSubject.next(null);
       }
     });
   }
