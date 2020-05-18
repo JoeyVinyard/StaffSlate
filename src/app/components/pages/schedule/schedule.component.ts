@@ -35,6 +35,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   public currentSchedule: Schedule;
   public curLocation: Location = null;
   public curSheet: Sheet = null;
+  private curSheetId: string = null;
   private shifts: Shift[];
   public createdShifts: Shift[];
   public remainingSpace: number = 0;
@@ -225,23 +226,24 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     return `http://www.picostaff.com${this.router.url}/${this.currentSchedule.viewId}`;
   }
   
-  public displaySheetClick(sheetLabel: string): void {
-    if(this.curSheet.label == sheetLabel) {
+  public displaySheetClick(sheetId: string): void {
+    if(this.curSheetId == sheetId) {
       return;
     } else {
-      this.displaySheet(sheetLabel);
+      this.displaySheet(sheetId);
     }
   }
 
-  private displaySheet(sheetLabel: string): void {
+  private displaySheet(sheetId: string): void {
     if(this.sheetSub) {
       this.sheetSub.unsubscribe();
     }
-    this.sheetSub = this.currentSchedule.loadSheetData(sheetLabel).subscribe((sheet) => {
+    this.sheetSub = this.currentSchedule.loadSheetData(sheetId).subscribe((sheet) => {
       if(!sheet || sheet == this.curSheet) {
         return;
       }
       this.curSheet = sheet;
+      this.curSheetId = sheetId;
       this.timeColumns = this.timeService.generateTimeColumns(this.curSheet.openTime, this.curSheet.closeTime, this.curSheet.timeIncrement);
       if(this.shiftSub) {
         this.shiftSub.unsubscribe();
@@ -331,10 +333,12 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
             this.dialog.open(SheetPromptDialogComponent, {maxWidth: "50%"});
           }
           this.curSheet = null;
+          this.curSheetId = null;
         }
       } else {
         // If the schedule doesn't match the route, don't display it
         this.curSheet = null;
+        this.curSheetId = null;
       }
     });
   }
