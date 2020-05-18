@@ -1,4 +1,7 @@
 <div (window:resize)="resizeSchedule()" #container class="container">
+    <div fxLayout="row" fxLayoutAlign="center end" class="noSheetDisplay" *ngIf="!curSheet">
+        No Sheet to display! Get started by adding on using the + below!
+    </div>
     <table #schedule class="schedule" *ngIf="curSheet">
         <tr>
             <th class="label rightBorder">{{curSheet.label}}</th>
