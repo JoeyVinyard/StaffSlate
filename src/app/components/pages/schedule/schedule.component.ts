@@ -91,6 +91,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
         this.currentSchedule.sheets.splice(i,1)[0];
         this.curSheet.document.delete().then(() => {
           this.sheetSub.unsubscribe();
+          this.shiftSub.unsubscribe();
           this.currentSchedule.document.update({
             sheets: this.currentSchedule.sheets
           });
@@ -276,7 +277,7 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     let compileSnackbarRef = this.snackbar.open("Compiling Schedule Data...", "dismiss");
     this.currentSchedule.printSchedule().then((printSchedule: PrintSchedule) => {
       printSchedule.timeIncrement = this.curSheet.timeIncrement;
-      this.locationService.getCurrentLocation().pipe(
+      this.locationService.getCurrentLocation().pipe (
           takeUntil(printSubject),
           switchMap((location: Location) => location.getEmployees()))
         .subscribe((employees: Map<string, Employee>) => {
