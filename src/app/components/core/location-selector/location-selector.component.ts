@@ -12,8 +12,9 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class LocationSelectorComponent implements OnDestroy {
 
-  alive: Subject<boolean> = new Subject<boolean>();
-  locations: [string, Location][];
+  private alive: Subject<boolean> = new Subject<boolean>();
+  public locations: [string, Location][];
+  public selectedLocation: string;
 
   public select(locationId: string): void {
     this.userService.setLastAccessedLocation(locationId);
@@ -25,6 +26,9 @@ export class LocationSelectorComponent implements OnDestroy {
   }
 
   constructor(private locationService: LocationService, private userService: UserService) {
+    this.userService.getCurrentUserInfo().pipe(takeUntil(this.alive)).subscribe((userData) => {
+      this.selectedLocation = userData.lastAccessed;
+    });
     this.locationService.getLocationsMap().pipe(takeUntil(this.alive)).subscribe((locationMap) => {
       this.locations = Array.from(locationMap.entries());
     });

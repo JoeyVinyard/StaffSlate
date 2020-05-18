@@ -40,11 +40,11 @@ export class LocationService {
         return this.currentLocation;
     }
 
-    private loadAccessibleLocations(email: string) {
+    private loadAccessibleLocations(userInfo: UserInfo) {
         if(this.accessedLocationsSub) {
             this.accessedLocationsSub();
         }
-        this.accessedLocationsSub = this.afs.collection("locations").ref.where("managers", "array-contains", email).onSnapshot((querySnapshot) => {
+        this.accessedLocationsSub = this.afs.collection("locations").ref.where("managers", "array-contains", userInfo.email).onSnapshot((querySnapshot) => {
             querySnapshot.docChanges().forEach((changedDoc: DocumentChange<Location>) => {
                 if(changedDoc.doc.exists) {
                     this.cachedLocations.set(changedDoc.doc.id, new Location(changedDoc.doc.data(), this.afs.collection("locations").doc<Location>(changedDoc.doc.id)));
@@ -53,18 +53,18 @@ export class LocationService {
                 }
             });
             this.cachedLocationsSubject.next(this.cachedLocations);
-            this.currentLocation.next(this.cachedLocations.values().next().value);
+            this.currentLocation.next(userInfo.lastAccessed ? this.cachedLocations.get(userInfo.lastAccessed) : this.cachedLocations.values().next().value);
         });
     }
 
     constructor(private afs: AngularFirestore, private userService: UserService) {
         this.userService.getCurrentUserInfo().subscribe((userInfo: UserInfo) => {
             if(userInfo) {
-                if(userInfo.email != this.lastUser) {
-                    this.loadAccessibleLocations(userInfo.email);
+                if(userInfo.email != this.lastUser) { //only update the accessible locations if the user changes
+                    this.loadAccessibleLocations(userInfo);
                     this.lastUser = userInfo.email;
                 }
             }
-        })
+        });
     }
 }
