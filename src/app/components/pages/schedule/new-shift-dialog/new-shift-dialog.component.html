@@ -20,5 +20,5 @@
     </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" [disabled]="employee.invalid || shiftStart.invalid || shiftEnd.invalid || !employeeIds.includes(employee.value)" (click)="submit()">{{data.shift ? "Save Changes" : "Add Shift"}}</button>
+    <button mat-raised-button color="primary" [disabled]="employee.invalid || shiftStart.invalid || shiftEnd.invalid || !employees.has(employee.value)" (click)="submit()">{{data.shift ? "Save Changes" : "Add Shift"}}</button>
 </div>

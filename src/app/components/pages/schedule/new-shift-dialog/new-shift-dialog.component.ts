@@ -20,8 +20,10 @@ import { takeUntil, switchMap } from 'rxjs/operators';
 export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
 
   alive: Subject<boolean> = new Subject<boolean>();
+  shifts: Shift[];
   employees: Map<string,Employee>;
   employeeIds: string[];
+  employeeShifts: Shift[] = [];
   employee: FormControl = new FormControl('', [Validators.required]);
   shiftStart: FormControl = new FormControl('', [Validators.required]);
   shiftEnd = new FormControl('', [Validators.required]);
@@ -29,17 +31,25 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
   @ViewChild("start", { static: true }) shiftStartField: NgxMaterialTimepickerComponent;
   @ViewChild("end", {static: true}) shiftEndField: NgxMaterialTimepickerComponent;
 
-  private compareTimesGTE(t1: Time, t2: Time): boolean {
-    //Returns true if t1 is greater than or equal to t2
+  private timeGreaterThanEqual(t1: Time, t2: Time): boolean {
+    //Returns true if t1 is greater than t2
     return (t1.hours > t2.hours || (t1.hours==t2.hours && t1.minutes>=t2.minutes));
   }
-  
-  private compareTimesGT(t1: Time, t2: Time): boolean {
-    //Returns true if t1 is greater than t2
-    return (t1.hours > t2.hours || (t1.hours==t2.hours && t1.minutes>t2.minutes));
+
+  private timeLessThanEqual(t1: Time, t2: Time): boolean {
+    //Returns true if t1 is less than than t2
+    return (t1.hours < t2.hours || (t1.hours==t2.hours && t1.minutes<=t2.minutes));
+  }
+
+  private shiftsOverlap(): boolean {
+    return !this.employeeShifts.every((shift: Shift) => {
+      let newShiftStart = this.timeService.stringToTime(this.shiftStart.value);
+      let newShiftEnd = this.timeService.stringToTime(this.shiftEnd.value);
+      return (this.timeLessThanEqual(newShiftEnd, shift.startTime) || this.timeGreaterThanEqual(newShiftStart, shift.endTime));
+    });
   }
   
-  getEmployeeError(): string {
+  public getEmployeeError(): string {
     if (this.employee.hasError("required")) {
       return "Please select an Employee";
     } else {
@@ -47,7 +57,7 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
     }
   }
   
-  getShiftStartError(): string {
+  public getShiftStartError(): string {
     if (this.shiftStart.hasError("required")) {
       return "Please select a time";
     } else {
@@ -55,15 +65,17 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
     }
   }
   
-  getShiftEndError(): string {
+  public getShiftEndError(): string {
     if (this.shiftEnd.hasError("required")) {
       return "Please select a time";
+    } else if(this.shiftsOverlap()) {
+      return "New shift cannot overlap with existing shifts";
     } else {
       return "";
     }
   }
     
-  displayFn(empId: string): string {
+  public displayFn(empId: string): string {
     if(!this.employees) {
       return "";
     }
@@ -75,14 +87,14 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  filterIds(): string[] {
+  public filterIds(): string[] {
     return this.employeeIds.filter((id) => {
       let employee = this.employees.get(id);
-      return `${employee.firstName.toLowerCase()} ${employee.lastName.toLowerCase().includes(this.employee.value)}`;
+      return `${employee.firstName.toLowerCase()} ${employee.lastName.toLowerCase()}`.includes(this.employee.value);
     });
   }
 
-  submit(): void {
+  public submit(): void {
     this.dialogRef.close({
       empId: this.employee.value,
       startTime: this.timeService.stringToTime(this.shiftStart.value),
@@ -90,6 +102,11 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
     } as Shift);
   }
   
+  private loadShiftData(): void {
+    this.data.sheet.loadShifts().pipe(takeUntil(this.alive)).subscribe((shifts: Shift[]) => {
+      this.shifts = shifts;
+    });
+  }
   
   ngAfterViewInit() {
     this.shiftStart.valueChanges.subscribe((val) => {
@@ -101,26 +118,40 @@ export class NewShiftDialogComponent implements AfterViewInit, OnDestroy {
     this.alive.next(true);
   }
 
+  private loadEmployeeShifts(empId: string): void {
+    console.log(empId);
+    if(this.employees.has(empId)) {
+      this.employeeShifts = this.shifts.filter((shift: Shift) => shift.empId == empId);
+      console.log(this.employeeShifts)
+    }
+  }
+
+  private loadEmployeeData(): void {
+    this.locationService.getCurrentLocation().pipe(
+      switchMap((location:Location) => location.getEmployees()),
+      takeUntil(this.alive))
+    .subscribe((employees) => {
+      this.employees = employees;
+      this.employeeIds = Array.from(employees.keys());
+      if(this.data.shift) {
+        this.employee.setValue(this.data.shift.empId);
+        this.shiftStart.setValue(this.timeService.timeToString(this.data.shift.startTime));
+        this.shiftEnd.setValue(this.timeService.timeToString(this.data.shift.endTime));
+      } else {
+        this.shiftStart.setValue(this.timeService.timeToString(this.data.sheet.openTime));
+        this.shiftEnd.setValue(this.timeService.timeToString(this.data.sheet.closeTime));
+      }
+    });
+  }
+
   constructor(
     public dialogRef: MatDialogRef<NewShiftDialogComponent>,
     private locationService: LocationService,
     public timeService: TimeService,
     @Inject(MAT_DIALOG_DATA) public data: {sheet: Sheet, shift: Shift}
     ) {
-      locationService.getCurrentLocation().pipe(
-        switchMap((location:Location) => location.getEmployees()),
-        takeUntil(this.alive))
-      .subscribe((employees) => {
-        this.employees = employees;
-        this.employeeIds = Array.from(employees.keys());
-        if(data.shift) {
-          this.employee.setValue(employees.get(data.shift.empId));
-          this.shiftStart.setValue(this.timeService.timeToString(data.shift.startTime));
-          this.shiftEnd.setValue(this.timeService.timeToString(data.shift.endTime));
-        } else {
-          this.shiftStart.setValue(this.timeService.timeToString(this.data.sheet.openTime));
-          this.shiftEnd.setValue(this.timeService.timeToString(this.data.sheet.closeTime));
-        }
-      });
+      this.loadEmployeeData();
+      this.loadShiftData();
+      this.employee.valueChanges.pipe(takeUntil(this.alive)).subscribe(this.loadEmployeeShifts.bind(this));
     }
 }
