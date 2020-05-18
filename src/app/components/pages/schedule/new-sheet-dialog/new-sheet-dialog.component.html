@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>{{data.sheet ? "Save" : "Add"}} Sheet</h1>
 <div class="content" mat-dialog-content>
     <mat-form-field>
-        <input matInput [formControl]="sheet" placeholder="Sheet Name">
+        <input (keypress)="enter($event)" matInput [formControl]="sheet" placeholder="Sheet Name">
         <mat-error *ngIf="sheet.invalid">{{getSheetError()}}</mat-error>
     </mat-form-field>
     <mat-form-field>
