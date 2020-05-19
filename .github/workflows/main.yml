@@ -1,4 +1,4 @@
-name: CI
+name: Deploy
 
 on:
   push:
@@ -16,6 +16,8 @@ jobs:
       with:
         node-version: '10.x'
     - run: npm install
+    - run: npm install
+      working-directory: functions
     - run: npm run build:prod
     - uses: w9jds/firebase-action@master
       with:
