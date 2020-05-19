@@ -3,11 +3,7 @@ import * as uniqid from 'uniqid';
 
 const nodemailer = require('nodemailer');
 const admin = require('firebase-admin');
-const serviceAccount = require('../key/serviceAccount.json');
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://emsys-39a0f.firebaseio.com"
-});
+admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
 

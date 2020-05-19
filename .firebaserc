@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "emsys-39a0f"
+    "prod": "emsys-39a0f",
+    "dev": "ems-dev-afdf5"
   }
 }
