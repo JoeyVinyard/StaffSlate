@@ -11,15 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@master
+    - name: Checkout Code
+      uses: actions/checkout@master
+    - name: Checkout Node
+      uses: actions/setup-node@master
       with:
         node-version: '10.x'
-    - run: npm install
-    - run: npm install
+    - name: Npm install in Angular App
+      run: npm install
+    - name: Npm install in functions
+      run: npm install
       working-directory: functions
-    - run: npm run build:prod
-    - uses: w9jds/firebase-action@master
+    - name: Build Angular App
+      run: npm run build:prod
+    - name: Deploy to Firebase
+      uses: w9jds/firebase-action@master
       with:
         args: deploy -P prod --only hosting,functions
       env:
