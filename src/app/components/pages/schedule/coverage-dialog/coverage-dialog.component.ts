@@ -63,6 +63,6 @@ export class CoverageDialogComponent implements AfterViewInit{
   ) {
     this.sheet = data;
     this.times = timeService.generateTimeColumns(this.sheet.openTime, this.sheet.closeTime, this.sheet.timeIncrement, true);
-    this.coverage = this.sheet.coverage || new Array(this.times.length).fill(0);
+    this.coverage = this.sheet.coverage.length ? this.sheet.coverage : Array(this.times.length).fill(0);
   }
 }
