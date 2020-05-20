@@ -71,8 +71,8 @@
     <div *ngIf="!(activatedRoute.data | async).guest" class="addSheet">
         <mat-icon matTooltip="Add Sheet" [matTooltipPosition]="'right'" (click)="openNewSheetDialog()">add</mat-icon>
     </div>
-    <div *ngIf="currentSchedule && curSheet" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)" [ngClass]="{'mobile': mobile}">
-        <div #sheets class="sheet no-select"
+    <div #sheets *ngIf="currentSchedule && curSheet" cdkDropList cdkDropListOrientation="horizontal" class="sheets" (cdkDropListDropped)="dropSheetLabel($event)" [ngClass]="{'mobile': mobile}">
+        <div class="sheet no-select"
             *ngFor="let sheet of currentSchedule.sheets"
             [ngClass]="{'selectedSheet': sheet.display==curSheet.label}"
             [cdkDragDisabled]="(activatedRoute.data | async).guest"
@@ -89,11 +89,11 @@
         </div>
     </div>
     <div class="filler"></div>
-    <ng-container *ngIf="!(activatedRoute.data | async).guest">
+    <div #actions *ngIf="!(activatedRoute.data | async).guest">
         <ng-container *ngIf="!mobile">
-            <button mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
-            <button mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="copyShareToClipboard()">Share</button>
-            <button mat-raised-button color="primary" class="toolbarButton right" [disabled]="!curSheet" (click)="printSchedule()">Print</button>
+            <button mat-raised-button color="primary" class="toolbarButton" [disabled]="!curSheet" (click)="openNewShiftDialog()">Add Shift</button>
+            <button mat-raised-button color="primary" class="toolbarButton" [disabled]="!curSheet" (click)="copyShareToClipboard()">Share</button>
+            <button mat-raised-button color="primary" class="toolbarButton" [disabled]="!curSheet" (click)="printSchedule()">Print</button>
         </ng-container>
         <button mat-icon-button [disableRipple]="true" [matMenuTriggerFor]="extrasMenu" [disabled]="!curSheet" class="action-menu-container">
             <mat-icon class="action-menu">toc</mat-icon>
@@ -110,5 +110,5 @@
             <button mat-menu-item (click)="openDefineCoverageDialog()">Define Coverage</button>
             <button mat-menu-item *ngIf="curSheet" [disabled]="!curSheet.coverage.length" (click)="openViewCoverageDialog()">View Coverage</button>
         </mat-menu>
-    </ng-container>
+    </div>
 </mat-toolbar>

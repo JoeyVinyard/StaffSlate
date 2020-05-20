@@ -55,7 +55,6 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   
   @ViewChild("schedule", {static: false}) scheduleEl: ElementRef<HTMLElement>;
   @ViewChild("container", {static: false}) containerEl: ElementRef<HTMLElement>;
-  @ViewChildren("sheets", {}) sheetContainerEl: QueryList<ElementRef<HTMLElement>>;
   
   public openDefineCoverageDialog(): void {
     const dialogRef = this.dialog.open(CoverageDialogComponent, {
@@ -198,22 +197,11 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     if(this.shifts) {
       this.makeDummyRows(this.containerEl.nativeElement.clientHeight, this.shifts.length);
     }
-    this.mobile = this.computeMobile();
+    this.mobile = window.innerWidth < 750;
   }
   
   public getHourSpan(shift: Shift): string {
     return `${this.timeService.timeToString(shift.startTime)} - ${this.timeService.timeToString(shift.endTime)}`
-  }
-  
-  private computeMobile() {
-    if(this.sheetContainerEl) {
-      let size = this.sheetContainerEl.reduce((a,c) => {
-        return a+=c.nativeElement.clientWidth;
-      }, 0);
-      return size > window.innerWidth*.6;
-    } else {
-      return true;
-    }
   }
   
   public copyShareToClipboard(): void {
