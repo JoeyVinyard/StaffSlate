@@ -1,1 +1,19 @@
-<p>employee works!</p>
+<mat-card
+    fxFlex="90"
+    fxFlexOffset="5"
+    fxFlex.gt-sm="50"
+    fxFlexOffset.gt-sm="25"
+    class="container"
+>
+    <div class="title">
+        {{employee.firstName}} {{employee.lastName}}
+    </div>
+    <div
+        class="item"
+        fxLayout="row"
+        fxLayoutAlign="space-between"
+    >
+        <span>Email: </span>
+        <span>{{employee.email || "(none)"}}</span>
+    </div>
+</mat-card>

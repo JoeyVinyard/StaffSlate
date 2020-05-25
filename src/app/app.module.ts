@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 // Angular Fire Imports
 import { AngularFireModule } from '@angular/fire';
@@ -70,6 +71,10 @@ import { DeleteManagerDialogComponent } from './components/pages/location/manage
 import { CoverageDialogComponent } from './components/pages/schedule/coverage-dialog/coverage-dialog.component';
 import { ViewCoverageDialogComponent } from './components/pages/schedule/view-coverage-dialog/view-coverage-dialog.component';
 import { DeleteEmployeeConfirmationComponent } from './components/pages/employees/delete-employee-confirmation/delete-employee-confirmation.component';
+ 
+const maskConfig: Partial<IConfig> = {
+  validation: false,
+};
 
 @NgModule({
   declarations: [
@@ -135,7 +140,8 @@ import { DeleteEmployeeConfirmationComponent } from './components/pages/employee
     AngularFireFunctionsModule,
     FlexLayoutModule,
     NgxMaterialTimepickerModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxMaskModule.forRoot(maskConfig)
   ],
   entryComponents: [
     NewEmployeeDialogComponent,

@@ -7,6 +7,7 @@ import { Location } from 'src/app/models/location';
 import { UserService } from 'src/app/services/user.service';
 import { Subscription } from 'rxjs';
 import { DeleteEmployeeConfirmationComponent } from './delete-employee-confirmation/delete-employee-confirmation.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-employees',
@@ -46,6 +47,10 @@ export class EmployeesComponent implements OnDestroy, OnInit {
     });
   }
 
+  public viewEmployee(employee: [string, Employee]): void {
+    this.router.navigateByUrl(`employee/${employee[0]}`);
+  }
+
   public delete(employee: [string, Employee]): void {
     const dialogRef = this.dialog.open(DeleteEmployeeConfirmationComponent, {
       width: '300px',
@@ -81,7 +86,7 @@ export class EmployeesComponent implements OnDestroy, OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar) {
+  constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
     this.snackbar.open("Loading Employees...", "Dismiss");
     this.locationService.getCurrentLocation().subscribe((location) => {
       if(location) {

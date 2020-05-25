@@ -9,10 +9,14 @@
     <mat-error *ngIf="lastName.invalid">{{getLastNameError()}}</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput (keypress)="enter($event)" [formControl]="email" placeholder="Email">
+    <input matInput (keypress)="enter($event)" [formControl]="email" placeholder="Email (Optional)">
     <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput (keypress)="enter($event)" [formControl]="phone" [hiddenInput]="true" mask="(000)000-0000" placeholder="Phone (Optional)">
+    <mat-error *ngIf="phone.invalid">{{getPhoneError()}}</mat-error>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="primary" [disabled]="firstName.invalid || lastName.invalid || email.invalid" (click)="submit()">{{data.employee ? "Save Changes" : "Add Employee"}}</button>
+  <button mat-raised-button color="primary" [disabled]="firstName.invalid || lastName.invalid || email.invalid || phone.invalid" (click)="submit()">{{data.employee ? "Save Changes" : "Add Employee"}}</button>
 </div>

@@ -15,6 +15,7 @@ import { NoLocationGuard } from './guards/no-location.guard';
 import { NewLocationComponent } from './components/pages/new-location/new-location.component';
 import { LocationsComponent } from './components/pages/locations/locations.component';
 import { LocationComponent } from './components/pages/location/location.component';
+import { EmployeeComponent } from './components/pages/employee/employee.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['register']);
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
@@ -77,6 +78,12 @@ export const appRoutes: Routes = [
     {
         path: "employees",
         component: EmployeesComponent,
+        canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
+        data: {authGuardPipe: redirectUnauthorizedToLogin}
+    },
+    {
+        path: "employee/:employeeId",
+        component: EmployeeComponent,
         canActivate: [AngularFireAuthGuard, ConfirmEmailGuard, NoLocationGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
     },

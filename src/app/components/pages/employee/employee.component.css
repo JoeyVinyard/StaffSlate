@@ -1,0 +1,21 @@
+.container {
+    margin-top: 4vh;
+    height: 300px;
+}
+
+.title {
+    border-bottom: 2px solid #111;
+    color: #111;
+    font-size: calc(2vw + 16px);
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    width: 100%;
+}
+
+.item {
+    width: 100%;
+}
+
+.item span {
+    font-size: calc(0.5vw + 12px);
+}

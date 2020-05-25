@@ -59,3 +59,7 @@ table {
   background-color:whitesmoke;
   transition: .2s linear;
 }
+
+.noEmail {
+  color: grey;
+}

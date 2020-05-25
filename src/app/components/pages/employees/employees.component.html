@@ -20,7 +20,7 @@
             
             <ng-container matColumnDef="email">
                 <th mat-header-cell class="email" *matHeaderCellDef> Email </th>
-                <td mat-cell *matCellDef="let employee"> {{employee[1].email}} </td>
+                <td mat-cell [ngClass]="{noEmail: !employee[1].email}" *matCellDef="let employee"> {{employee[1].email || "(no email)"}} </td>
             </ng-container>
             
             <ng-container matColumnDef="action">
@@ -30,6 +30,7 @@
                         <mat-icon class="icon">more_horiz</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="viewEmployee(employee)">View</button>
                         <button mat-menu-item (click)="openNewEmployeeDialog(employee)">Edit</button>
                         <button mat-menu-item (click)="delete(employee)">Delete</button>
                     </mat-menu>
