@@ -20,7 +20,6 @@ export class EmployeesComponent implements OnDestroy, OnInit {
 
   subscriptions: Subscription[] = [];
   dataSource = new MatTableDataSource<[string, Employee]>();
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'action'];
   loadedLocation: Location;
   locations: [string, Location][];
 
@@ -34,7 +33,6 @@ export class EmployeesComponent implements OnDestroy, OnInit {
     dialogRef.afterClosed().subscribe((newEmployee: Employee) => {
       if(newEmployee) {
         if(employee) {
-          console.log(employee)
           this.loadedLocation.updateEmployee(employee[0], newEmployee)
           .then(() => this.snackbar.open("Employee succesfully updated.", "Dismiss", {duration: 3000}))
           .catch(() => this.snackbar.open("Failed to update Employee. Please try again later.", "Dismiss", {duration: 3000}));
@@ -51,7 +49,7 @@ export class EmployeesComponent implements OnDestroy, OnInit {
     this.router.navigateByUrl(`employee/${employee[0]}`);
   }
 
-  public delete(employee: [string, Employee]): void {
+  public deleteEmployee(employee: [string, Employee]): void {
     const dialogRef = this.dialog.open(DeleteEmployeeConfirmationComponent, {
       width: '300px',
       data: employee[1]
@@ -75,7 +73,11 @@ export class EmployeesComponent implements OnDestroy, OnInit {
   }
 
   public buttonContent(): string {
-    return `New ${window.innerWidth > 800 && !this.inline ? "Employee" : ""}`;
+    return `New ${window.innerWidth > 900 && !this.inline ? "Employee" : ""}`;
+  }
+
+  public mobile(): boolean {
+    return window.innerWidth < 900;
   }
 
   ngOnDestroy() {

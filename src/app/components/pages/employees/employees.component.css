@@ -3,63 +3,27 @@
   width: 90%;
 }
 
-.buttons {
+.actions {
   width: 100%;
   margin: 10px 0;
 }
 
-.buttons button {
+.actions button {
   padding: 2px;
   margin-top: 10px;
   height: 40px;
-  width: 13%;
   font-size: calc(12px + 0.2vw);
   float: right;
 }
 
 .select {
   display: inline-block;
-  width: 15%;
-  margin-right: 5%;
 }
 
 .search {
   margin: 0;
-  width: 50%;
 }
 
 .tableContainer {
   overflow-x: auto;
-}
-
-table {
-  width: 100%;
-}
-
-.firstName {
-    width: 15%;
-    min-width: 100px;
-}
-
-.lastName {
-    width: 25%;
-    min-width: 100px;
-}
-
-.email {
-  width: 65%;
-  min-width: 100px;
-}
-
-.row {
-  transition: .2s linear;
-}
-
-.row:hover {
-  background-color:whitesmoke;
-  transition: .2s linear;
-}
-
-.noEmail {
-  color: grey;
 }

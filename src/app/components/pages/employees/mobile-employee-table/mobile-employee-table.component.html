@@ -1,0 +1,28 @@
+<mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="firstName">
+        <mat-header-cell fxFlex="38" *matHeaderCellDef> First Name </mat-header-cell>
+        <mat-cell fxFlex="38" *matCellDef="let employee"> {{employee[1].firstName}} </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="lastName">
+        <mat-header-cell fxFlex="38" *matHeaderCellDef> Last Name </mat-header-cell>
+        <mat-cell fxFlex="38" *matCellDef="let employee"> {{employee[1].lastName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+        <mat-header-cell fxFlex fxLayoutAlign="end center" *matHeaderCellDef> Action </mat-header-cell>
+        <mat-cell fxFlex fxLayoutAlign="end center" *matCellDef="let employee">
+            <button mat-button class="button" [matMenuTriggerFor]="menu">
+                <mat-icon class="icon">more_horiz</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="viewEmployee(employee)">View</button>
+                <button mat-menu-item (click)="openNewEmployeeDialog(employee)">Edit</button>
+                <button mat-menu-item (click)="deleteEmployee(employee)">Delete</button>
+            </mat-menu>
+        </mat-cell>
+    </ng-container>
+    
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" class="row"></mat-row>
+</mat-table>
