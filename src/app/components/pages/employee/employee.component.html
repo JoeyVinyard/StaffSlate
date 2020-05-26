@@ -1,19 +1,19 @@
-<mat-card
+<div
     fxFlex="90"
     fxFlexOffset="5"
     fxFlex.gt-sm="50"
     fxFlexOffset.gt-sm="25"
     class="container"
 >
-    <div class="title">
-        {{employee.firstName}} {{employee.lastName}}
+    <div class="breadcrumbs">
+        <a routerLink="/employees">Employees</a><span>/{{employee.firstName | titlecase}} {{employee.lastName  | titlecase}}</span>
     </div>
-    <div
-        class="item"
-        fxLayout="row"
-        fxLayoutAlign="space-between"
-    >
-        <span>Email: </span>
-        <span>{{employee.email || "(none)"}}</span>
-    </div>
-</mat-card>
+    <mat-card>
+        <div class="name">
+            {{employee.firstName | uppercase}} {{employee.lastName  | uppercase}}
+        </div>
+        <div class="info"><span class="item">Email: </span><a class="email" href="mailto:{{employee.email}}">{{employee.email}}</a></div>
+        <div class="info"><span class="item">Phone: </span>{{employee.phone | phone}}</div>
+        <div class="info"><span class="item">Employee ID: </span>{{employeeId}}</div>
+    </mat-card>
+</div>

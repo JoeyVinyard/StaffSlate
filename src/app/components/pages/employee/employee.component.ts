@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { LocationService } from 'src/app/services/location.service';
-import { takeUntil, switchMap, map, mergeMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Location } from 'src/app/models/location';
 import { ActivatedRoute, Params } from '@angular/router';

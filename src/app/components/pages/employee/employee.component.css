@@ -1,21 +1,42 @@
 .container {
-    margin-top: 4vh;
-    height: 300px;
+    margin-top: 1vh;
 }
 
-.title {
-    border-bottom: 2px solid #111;
+.breadcrumbs {
+    margin-bottom: 1vh;
+}
+
+
+.breadcrumbs span {
     color: #111;
-    font-size: calc(2vw + 16px);
-    margin-bottom: 5px;
-    padding-bottom: 5px;
+    font-size: calc(0.5vw + 12px);
+}
+
+.breadcrumbs a {
+    font-size: calc(0.5vw + 12px);
+}
+
+.breadcrumbs a:link, a:visited {
+    color: blue;
+}
+
+.name {
+    color: #111;
+    font-size: calc(1.5vw + 16px);
+    font-weight: 700;
+    line-height: calc(1.5vw + 16px);
+    margin-bottom: 3px;
     width: 100%;
+}
+
+.email:link, .email:visited {
+    color: blue;
+}
+
+.info {
+    font-size: calc(0.3vw + 12px);
 }
 
 .item {
-    width: 100%;
-}
-
-.item span {
-    font-size: calc(0.5vw + 12px);
+    font-weight: 600;
 }

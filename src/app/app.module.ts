@@ -73,6 +73,7 @@ import { ViewCoverageDialogComponent } from './components/pages/schedule/view-co
 import { DeleteEmployeeConfirmationComponent } from './components/pages/employees/delete-employee-confirmation/delete-employee-confirmation.component';
 import { MobileEmployeeTableComponent } from './components/pages/employees/mobile-employee-table/mobile-employee-table.component';
 import { DesktopEmployeeTableComponent } from './components/pages/employees/desktop-employee-table/desktop-employee-table.component';
+import { PhonePipe } from './pipes/phone.pipe';
  
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -112,7 +113,8 @@ const maskConfig: Partial<IConfig> = {
     ViewCoverageDialogComponent,
     DeleteEmployeeConfirmationComponent,
     MobileEmployeeTableComponent,
-    DesktopEmployeeTableComponent
+    DesktopEmployeeTableComponent,
+    PhonePipe
   ],
   imports: [
     BrowserModule,
