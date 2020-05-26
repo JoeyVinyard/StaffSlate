@@ -1,12 +1,12 @@
 <mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="firstName">
         <mat-header-cell fxFlex="38" *matHeaderCellDef> First Name </mat-header-cell>
-        <mat-cell fxFlex="38" *matCellDef="let employee"> {{employee[1].firstName}} </mat-cell>
+        <mat-cell fxFlex="38" *matCellDef="let employee"> {{truncate(employee[1].firstName)}} </mat-cell>
     </ng-container>
     
     <ng-container matColumnDef="lastName">
         <mat-header-cell fxFlex="38" *matHeaderCellDef> Last Name </mat-header-cell>
-        <mat-cell fxFlex="38" *matCellDef="let employee"> {{employee[1].lastName}} </mat-cell>
+        <mat-cell fxFlex="38" *matCellDef="let employee"> {{truncate(employee[1].lastName)}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="action">
