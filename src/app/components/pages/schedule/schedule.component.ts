@@ -200,10 +200,6 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
     this.mobile = window.innerWidth < 750;
   }
   
-  public getHourSpan(shift: Shift): string {
-    return `${this.timeService.timeToString(shift.startTime)} - ${this.timeService.timeToString(shift.endTime)}`
-  }
-  
   public copyShareToClipboard(): void {
     navigator.clipboard.writeText(this.getViewLink()).then(() => {
       this.snackbar.open("Share link copied to clipboard!", "Dismiss", {duration: 2000});

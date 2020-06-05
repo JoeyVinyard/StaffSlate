@@ -29,7 +29,7 @@
                         </mat-expansion-panel-header>
                         <div class="sheet" *ngFor="let sheet of filterSheets(scheduleId, scheduleMap.get(scheduleId).sheets)">
                             <div class="sheetName">{{sheet.display}}</div>
-                            <div class="shift">9am-12pm</div>
+                            <div *ngFor="let shift of getShifts(scheduleId,sheet.key)" class="shift">{{timeService.getHourSpan(shift)}}</div>
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>

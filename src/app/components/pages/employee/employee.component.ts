@@ -7,9 +7,9 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Employee } from 'src/app/models/employee';
 import { AngularFirestore, Query, DocumentChangeAction, QueryDocumentSnapshot, DocumentReference, DocumentSnapshot } from '@angular/fire/firestore';
 import { Shift } from 'src/app/models/shift';
-import { Sheet } from 'src/app/models/sheet';
 import { Schedule } from 'src/app/models/schedule';
 import { Identifier } from 'src/app/models/identifier';
+import { TimeService } from 'src/app/services/time.service';
 
 @Component({
   selector: 'app-employee',
@@ -31,6 +31,10 @@ export class EmployeeComponent implements OnDestroy{
 
   public filterSheets(scheduleId: string, sheetArray: Identifier[]): Identifier[] {
     return sheetArray.filter((id: Identifier) => this.fullShiftMap.get(scheduleId).has(id.key));
+  }
+
+  public getShifts(scheduleId: string, sheetId: string): Shift[] {
+    return this.fullShiftMap.get(scheduleId).get(sheetId);
   }
 
   private findEmployeeShifts(): void {
@@ -67,7 +71,7 @@ export class EmployeeComponent implements OnDestroy{
     this.alive.next(true);
   }
 
-  constructor(private locationService: LocationService, private route: ActivatedRoute, private afs: AngularFirestore) {
+  constructor(private locationService: LocationService, private route: ActivatedRoute, private afs: AngularFirestore, private timeService: TimeService) {
     this.route.params.pipe(
       switchMap((params: EmployeeRouteParams) => {
         this.employeeId = params.employeeId;
