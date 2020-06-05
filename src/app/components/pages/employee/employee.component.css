@@ -2,10 +2,13 @@
     margin-top: 1vh;
 }
 
-.breadcrumbs {
+mat-card {
     margin-bottom: 1vh;
 }
 
+.breadcrumbs {
+    margin-bottom: 1vh;
+}
 
 .breadcrumbs span {
     color: #111;
@@ -22,9 +25,9 @@
 
 .name {
     color: #111;
-    font-size: calc(1.5vw + 16px);
+    font-size: calc(1.3vw + 16px);
     font-weight: 700;
-    line-height: calc(1.5vw + 16px);
+    line-height: calc(1.3vw + 16px);
     margin-bottom: 3px;
     width: 100%;
 }
@@ -39,4 +42,34 @@
 
 .item {
     font-weight: 600;
+}
+
+.panel {
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #dedede;
+}
+
+.tab {
+    font-size: calc(14px + 0.2vw);
+    font-weight: 600;
+}
+
+.schedule {
+    font-weight: 600;
+    font-size: calc(15px + 0.2vw);
+}
+
+.sheet {
+    margin-left: 10px;
+    margin-bottom: 2px;
+}
+
+.sheetName {
+    font-size: calc(14px + 0.2vw);
+}
+
+.shift {
+    font-size: calc(12px + 0.2vw);
+    margin-left: 10px;
 }

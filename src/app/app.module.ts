@@ -16,7 +16,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 // Material Imports
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule, MatDialog } from '@angular/material';
+import { MatInputModule, MatDialog, MatExpansionModule, MatListModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -31,7 +31,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTabsModule } from '@angular/material/tabs'; 
+import { MatTabsModule } from '@angular/material/tabs';
 
 // Config Files
 import { appRoutes } from "./routes";
@@ -139,6 +139,8 @@ const maskConfig: Partial<IConfig> = {
     MatTooltipModule,
     MatTabsModule,
     DragDropModule,
+    MatExpansionModule,
+    MatListModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,

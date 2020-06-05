@@ -16,4 +16,29 @@
         <div class="info"><span class="item">Phone: </span>{{employee.phone | phone}}</div>
         <div class="info"><span class="item">Employee ID: </span>{{employeeId}}</div>
     </mat-card>
+    <mat-card>
+        <mat-tab-group mat-stretch-tabs mat-align-tabs="center">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span class="tab">Shifts</span>
+                </ng-template>
+                <mat-accordion [displayMode]="flat" [multi]="true">
+                    <mat-expansion-panel class="mat-elevation-z panel" *ngFor="let scheduleId of getScheduleIds()">
+                        <mat-expansion-panel-header [collapsedHeight]="'40px'" [expandedHeight]="'40px'">
+                            <mat-panel-title class="schedule">{{scheduleMap.get(scheduleId).label}}</mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="sheet" *ngFor="let sheet of filterSheets(scheduleId, scheduleMap.get(scheduleId).sheets)">
+                            <div class="sheetName">{{sheet.display}}</div>
+                            <div class="shift">9am-12pm</div>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span class="tab">Notes</span>
+                </ng-template>
+            </mat-tab>
+          </mat-tab-group>
+    </mat-card>
 </div>
