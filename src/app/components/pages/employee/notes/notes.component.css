@@ -1,0 +1,23 @@
+.panel {
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #dedede;
+}
+
+.noteTitle {
+    font-weight: 600;
+    font-size: calc(15px + 0.2vw);
+}
+
+.noteContent {
+    margin-left: 10px;
+}
+
+.noteDescription {
+    font-size: calc(13px + 0.2vw);
+}
+
+.noteTimestamp {
+    font-size: calc(12px + 0.2vw);
+    color: grey;
+}

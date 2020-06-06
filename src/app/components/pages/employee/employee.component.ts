@@ -1,15 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
 import { LocationService } from 'src/app/services/location.service';
 import { switchMap, map, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Location } from 'src/app/models/location';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Employee } from 'src/app/models/employee';
 import { AngularFirestore, Query, DocumentChangeAction, QueryDocumentSnapshot, DocumentReference, DocumentSnapshot } from '@angular/fire/firestore';
 import { Shift } from 'src/app/models/shift';
 import { Schedule } from 'src/app/models/schedule';
-import { Identifier } from 'src/app/models/identifier';
-import { TimeService } from 'src/app/services/time.service';
+import { EmployeeRouteParams } from './employee-route-params';
 
 @Component({
   selector: 'app-employee',
@@ -24,10 +23,15 @@ export class EmployeeComponent implements OnDestroy{
   public employeeShifts: Shift[];
   private fullShiftMap: Map<string, Map<string, Shift[]>> = new Map();
   private scheduleMap: Map<string, Schedule> = new Map();
+  private shiftQuerySubscription: Subscription;
 
   private findEmployeeShifts(): void {
+    if(this.shiftQuerySubscription) {
+      this.shiftQuerySubscription.unsubscribe();
+    }
+
     let query = this.afs.collectionGroup("shifts", (ref: Query) => ref.where("empId", "==", this.employeeId)).snapshotChanges();
-    query.pipe(takeUntil(this.alive))
+    this.shiftQuerySubscription = query.pipe(takeUntil(this.alive))
     .subscribe((shifts: DocumentChangeAction<Shift>[]) => {
       this.fullShiftMap = new Map<string, Map<string, Shift[]>>();
       shifts.forEach((shift: DocumentChangeAction<Shift>) => {
@@ -75,7 +79,4 @@ export class EmployeeComponent implements OnDestroy{
   }
 }
 
-interface EmployeeRouteParams extends Params {
-  employeeId: string;
-}
 

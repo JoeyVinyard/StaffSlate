@@ -1,0 +1,12 @@
+<mat-accordion [displayMode]="flat" [multi]="true">
+    <mat-expansion-panel class="mat-elevation-z panel" *ngFor="let note of notes">
+        <mat-expansion-panel-header [collapsedHeight]="'40px'" [expandedHeight]="'40px'">
+            <mat-panel-title class="noteTitle no-select">{{note[1].title}}</mat-panel-title>
+            <mat-panel-description class="no-select">{{truncate(note[1].content)}}</mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="noteContent">
+            <div class="noteDescription">{{note[1].content}}</div>
+            <div class="noteTimestamp">{{displayTimestamp(note[1].timestamp)}}</div>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
