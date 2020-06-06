@@ -44,32 +44,7 @@ mat-card {
     font-weight: 600;
 }
 
-.panel {
-    border-left: 1px solid #eee;
-    border-right: 1px solid #eee;
-    border-bottom: 1px solid #dedede;
-}
-
 .tab {
     font-size: calc(14px + 0.2vw);
     font-weight: 600;
-}
-
-.schedule {
-    font-weight: 600;
-    font-size: calc(15px + 0.2vw);
-}
-
-.sheet {
-    margin-left: 10px;
-    margin-bottom: 2px;
-}
-
-.sheetName {
-    font-size: calc(14px + 0.2vw);
-}
-
-.shift {
-    font-size: calc(12px + 0.2vw);
-    margin-left: 10px;
 }

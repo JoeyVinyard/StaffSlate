@@ -25,18 +25,6 @@ export class EmployeeComponent implements OnDestroy{
   private fullShiftMap: Map<string, Map<string, Shift[]>> = new Map();
   private scheduleMap: Map<string, Schedule> = new Map();
 
-  public getScheduleIds(): string[] {
-    return Array.from(this.scheduleMap.keys());
-  }
-
-  public filterSheets(scheduleId: string, sheetArray: Identifier[]): Identifier[] {
-    return sheetArray.filter((id: Identifier) => this.fullShiftMap.get(scheduleId).has(id.key));
-  }
-
-  public getShifts(scheduleId: string, sheetId: string): Shift[] {
-    return this.fullShiftMap.get(scheduleId).get(sheetId);
-  }
-
   private findEmployeeShifts(): void {
     let query = this.afs.collectionGroup("shifts", (ref: Query) => ref.where("empId", "==", this.employeeId)).snapshotChanges();
     query.pipe(takeUntil(this.alive))
@@ -71,7 +59,7 @@ export class EmployeeComponent implements OnDestroy{
     this.alive.next(true);
   }
 
-  constructor(private locationService: LocationService, private route: ActivatedRoute, private afs: AngularFirestore, private timeService: TimeService) {
+  constructor(private locationService: LocationService, private route: ActivatedRoute, private afs: AngularFirestore) {
     this.route.params.pipe(
       switchMap((params: EmployeeRouteParams) => {
         this.employeeId = params.employeeId;
@@ -85,7 +73,6 @@ export class EmployeeComponent implements OnDestroy{
       this.findEmployeeShifts();
     });
   }
-
 }
 
 interface EmployeeRouteParams extends Params {

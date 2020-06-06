@@ -74,6 +74,8 @@ import { DeleteEmployeeConfirmationComponent } from './components/pages/employee
 import { MobileEmployeeTableComponent } from './components/pages/employees/mobile-employee-table/mobile-employee-table.component';
 import { DesktopEmployeeTableComponent } from './components/pages/employees/desktop-employee-table/desktop-employee-table.component';
 import { PhonePipe } from './pipes/phone.pipe';
+import { NotesComponent } from './components/pages/employee/notes/notes.component';
+import { ShiftsComponent } from './components/pages/employee/shifts/shifts.component';
  
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -114,7 +116,9 @@ const maskConfig: Partial<IConfig> = {
     DeleteEmployeeConfirmationComponent,
     MobileEmployeeTableComponent,
     DesktopEmployeeTableComponent,
-    PhonePipe
+    PhonePipe,
+    NotesComponent,
+    ShiftsComponent
   ],
   imports: [
     BrowserModule,

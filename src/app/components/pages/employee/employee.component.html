@@ -22,17 +22,7 @@
                 <ng-template mat-tab-label>
                     <span class="tab">Shifts</span>
                 </ng-template>
-                <mat-accordion [displayMode]="flat" [multi]="true">
-                    <mat-expansion-panel class="mat-elevation-z panel" *ngFor="let scheduleId of getScheduleIds()">
-                        <mat-expansion-panel-header [collapsedHeight]="'40px'" [expandedHeight]="'40px'">
-                            <mat-panel-title class="schedule">{{scheduleMap.get(scheduleId).label}}</mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <div class="sheet" *ngFor="let sheet of filterSheets(scheduleId, scheduleMap.get(scheduleId).sheets)">
-                            <div class="sheetName">{{sheet.display}}</div>
-                            <div *ngFor="let shift of getShifts(scheduleId,sheet.key)" class="shift">{{timeService.getHourSpan(shift)}}</div>
-                        </div>
-                    </mat-expansion-panel>
-                </mat-accordion>
+                <app-shifts [fullShiftMap]="fullShiftMap" [scheduleMap]="scheduleMap"></app-shifts>
             </mat-tab>
             <mat-tab>
                 <ng-template mat-tab-label>
