@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ViewChild, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NewShiftDialogComponent } from '../new-shift-dialog/new-shift-dialog.component';
 import { Sheet } from 'src/app/models/sheet';
 import { TimeService } from 'src/app/services/time.service';

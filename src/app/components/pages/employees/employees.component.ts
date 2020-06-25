@@ -1,6 +1,9 @@
 import { Component, ViewChild, OnDestroy, Input, OnInit } from '@angular/core';
 import {  Employee } from 'src/app/models/employee';
-import { MatTableDataSource, MatDialog, MatSnackBar, MatPaginator } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { LocationService } from 'src/app/services/location.service';
 import { NewEmployeeDialogComponent } from './new-employee-dialog/new-employee-dialog.component';
 import { Location } from 'src/app/models/location';

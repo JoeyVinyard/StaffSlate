@@ -1,5 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { WelcomeDialogComponent } from './welcome-dialog/welcome-dialog.component';
 import { FormControl, Validators } from '@angular/forms';
 import { LocationService } from 'src/app/services/location.service';

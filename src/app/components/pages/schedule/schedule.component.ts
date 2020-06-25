@@ -5,7 +5,8 @@ import { TimeService } from 'src/app/services/time.service';
 import { Sheet } from 'src/app/models/sheet';
 import { Employee } from 'src/app/models/employee';
 import { Shift } from 'src/app/models/shift';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewShiftDialogComponent } from './new-shift-dialog/new-shift-dialog.component';
 import { Time } from '@angular/common';
 import { NewSheetDialogComponent } from './new-sheet-dialog/new-sheet-dialog.component';
@@ -53,8 +54,8 @@ export class ScheduleComponent implements OnDestroy, AfterViewInit{
   public hovered: Shift = null;
   private alive: Subject<boolean> = new Subject();
   
-  @ViewChild("schedule", {static: false}) scheduleEl: ElementRef<HTMLElement>;
-  @ViewChild("container", {static: false}) containerEl: ElementRef<HTMLElement>;
+  @ViewChild("schedule") scheduleEl: ElementRef<HTMLElement>;
+  @ViewChild("container") containerEl: ElementRef<HTMLElement>;
   
   public openDefineCoverageDialog(): void {
     const dialogRef = this.dialog.open(CoverageDialogComponent, {
