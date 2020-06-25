@@ -1,4 +1,4 @@
-<mat-accordion [displayMode]="flat" [multi]="true">
+<mat-accordion [displayMode]="'flat'" [multi]="true">
     <mat-expansion-panel class="mat-elevation-z panel" *ngFor="let scheduleId of getScheduleIds()">
         <mat-expansion-panel-header [collapsedHeight]="'40px'" [expandedHeight]="'40px'">
             <mat-panel-title class="schedule">{{scheduleMap.get(scheduleId).label}}</mat-panel-title>

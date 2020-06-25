@@ -4,7 +4,7 @@
     </mat-form-field>
     <button class="addButton" fxFlex="15" mat-raised-button color="primary">Add Note</button>
 </div>
-<mat-accordion [displayMode]="flat" [multi]="true">
+<mat-accordion [displayMode]="'flat'" [multi]="true">
     <mat-expansion-panel class="mat-elevation-z panel" *ngFor="let note of filteredNotes">
         <mat-expansion-panel-header [collapsedHeight]="'40px'" [expandedHeight]="'40px'">
             <mat-panel-title class="noteTitle no-select">{{note[1].title}}</mat-panel-title>

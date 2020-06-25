@@ -21,8 +21,8 @@ export class EmployeeComponent implements OnDestroy{
   public employee: Employee = {} as Employee;
   public employeeId: string;
   public employeeShifts: Shift[];
-  private fullShiftMap: Map<string, Map<string, Shift[]>> = new Map();
-  private scheduleMap: Map<string, Schedule> = new Map();
+  public fullShiftMap: Map<string, Map<string, Shift[]>> = new Map();
+  public scheduleMap: Map<string, Schedule> = new Map();
   private shiftQuerySubscription: Subscription;
 
   private findEmployeeShifts(): void {
