@@ -1,5 +1,11 @@
+<div fxLayout="row" fxLayoutAlign="space-between" class="actions">
+    <mat-form-field fxFlex="70" class="search">
+        <input type="search" matInput (input)="filter($event.target.value)" placeholder="Search Notes">
+    </mat-form-field>
+    <button class="addButton" fxFlex="15" mat-raised-button color="primary">Add Note</button>
+</div>
 <mat-accordion [displayMode]="flat" [multi]="true">
-    <mat-expansion-panel class="mat-elevation-z panel" *ngFor="let note of notes">
+    <mat-expansion-panel class="mat-elevation-z panel" *ngFor="let note of filteredNotes">
         <mat-expansion-panel-header [collapsedHeight]="'40px'" [expandedHeight]="'40px'">
             <mat-panel-title class="noteTitle no-select">{{note[1].title}}</mat-panel-title>
             <mat-panel-description class="no-select">{{truncate(note[1].content)}}</mat-panel-description>

@@ -19,9 +19,14 @@ export class NotesComponent implements OnDestroy {
   private alive: Subject<boolean> = new Subject();
   private employeeId: string;
   public notes: [string, Note][];
+  public filteredNotes: [string, Note][];
 
   public displayTimestamp(timestamp: firestore.Timestamp): string {
     return timestamp.toDate().toDateString();
+  }
+
+  public filter(text: string): void {
+    this.filteredNotes = this.notes.filter((note: [string, Note]) => note[1].content.includes(text) || note[1].title.includes(text));
   }
 
   public truncate(content: string): string {
@@ -43,6 +48,7 @@ export class NotesComponent implements OnDestroy {
       takeUntil(this.alive)
     ).subscribe((notes: DocumentChangeAction<Note>[]) => {
       this.notes = notes.map((noteDocument: DocumentChangeAction<Note>) => [noteDocument.payload.doc.id, noteDocument.payload.doc.data()]);
+      this.filteredNotes = notes.map((noteDocument: DocumentChangeAction<Note>) => [noteDocument.payload.doc.id, noteDocument.payload.doc.data()]);
     });
   }
 
