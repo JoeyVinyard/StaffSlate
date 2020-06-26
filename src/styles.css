@@ -19,3 +19,18 @@ body {
 .no-select {
     user-select: none;
 }
+
+
+/* Temp fix for fab buttons */
+.mat-mini-fab .mat-button-wrapper {
+    padding: 0 !important;
+}
+
+/* Align expansion panel headers */
+.header > .mat-content {
+    justify-content: space-between;
+}
+
+.mat-content > mat-panel-title, .mat-content > mat-panel-description {
+  flex: 0 0 auto;
+}

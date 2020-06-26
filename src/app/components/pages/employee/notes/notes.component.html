@@ -1,18 +1,26 @@
-<div fxLayout="row" fxLayoutAlign="space-between" class="actions">
-    <mat-form-field fxFlex="70" class="search">
+<div fxLayout="row" fxLayoutAlign="space-between center" class="actions">
+    <mat-form-field fxFlex="80" class="search">
         <input type="search" matInput (input)="filter($event.target.value)" placeholder="Search Notes">
     </mat-form-field>
-    <button class="addButton" fxFlex="15" mat-raised-button color="primary">Add Note</button>
+    <!-- Desktop View -->
+    <button class="addButton" fxShow="true" fxShow.xs="false" fxFlex="15" mat-raised-button color="primary" (click)="openNewNoteDialog()">Add Note</button>
+    <!-- Mobile View -->
+    <button mat-mini-fab class="mat-elevation-z0" fxShow="false" fxShow.xs="true" color="primary" (click)="openNewNoteDialog()">
+        <mat-icon>add</mat-icon>
+    </button>
 </div>
 <mat-accordion [displayMode]="'flat'" [multi]="true">
     <mat-expansion-panel class="mat-elevation-z panel" *ngFor="let note of filteredNotes">
-        <mat-expansion-panel-header [collapsedHeight]="'40px'" [expandedHeight]="'40px'">
-            <mat-panel-title class="noteTitle no-select">{{note[1].title}}</mat-panel-title>
-            <mat-panel-description class="no-select">{{truncate(note[1].content)}}</mat-panel-description>
+        <mat-expansion-panel-header class="header" [collapsedHeight]="'40px'" [expandedHeight]="'40px'">
+            <mat-panel-title class="noteTitle no-select">{{truncateTitle(note[1].title)}}</mat-panel-title>
+            <mat-panel-description class="no-select">{{truncateContent(note[1].content)}}</mat-panel-description>
         </mat-expansion-panel-header>
-        <div class="noteContent">
-            <div class="noteDescription">{{note[1].content}}</div>
-            <div class="noteTimestamp">{{displayTimestamp(note[1].timestamp)}}</div>
+        <div class="noteContent" fxLayoutAlign="space-between end">
+            <div fxFlex="80">
+                <div class="noteDescription">{{note[1].content}}</div>
+                <div class="noteTimestamp">{{displayTimestamp(note[1].timestamp)}}</div>
+            </div>
+            <mat-icon>create</mat-icon>
         </div>
     </mat-expansion-panel>
 </mat-accordion>

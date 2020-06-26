@@ -79,6 +79,7 @@ import { DesktopEmployeeTableComponent } from './components/pages/employees/desk
 import { PhonePipe } from './pipes/phone.pipe';
 import { NotesComponent } from './components/pages/employee/notes/notes.component';
 import { ShiftsComponent } from './components/pages/employee/shifts/shifts.component';
+import { NewNoteDialogComponent } from './components/pages/employee/notes/new-note-dialog/new-note-dialog.component';
  
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -121,7 +122,8 @@ const maskConfig: Partial<IConfig> = {
     DesktopEmployeeTableComponent,
     PhonePipe,
     NotesComponent,
-    ShiftsComponent
+    ShiftsComponent,
+    NewNoteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -157,20 +159,6 @@ const maskConfig: Partial<IConfig> = {
     NgxMaterialTimepickerModule,
     HttpClientModule,
     NgxMaskModule.forRoot(maskConfig)
-  ],
-  entryComponents: [
-    NewEmployeeDialogComponent,
-    NewScheduleDialogComponent,
-    NewShiftDialogComponent,
-    NewSheetDialogComponent,
-    DeleteSheetConfirmationComponent,
-    WelcomeDialogComponent,
-    SheetPromptDialogComponent,
-    NewManagerDialogComponent,
-    DeleteManagerDialogComponent,
-    CoverageDialogComponent,
-    ViewCoverageDialogComponent,
-    DeleteEmployeeConfirmationComponent
   ],
   providers: [
     AngularFireAuthGuard,
