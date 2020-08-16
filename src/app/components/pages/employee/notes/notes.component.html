@@ -20,7 +20,9 @@
                 <div class="noteDescription">{{note[1].content}}</div>
                 <div class="noteTimestamp">{{displayTimestamp(note[1].timestamp)}}</div>
             </div>
-            <mat-icon>create</mat-icon>
+            <button mat-icon-button>
+                <mat-icon (click)="openNewNoteDialog(note)">create</mat-icon>
+            </button>
         </div>
     </mat-expansion-panel>
 </mat-accordion>

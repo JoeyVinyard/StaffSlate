@@ -49,6 +49,11 @@ export class NewNoteDialogComponent {
     }
   }
 
-  constructor(public dialogRef: MatDialogRef<NewNoteDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: {note: Note}) { }
+  constructor(public dialogRef: MatDialogRef<NewNoteDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: {note: [string, Note]}) {
+    if(data.note) {
+      this.title.setValue(data.note[1].title);
+      this.content.setValue(data.note[1].content);
+    }
+  }
 
 }

@@ -26,7 +26,10 @@ export class NotesComponent implements OnDestroy {
   public filteredNotes: [string, Note][];
 
   public openNewNoteDialog(note?: [string, Note]): void {
-    let dialogRef = this.dialog.open(NewNoteDialogComponent, {width: "300px"})
+    let dialogRef = this.dialog.open(NewNoteDialogComponent, {
+      width: "300px",
+      data: note ? {note: note} : {}
+    })
     dialogRef.afterClosed().subscribe((newNote: Note) => {
       if(newNote) {
         if(note) {

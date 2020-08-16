@@ -25,9 +25,9 @@ mat-card {
 
 .name {
     color: #111;
-    font-size: calc(1.3vw + 16px);
+    font-size: calc(1vw + 16px);
     font-weight: 700;
-    line-height: calc(1.3vw + 16px);
+    line-height: calc(1vw + 16px);
     margin-bottom: 3px;
     width: 100%;
 }
