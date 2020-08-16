@@ -41,7 +41,7 @@
                     </mat-menu>
                 </td>
                 <td class="hoursColumn rightBorder">
-                    {{getHourSpan(shift)}}
+                    {{timeService.getHourSpan(shift)}}
                 </td>
                 <td class="hbuffer"></td>
                 <ng-container *ngFor="let t of timeColumns">

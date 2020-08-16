@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>New Note</h1>
+<div class="content" mat-dialog-content>
+  <mat-form-field>
+    <input matInput (keypress)="enter($event)" [formControl]="title" placeholder="Title">
+    <mat-error *ngIf="title.invalid">{{getTitleError()}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <textarea matInput rows=5 (keypress)="enter($event)" [formControl]="content" placeholder="Content"></textarea>
+    <mat-error *ngIf="content.invalid">{{getContentError()}}</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" [disabled]="title.invalid || content.invalid" (click)="submit()">Save Note</button>
+</div>

@@ -1,1 +1,35 @@
-<p>employee works!</p>
+<div
+    fxFlex="90"
+    fxFlexOffset="5"
+    fxFlex.gt-md="50"
+    fxFlexOffset.gt-md="25"
+    class="container"
+>
+    <div class="breadcrumbs">
+        <a routerLink="/employees">Employees</a><span>/{{employee.firstName | titlecase}} {{employee.lastName  | titlecase}}</span>
+    </div>
+    <mat-card>
+        <div class="name">
+            {{employee.firstName | uppercase}} {{employee.lastName  | uppercase}}
+        </div>
+        <div class="info"><span class="item">Email: </span><a class="email" href="mailto:{{employee.email}}">{{employee.email}}</a></div>
+        <div class="info"><span class="item">Phone: </span>{{employee.phone | phone}}</div>
+        <div class="info"><span class="item">Employee ID: </span>{{employeeId}}</div>
+    </mat-card>
+    <mat-card>
+        <mat-tab-group mat-stretch-tabs mat-align-tabs="center">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span class="tab">Shifts</span>
+                </ng-template>
+                <app-shifts [fullShiftMap]="fullShiftMap" [scheduleMap]="scheduleMap"></app-shifts>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span class="tab">Notes</span>
+                </ng-template>
+                <app-notes></app-notes>
+            </mat-tab>
+          </mat-tab-group>
+    </mat-card>
+</div>

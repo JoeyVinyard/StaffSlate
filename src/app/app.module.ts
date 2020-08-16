@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 // Angular Fire Imports
 import { AngularFireModule } from '@angular/fire';
@@ -15,7 +16,10 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 // Material Imports
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -30,7 +34,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTabsModule } from '@angular/material/tabs'; 
+import { MatTabsModule } from '@angular/material/tabs';
 
 // Config Files
 import { appRoutes } from "./routes";
@@ -70,6 +74,17 @@ import { DeleteManagerDialogComponent } from './components/pages/location/manage
 import { CoverageDialogComponent } from './components/pages/schedule/coverage-dialog/coverage-dialog.component';
 import { ViewCoverageDialogComponent } from './components/pages/schedule/view-coverage-dialog/view-coverage-dialog.component';
 import { DeleteEmployeeConfirmationComponent } from './components/pages/employees/delete-employee-confirmation/delete-employee-confirmation.component';
+import { MobileEmployeeTableComponent } from './components/pages/employees/mobile-employee-table/mobile-employee-table.component';
+import { DesktopEmployeeTableComponent } from './components/pages/employees/desktop-employee-table/desktop-employee-table.component';
+import { PhonePipe } from './pipes/phone.pipe';
+import { NotesComponent } from './components/pages/employee/notes/notes.component';
+import { ShiftsComponent } from './components/pages/employee/shifts/shifts.component';
+import { NewNoteDialogComponent } from './components/pages/employee/notes/new-note-dialog/new-note-dialog.component';
+import { ConfirmDeleteNoteComponent } from './components/pages/employee/notes/confirm-delete-note/confirm-delete-note.component';
+ 
+const maskConfig: Partial<IConfig> = {
+  validation: false,
+};
 
 @NgModule({
   declarations: [
@@ -103,7 +118,14 @@ import { DeleteEmployeeConfirmationComponent } from './components/pages/employee
     DeleteManagerDialogComponent,
     CoverageDialogComponent,
     ViewCoverageDialogComponent,
-    DeleteEmployeeConfirmationComponent
+    DeleteEmployeeConfirmationComponent,
+    MobileEmployeeTableComponent,
+    DesktopEmployeeTableComponent,
+    PhonePipe,
+    NotesComponent,
+    ShiftsComponent,
+    NewNoteDialogComponent,
+    ConfirmDeleteNoteComponent
   ],
   imports: [
     BrowserModule,
@@ -128,6 +150,8 @@ import { DeleteEmployeeConfirmationComponent } from './components/pages/employee
     MatTooltipModule,
     MatTabsModule,
     DragDropModule,
+    MatExpansionModule,
+    MatListModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
@@ -135,21 +159,8 @@ import { DeleteEmployeeConfirmationComponent } from './components/pages/employee
     AngularFireFunctionsModule,
     FlexLayoutModule,
     NgxMaterialTimepickerModule,
-    HttpClientModule
-  ],
-  entryComponents: [
-    NewEmployeeDialogComponent,
-    NewScheduleDialogComponent,
-    NewShiftDialogComponent,
-    NewSheetDialogComponent,
-    DeleteSheetConfirmationComponent,
-    WelcomeDialogComponent,
-    SheetPromptDialogComponent,
-    NewManagerDialogComponent,
-    DeleteManagerDialogComponent,
-    CoverageDialogComponent,
-    ViewCoverageDialogComponent,
-    DeleteEmployeeConfirmationComponent
+    HttpClientModule,
+    NgxMaskModule.forRoot(maskConfig)
   ],
   providers: [
     AngularFireAuthGuard,

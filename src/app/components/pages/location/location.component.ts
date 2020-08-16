@@ -3,7 +3,7 @@ import { LocationService } from 'src/app/services/location.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from 'src/app/models/location';
 import { FormControl, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap, takeWhile } from 'rxjs/operators';
 
 @Component({

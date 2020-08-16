@@ -1,6 +1,6 @@
 import { Component, ViewChild, AfterViewInit, Inject, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Employee } from 'src/app/models/employee';
 import { LocationService } from 'src/app/services/location.service';
 import { Location } from 'src/app/models/location';

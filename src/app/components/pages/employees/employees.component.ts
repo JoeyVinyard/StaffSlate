@@ -1,12 +1,16 @@
 import { Component, ViewChild, OnDestroy, Input, OnInit } from '@angular/core';
 import {  Employee } from 'src/app/models/employee';
-import { MatTableDataSource, MatDialog, MatSnackBar, MatPaginator } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { LocationService } from 'src/app/services/location.service';
 import { NewEmployeeDialogComponent } from './new-employee-dialog/new-employee-dialog.component';
 import { Location } from 'src/app/models/location';
 import { UserService } from 'src/app/services/user.service';
 import { Subscription } from 'rxjs';
 import { DeleteEmployeeConfirmationComponent } from './delete-employee-confirmation/delete-employee-confirmation.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-employees',
@@ -19,7 +23,6 @@ export class EmployeesComponent implements OnDestroy, OnInit {
 
   subscriptions: Subscription[] = [];
   dataSource = new MatTableDataSource<[string, Employee]>();
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'action'];
   loadedLocation: Location;
   locations: [string, Location][];
 
@@ -33,7 +36,6 @@ export class EmployeesComponent implements OnDestroy, OnInit {
     dialogRef.afterClosed().subscribe((newEmployee: Employee) => {
       if(newEmployee) {
         if(employee) {
-          console.log(employee)
           this.loadedLocation.updateEmployee(employee[0], newEmployee)
           .then(() => this.snackbar.open("Employee succesfully updated.", "Dismiss", {duration: 3000}))
           .catch(() => this.snackbar.open("Failed to update Employee. Please try again later.", "Dismiss", {duration: 3000}));
@@ -46,7 +48,11 @@ export class EmployeesComponent implements OnDestroy, OnInit {
     });
   }
 
-  public delete(employee: [string, Employee]): void {
+  public viewEmployee(employee: [string, Employee]): void {
+    this.router.navigateByUrl(`employee/${employee[0]}`);
+  }
+
+  public deleteEmployee(employee: [string, Employee]): void {
     const dialogRef = this.dialog.open(DeleteEmployeeConfirmationComponent, {
       width: '300px',
       data: employee[1]
@@ -70,7 +76,11 @@ export class EmployeesComponent implements OnDestroy, OnInit {
   }
 
   public buttonContent(): string {
-    return `New ${window.innerWidth > 800 && !this.inline ? "Employee" : ""}`;
+    return `New ${window.innerWidth > 900 && !this.inline ? "Employee" : ""}`;
+  }
+
+  public mobile(): boolean {
+    return window.innerWidth < 900;
   }
 
   ngOnDestroy() {
@@ -81,7 +91,7 @@ export class EmployeesComponent implements OnDestroy, OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar) {
+  constructor(private locationService: LocationService, private userService: UserService, public dialog: MatDialog, public snackbar: MatSnackBar, private router: Router) {
     this.snackbar.open("Loading Employees...", "Dismiss");
     this.locationService.getCurrentLocation().subscribe((location) => {
       if(location) {

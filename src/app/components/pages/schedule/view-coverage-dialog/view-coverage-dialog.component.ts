@@ -1,5 +1,5 @@
 import { Component, Inject, ChangeDetectorRef, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Sheet } from 'src/app/models/sheet';
 import { CoverageDialogComponent } from '../coverage-dialog/coverage-dialog.component';
 import { TimeService } from 'src/app/services/time.service';

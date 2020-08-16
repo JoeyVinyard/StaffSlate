@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Employee } from 'src/app/models/employee';
 import { Validators, FormControl } from '@angular/forms';
 
@@ -10,7 +10,8 @@ import { Validators, FormControl } from '@angular/forms';
 })
 export class NewEmployeeDialogComponent {
 
-  email = new FormControl('', [Validators.required, Validators.email]);
+  email = new FormControl('', [Validators.email]);
+  phone = new FormControl('', [Validators.minLength(10), Validators.maxLength(10)]);
   firstName = new FormControl('', [Validators.required]);
   lastName = new FormControl('', [Validators.required]);
 
@@ -21,10 +22,16 @@ export class NewEmployeeDialogComponent {
   }
 
   getEmailError(): string {
-    if(this.email.hasError("required")) {
-      return "Email is required";
-    } else if (this.email.hasError("email")) {
+    if (this.email.hasError("email")) {
       return "Not a valid email";
+    } else {
+      return "";
+    }
+  }
+
+  getPhoneError(): string {
+    if(this.phone.hasError("minlength") || this.phone.hasError("maxlength") || isNaN(this.phone.value)) {
+      return "Not a valid phone number"
     } else {
       return "";
     }
@@ -47,7 +54,7 @@ export class NewEmployeeDialogComponent {
   }
   
   submit(): void {
-    if(this.firstName.invalid || this.lastName.invalid || this.email.invalid) {
+    if(this.firstName.invalid || this.lastName.invalid || this.email.invalid || this.phone.invalid) {
       return;
     }
     this.dialogRef.close({

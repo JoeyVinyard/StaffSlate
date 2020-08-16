@@ -56,6 +56,9 @@ export class TimeService {
     }
     return {hours: hours, minutes: minutes} as Time;
   }
+  public getHourSpan(shift: Shift): string {
+    return `${this.timeToString(shift.startTime)} - ${this.timeToString(shift.endTime)}`
+  }
   public blankTime(): Time {
     return {hours: 0, minutes: 0} as Time;
   }

@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css?family=Lexend+Mega&display=swap');
 
 html * {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: Segoe UI, "Helvetica Neue", sans-serif;
 }
 
 body {
@@ -18,4 +18,19 @@ body {
 
 .no-select {
     user-select: none;
+}
+
+
+/* Temp fix for fab buttons */
+.mat-mini-fab .mat-button-wrapper {
+    padding: 0 !important;
+}
+
+/* Align expansion panel headers */
+.header > .mat-content {
+    justify-content: space-between;
+}
+
+.mat-content > mat-panel-title, .mat-content > mat-panel-description {
+  flex: 0 0 auto;
 }

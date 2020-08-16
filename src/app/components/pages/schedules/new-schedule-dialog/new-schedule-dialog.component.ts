@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { Schedule } from 'src/app/models/schedule';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Identifier } from 'src/app/models/identifier';
 
 @Component({
