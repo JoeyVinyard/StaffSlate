@@ -80,6 +80,7 @@ import { PhonePipe } from './pipes/phone.pipe';
 import { NotesComponent } from './components/pages/employee/notes/notes.component';
 import { ShiftsComponent } from './components/pages/employee/shifts/shifts.component';
 import { NewNoteDialogComponent } from './components/pages/employee/notes/new-note-dialog/new-note-dialog.component';
+import { ConfirmDeleteNoteComponent } from './components/pages/employee/notes/confirm-delete-note/confirm-delete-note.component';
  
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -123,7 +124,8 @@ const maskConfig: Partial<IConfig> = {
     PhonePipe,
     NotesComponent,
     ShiftsComponent,
-    NewNoteDialogComponent
+    NewNoteDialogComponent,
+    ConfirmDeleteNoteComponent
   ],
   imports: [
     BrowserModule,

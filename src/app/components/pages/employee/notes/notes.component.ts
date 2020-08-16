@@ -11,6 +11,7 @@ import { firestore } from 'firebase'
 import { MatDialog } from '@angular/material/dialog';
 import { NewNoteDialogComponent } from './new-note-dialog/new-note-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmDeleteNoteComponent } from './confirm-delete-note/confirm-delete-note.component';
 
 @Component({
   selector: 'app-notes',
@@ -41,6 +42,17 @@ export class NotesComponent implements OnDestroy {
           .then(() => this.snackbar.open("Note Successfully Added", "Dismiss", {duration: 3000}))
           .catch(() => this.snackbar.open("Failed to add note. Please try again", "Dismiss", {duration: 3000}));
         }
+      }
+    });
+  }
+
+  public openDeleteNoteDialog(note?: [string, Note]): void {
+    let dialogRef = this.dialog.open(ConfirmDeleteNoteComponent, {width: "300px"})
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if(confirmed) {
+        this.notesCollection.doc(note[0]).delete()
+        .then(() => this.snackbar.open("Note Successfully Deleted", "Dismiss", {duration: 3000}))
+        .catch(() => this.snackbar.open("Failed to delete note. Please try again", "Dismiss", {duration: 3000}));
       }
     });
   }

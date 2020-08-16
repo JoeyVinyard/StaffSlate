@@ -1,0 +1,12 @@
+.content * {
+    width: 100%;
+}
+
+.buttons {
+    display: inline;
+}
+
+.buttons button {
+    float: right;
+    margin-left: 5px;
+}
