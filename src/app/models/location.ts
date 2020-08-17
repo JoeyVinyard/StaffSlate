@@ -2,7 +2,6 @@ import {  AngularFirestoreDocument, DocumentReference } from '@angular/fire/fire
 import { Observable, ReplaySubject } from 'rxjs';
 import { Employee } from './employee';
 import { Schedule } from './schedule';
-import { map } from 'rxjs/operators';
 
 export interface NewLocation {
     label: string;
